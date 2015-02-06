@@ -9,6 +9,8 @@ package cm.aptoide.ptdev.model;
  */
 public class Login {
 
+    private String passwordSha1;
+
     public String getUsername() {
         return username;
     }
@@ -30,4 +32,11 @@ public class Login {
     private String password;
 
 
+    public String getPasswordSha1() {
+        return passwordSha1;
+    }
+
+    public void setPasswordSha1(String passwordSha1) {
+        this.passwordSha1 = passwordSha1;
+    }
 }

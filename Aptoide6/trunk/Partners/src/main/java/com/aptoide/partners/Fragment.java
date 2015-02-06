@@ -9,6 +9,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.octo.android.robospice.persistence.DurationInMillis;
+
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.CategoryCallback;
 import cm.aptoide.ptdev.StoreActivity;
@@ -61,7 +63,7 @@ public class Fragment extends android.support.v4.app.Fragment  {
         if (i == android.R.id.home) {
 
         } else if( i == cm.aptoide.ptdev.R.id.refresh_store){
-            ((StartPartner)getActivity()).refreshList();
+
         }
         else if( i == cm.aptoide.ptdev.R.id.nameAZ) {
             ((StartPartner) getActivity()).setSort(StoreActivity.Sort.NAMEAZ);
@@ -88,7 +90,8 @@ public class Fragment extends android.support.v4.app.Fragment  {
 
     private void setSort(MenuItem item) {
         getActivity().supportInvalidateOptionsMenu();
-        ((StartPartner)getActivity()).refreshList();
+        FragmentListStore fragmentById = (FragmentListStore) getChildFragmentManager().findFragmentById(cm.aptoide.ptdev.R.id.content_layout);
+        fragmentById.refresh(DurationInMillis.ONE_HOUR);
     }
 
     @Override

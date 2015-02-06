@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.MoreActivity;
+
 import cm.aptoide.ptdev.MoreTopStoresActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.StickyRecyclerHeadersDecoration;
@@ -42,6 +42,7 @@ import cm.aptoide.ptdev.adapters.V6.Holders.AppViewHolder;
 import cm.aptoide.ptdev.adapters.V6.Rows.AppsRow;
 import cm.aptoide.ptdev.adapters.V6.Rows.StoreRow;
 import cm.aptoide.ptdev.adapters.V6.V6StoresRecyclerAdapter;
+import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.Api;
@@ -59,6 +60,7 @@ public class FragmentListTopApps extends Fragment {
     private RequestListener<Response> requestListener;
 
     SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
+    private TestRequest request;
 
     @Override
     public void onAttach(Activity activity) {
@@ -90,6 +92,17 @@ public class FragmentListTopApps extends Fragment {
 
         }
 
+        private String username;
+        private String password;
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+
         private String context;
 
         @Override
@@ -101,6 +114,8 @@ public class FragmentListTopApps extends Fragment {
             api.getApi_global_params().setStore_name(Aptoide.getConfiguration().getDefaultStore());
             api.getApi_global_params().limit = 10;
 
+
+
             SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
 
             if(Aptoide.DEBUG_MODE){
@@ -111,7 +126,10 @@ public class FragmentListTopApps extends Fragment {
             
             Api.GetStore getStore = new Api.GetStore();
 
-
+            if(username != null){
+                api.getApi_global_params().store_user = username;
+                api.getApi_global_params().store_pass_sha1 = password;
+            }
             Api.GetStore.WidgetParams widgetParams = new Api.GetStore.WidgetParams();
             widgetParams.setContext(context);
 
@@ -165,7 +183,7 @@ public class FragmentListTopApps extends Fragment {
                     FlurryAgent.logEvent("Top_Page_Clicked_On_More_Top_Stores");
 
                 }else{
-                    Intent intent = new Intent(getActivity(), MoreActivity.class);
+                    Intent intent = new Intent(getActivity(), Aptoide.getConfiguration().getMoreActivityClass());
 
                     intent.putExtra("widgetid", ((AppsRow) ((RecyclerAdapter) view.getAdapter()).list.get(i)).widgetid);
                     intent.putExtra("widgetrefid", ((AppsRow) ((RecyclerAdapter) view.getAdapter()).list.get(i)).widgetrefid);
@@ -191,7 +209,14 @@ public class FragmentListTopApps extends Fragment {
         view.setLayoutManager(linearLayoutManager);
         view.addItemDecoration(stickyRecyclerHeadersDecoration);
 
-        final TestRequest request = new TestRequest();
+        request = new TestRequest();
+
+        Login login = getLogin();
+
+        if(login!=null){
+            request.setUsername(login.getUsername());
+            request.setPassword(login.getPassword());
+        }
 
         request.setContext(getContext());
         final SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
@@ -335,6 +360,10 @@ public class FragmentListTopApps extends Fragment {
         manager.execute(request, "top" , DurationInMillis.ONE_DAY,  requestListener);
 
         return rootView;
+    }
+
+    public Login getLogin() {
+        return null;
     }
 
     public static class RecyclerAdapter extends V6StoresRecyclerAdapter {

@@ -19,6 +19,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
+import cm.aptoide.ptdev.utils.AptoideUtils;
+
 /**
  * Created by rmateus on 23-01-2015.
  */
@@ -83,6 +85,10 @@ public class SelectableAdapter extends RecyclerView.Adapter<SelectableAdapter.Vi
         }else{
             viewHolder.flipDrawable.reset(!row.isSelected());
         }
+
+        String downloads = AptoideUtils.withSuffix(String.valueOf(row.getDownloads()));
+        String size = AptoideUtils.formatBytes(row.getSize());
+        viewHolder.downloadsAndSize.setText(downloads + " - " + size);
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

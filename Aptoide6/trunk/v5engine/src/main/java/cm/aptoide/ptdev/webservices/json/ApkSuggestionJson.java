@@ -8,6 +8,7 @@ import java.util.List;
  * Created by rmateus on 29-07-2014.
  */
 public class ApkSuggestionJson {
+    public Options options = new Options();
 
      public List<Ads> ads;
      public String status;
@@ -24,6 +25,17 @@ public class ApkSuggestionJson {
     public void setStatus(String status){
         this.status = status;
     }
+
+
+    public static class Options{
+        public Boolean mediation = true;
+
+        public Boolean getMediation(){
+            return mediation;
+        }
+
+    }
+
 
     public static class Data{
         public String description;

@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import java.io.File;
 
 import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.MoreActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.SearchManager;
 import cm.aptoide.ptdev.pushnotification.PushNotificationReceiver;
@@ -40,6 +41,7 @@ public class AptoideConfiguration {
     private String webservicesPath;
     private static String MARKETNAME = "Aptoide";
     private static String BRAND;
+    private Class<?> moreActivityClass;
 
     public boolean isSaveOldRepos(){
         return true;
@@ -258,5 +260,9 @@ public class AptoideConfiguration {
 
     public String getActionFirstTime() {
         return "cm.aptoide.pt.PushNotificationFirstTime";
+    }
+
+    public Class<?> getMoreActivityClass() {
+        return MoreActivity.class;
     }
 }

@@ -56,6 +56,7 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
 
 
     private SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
+    private Login login;
 
     @Override
     public void matureUnlock() {
@@ -180,6 +181,14 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
 
     }
 
+    public Login getLogin(){
+        return login;
+    }
+
+    public void setLogin(Login login){
+        this.login = login;
+    }
+
     private void setFragment() {
 
         Fragment fragment = new FragmentListStore();
@@ -221,10 +230,9 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
         if(getIntent().hasExtra("username")){
             String username = getIntent().getStringExtra("username");
             String password = getIntent().getStringExtra("password");
-            args.putString("username", username);
-            args.putString("password", password);
 
-            Login login = new Login();
+
+            login = new Login();
             login.setUsername(username);
             login.setPassword(password);
             request.setLogin(login);

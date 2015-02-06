@@ -1,12 +1,14 @@
 package cm.aptoide.ptdev.fragments;
 
 import android.app.Activity;
+import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -20,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -35,6 +38,8 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 import com.squareup.otto.Subscribe;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,13 +51,18 @@ import cm.aptoide.ptdev.EnumCategories;
 import cm.aptoide.ptdev.EnumStoreTheme;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.StoreActivity;
+import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.dialogs.AdultHiddenDialog;
+import cm.aptoide.ptdev.dialogs.PasswordDialog;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
+import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.Api;
+import cm.aptoide.ptdev.webservices.GetAdsRequest;
 import cm.aptoide.ptdev.webservices.Response;
+import cm.aptoide.ptdev.webservices.json.ApkSuggestionJson;
 import retrofit.http.Body;
 import retrofit.http.POST;
 
@@ -161,9 +171,9 @@ public class FragmentListStore extends Fragment {
             //widgetParams.offset = offset;
             //widgetParams.limit = 3;
 
-            if(username != null){
-                getStore.store_user = username;
-                getStore.store_pass_sha1 = password;
+            if (username != null) {
+                api.getApi_global_params().store_user = username;
+                api.getApi_global_params().store_pass_sha1 = password;
             }
 
             getStore.getDatasets_params().set(widgetParams);
@@ -181,7 +191,6 @@ public class FragmentListStore extends Fragment {
 
             if(widgetId != null){
                 listApps.datasets.add(refId);
-
                 api.getApi_params().set(listApps);
                 if(offset.intValue() > 0){
                     return getService().postApk3(api);
@@ -277,10 +286,11 @@ public class FragmentListStore extends Fragment {
         request.setSort(sort);
         items.clear();
         rRiew.getAdapter().notifyDataSetChanged();
+        Login login = ((CategoryCallback) getActivity()).getLogin();
 
-        if(getArguments().containsKey("username")){
-            request.setUsername(getArguments().getString("username"));
-            request.setPassword(getArguments().getString("password"));
+        if( login != null){
+            request.setUsername(login.getUsername());
+            request.setPassword(login.getPassword());
         }
 
         request.setStore(getArguments().getString("storename"));
@@ -302,11 +312,49 @@ public class FragmentListStore extends Fragment {
     int firstVisibleItem, visibleItemCount, totalItemCount;
 
     private int total;
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case 20:
+                String username = data.getStringExtra("username");
+                String password = null;
+                try {
+                    password = AptoideUtils.Algorithms.computeSHA1sum(data.getStringExtra("password"));
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+
+                List<Fragment> fragments = getFragmentManager().getFragments();
+                Bundle bundle = new Bundle();
+
+                bundle.putString("username", username);
+
+                bundle.putString("password", password);
+                Login login = new Login();
+                login.setUsername(username);
+                login.setPassword(password);
+                ((CategoryCallback)getActivity()).setLogin(login);
+
+
+                new Database(Aptoide.getDb()).updateStoreLogin(getArguments().getString("storename"), username, password);
+
+                refresh(DurationInMillis.ALWAYS_EXPIRED);
+                break;
+        }
+    }
+
     RequestListener<Response> listener = new RequestListener<Response>() {
 
 
         @Override
         public void onRequestFailure(SpiceException spiceException) {
+
+
 
             if(items.isEmpty()) {
 
@@ -331,6 +379,7 @@ public class FragmentListStore extends Fragment {
                 }
 
             }else{
+
                 if(loading){
                     items.remove(items.size() - 1);
                 }
@@ -342,9 +391,24 @@ public class FragmentListStore extends Fragment {
             }
         }
 
+
+        int adsPosition = 0;
+        boolean adsLoaded ;
+
         @Override
         public void onRequestSuccess(final Response response) {
-            ArrayList<StoreListItem> map = new ArrayList<StoreListItem>();
+            final ArrayList<StoreListItem> map = new ArrayList<StoreListItem>();
+
+            try {
+                if (response.responses.getStore.errors!=null && !response.responses.getStore.errors.isEmpty() && response.responses.getStore.errors.get(0).code.equals("STORE-3") || response.responses.getStore.errors.get(0).code.equals("STORE-5")) {
+                    DialogFragment fragment = new PasswordDialog();
+                    fragment.setTargetFragment(FragmentListStore.this, 20);
+                    fragment.show(getFragmentManager(), "passwordDialog");
+                    return;
+                }
+            }catch (Exception e){
+
+            }
 
 
             try {
@@ -362,6 +426,7 @@ public class FragmentListStore extends Fragment {
                 if (response.responses.listApps != null) {
                     dataset = response.responses.listApps.datasets.getDataset();
                 }
+
 
 
 
@@ -413,6 +478,7 @@ public class FragmentListStore extends Fragment {
                         WidgetCategory item = new WidgetCategory();
                         item.refid = widget.data.ref_id;
                         item.widgetid = widget.widgetid;
+                        item.icon = widget.data.icon;
                         item.name = widget.name;
                         item.theme = theme;
                         item.apps_count = widget.data.apps_count;
@@ -421,6 +487,8 @@ public class FragmentListStore extends Fragment {
 
 
                     }
+
+                    adsPosition = map.size();
 
                     if (dataset != null) {
 
@@ -458,7 +526,45 @@ public class FragmentListStore extends Fragment {
 
                 //string.clear();
 
+                if(!adsLoaded && getArguments().getString("widgetrefid") != null) {
+                    GetAdsRequest adrequest = new GetAdsRequest(Aptoide.getContext());
 
+                    adrequest.setLimit(1);
+                    adrequest.setLocation("homepage");
+                    adrequest.setKeyword("__NULL__");
+                    adrequest.setCategories(getArguments().getString("widgetrefid"));
+                    manager.execute(adrequest, new RequestListener<ApkSuggestionJson>() {
+
+                        @Override
+                        public void onRequestFailure(SpiceException spiceException) {
+
+                        }
+
+                        @Override
+                        public void onRequestSuccess(ApkSuggestionJson apkSuggestionJson) {
+
+
+                            for (ApkSuggestionJson.Ads ad : apkSuggestionJson.getAds()) {
+
+                                AdApp app = new AdApp();
+                                app.setName(ad.getData().getName());
+                                app.setIcon(ad.getData().getIcon());
+                                app.setMd5sum(ad.getData().getMd5sum());
+                                app.setRepo(ad.getData().getRepo());
+                                if (ad.getData().getStars() != null) {
+                                    app.setRating(ad.getData().getStars().floatValue());
+                                }
+                                app.setVersionName(ad.getData().getVername());
+                                app.setAd(ad);
+                                items.add(adsPosition,app);
+                                rRiew.getAdapter().notifyItemRangeInserted(adsPosition, 1);
+
+                            }
+
+
+                        }
+                    });
+                }
 
 
                 rRiew.setOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -497,9 +603,12 @@ public class FragmentListStore extends Fragment {
                                 StoreActivity.Sort sort = ((CategoryCallback) getActivity()).getSort().getSort();
                                 request.setSort(sort);
 
-                                if(getArguments().containsKey("username")){
-                                    request.setUsername(getArguments().getString("username"));
-                                    request.setPassword(getArguments().getString("password"));
+                                Login login = ((CategoryCallback) getActivity()).getLogin();
+
+                                if(login!=null){
+
+                                    request.setUsername(login.getUsername());
+                                    request.setPassword(login.getPassword());
                                 }
 
                                 request.setOffset(offset);
@@ -558,6 +667,7 @@ public class FragmentListStore extends Fragment {
 
     public class WidgetCategory implements StoreListItem{
 
+        public String icon;
         public String refid;
         public String widgetid;
         public String name;
@@ -576,6 +686,25 @@ public class FragmentListStore extends Fragment {
         }
 
 
+    }
+
+    public class AdApp extends App{
+
+        private ApkSuggestionJson.Ads ad;
+
+        @Override
+        public int getItemViewType() {
+            return 2;
+        }
+
+
+        public ApkSuggestionJson.Ads getAd() {
+            return ad;
+        }
+
+        public void setAd(ApkSuggestionJson.Ads ad) {
+            this.ad = ad;
+        }
     }
 
     public class App implements StoreListItem{
@@ -661,6 +790,7 @@ public class FragmentListStore extends Fragment {
     }
 
 
+
     public interface StoreListItem{
         int getItemViewType();
     }
@@ -670,6 +800,7 @@ public class FragmentListStore extends Fragment {
         private final List<StoreListItem> list;
         private final Bundle parentBundle;
 
+
         private String storename;
 
         public StoreListAdapter(Context context, List<StoreListItem> list, FragmentManager fragmentManager, Bundle bundle) {
@@ -677,6 +808,7 @@ public class FragmentListStore extends Fragment {
             this.context = context;
             this.fragmentManager = fragmentManager;
             this.parentBundle = bundle;
+
         }
 
         private Context context;
@@ -691,6 +823,7 @@ public class FragmentListStore extends Fragment {
 
             switch (viewType){
                 case 0:
+                case 2:
                     return new AppStoreListViewHolder(LayoutInflater.from(context).inflate(R.layout.row_app_standard, parent, false));
                 case 1:
                     return new CategoryStoreListViewHolder(LayoutInflater.from(context).inflate(R.layout.row_item_category_first_level_list, parent, false));
@@ -702,18 +835,88 @@ public class FragmentListStore extends Fragment {
         @Override
         public void onBindViewHolder(StoreListViewHolder holder, final int position) {
 
+            String icon = null;
 
             switch (getItemViewType(position)) {
+
+                case 2:
+                    final AdApp adItem = (AdApp) list.get(position);
+                    AppStoreListViewHolder adAppHolder = (AppStoreListViewHolder) holder;
+                    adAppHolder.name.setText(adItem.getName());
+
+                    adAppHolder.appName.setText(Html.fromHtml(adItem.getName()).toString());
+                    adAppHolder.rating.setRating(adItem.getRating());
+
+                    icon = adItem.getIcon();
+                    if (icon.contains("_icon")) {
+                        String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");
+                        icon = splittedUrl[0] + "_" + Aptoide.iconSize + "." + splittedUrl[1];
+                    }
+                    ImageLoader.getInstance().displayImage(icon,adAppHolder.appIcon);
+
+
+                    adAppHolder.versionName.setText(adItem.getVersionName());
+
+                    final ApkSuggestionJson.Ads apkSuggestion = adItem.getAd();
+
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent i = new Intent(v.getContext(), Aptoide.getConfiguration().getAppViewActivityClass());
+                            long id = apkSuggestion.getData().getId().longValue();
+                            i.putExtra("id", id);
+                            i.putExtra("packageName", apkSuggestion.getData().getPackageName());
+                            i.putExtra("repoName", apkSuggestion.getData().getRepo());
+                            i.putExtra("fromSponsored", true);
+                            i.putExtra("location", "homepage");
+                            i.putExtra("keyword", "__NULL__");
+                            i.putExtra("cpc", apkSuggestion.getInfo().getCpc_url());
+                            i.putExtra("cpi", apkSuggestion.getInfo().getCpi_url());
+                            i.putExtra("whereFrom", "sponsored");
+                            i.putExtra("download_from", "sponsored");
+                            FlurryAgent.logEvent("Home_Page_Clicked_On_Sponsored_App");
+
+                            if(apkSuggestion.getPartner() != null){
+                                Bundle bundle = new Bundle();
+
+                                bundle.putString("partnerType", apkSuggestion.getPartner().getPartnerInfo().getName());
+                                bundle.putString("partnerClickUrl", apkSuggestion.getPartner().getPartnerData().getClick_url());
+
+                                i.putExtra("partnerExtra", bundle);
+                            }
+
+                            v.getContext().startActivity(i);
+                            FlurryAgent.logEvent("Store_Clicked_On_App");
+
+                        }
+                    });
+                    break;
+
                 case 0:
 
                     final App appItem = (App) list.get(position);
+                    StoreActivity.Sort sort = ((CategoryCallback) context).getSort().getSort();
                     AppStoreListViewHolder appHolder = (AppStoreListViewHolder) holder;
                     appHolder.name.setText(appItem.getName());
 
                     appHolder.appName.setText(Html.fromHtml(appItem.getName()).toString());
-                    appHolder.rating.setRating(appItem.getRating());
 
-                    String icon = appItem.getIcon();
+
+                    if(sort.equals(StoreActivity.Sort.DOWNLOADS)){
+                        appHolder.rating.setVisibility(View.GONE);
+                        appHolder.downloads.setVisibility(View.VISIBLE);
+                        appHolder.downloads.setText(context.getString(R.string.X_download_number,AptoideUtils.withSuffix(String.valueOf(appItem.getDownloads()))));
+
+                    }else{
+                        appHolder.rating.setVisibility(View.VISIBLE);
+                        appHolder.rating.setRating(appItem.getRating());
+                        appHolder.downloads.setVisibility(View.GONE);
+
+                    }
+
+
+
+                    icon = appItem.getIcon();
                     if (icon.contains("_icon")) {
                         String[] splittedUrl = icon.split("\\.(?=[^\\.]+$)");
                         icon = splittedUrl[0] + "_" + Aptoide.iconSize + "." + splittedUrl[1];
@@ -808,67 +1011,79 @@ public class FragmentListStore extends Fragment {
                         }
                     });
 
-                    int catid;
-                    try{
+                    if(storeListItem.icon != null){
 
-                        if("group_top".equals(storeListItem.refid)){
-                            catid = EnumCategories.TOP_APPS;
-                        }else if("likes".equals(storeListItem.refid)) {
-                            catid = EnumCategories.LATEST_LIKES;
-                        }else if("comments".equals(storeListItem.refid)) {
-                            catid = EnumCategories.LATEST_COMMENTS;
-                        }else if("group_latest".equals(storeListItem.refid)) {
-                            catid = EnumCategories.LATEST_APPS;
-                        }else if("ucat_3239".equals(storeListItem.refid)) {
-                            catid = EnumCategories.APTOIDE_PUBLISHERS;
-                        }else {
-                            catid = Integer.valueOf(storeListItem.refid.replaceAll("[^-?0-9]+", ""));
+                        if (storeListItem.icon.contains("_cat_icon")) {
+                            String[] splittedUrl = storeListItem.icon.split("\\.(?=[^\\.]+$)");
+                            icon = splittedUrl[0] + "_" + Aptoide.iconSize + "." + splittedUrl[1];
                         }
-                    }catch (Exception e){
-                        catid = 0;
-                    }
 
-                    EnumStoreTheme theme;
-                    try{
-                        String themeString = storeListItem.theme;
-                        theme = EnumStoreTheme.valueOf("APTOIDE_STORE_THEME_" + themeString);
-                        Log.d("FragmentListStore", "theme "+theme);
+                        ImageLoader.getInstance().displayImage(icon, categoryHolder.icon);
 
-                    }catch (Exception e){
-                        theme = EnumStoreTheme.APTOIDE_STORE_THEME_ORANGE;
-                    }
+                    }else {
 
-                    switch (catid) {
-                        case EnumCategories.APPLICATIONS:
-                            categoryHolder.icon.setImageResource(R.drawable.cat_applications);
-                            break;
-                        case EnumCategories.GAMES:
-                            categoryHolder.icon.setImageResource(R.drawable.cat_games);
-                            break;
-                        case EnumCategories.TOP_APPS:
-                            categoryHolder.icon.setImageResource(R.drawable.cat_top_apps);
-                            break;
-                        case EnumCategories.LATEST_APPS:
-                            categoryHolder.icon.setImageResource(R.drawable.cat_latest);
-                            break;
-                        case EnumCategories.LATEST_LIKES:
-                            categoryHolder.icon.setImageResource(R.drawable.cat_likes);
-                            break;
-                        case EnumCategories.LATEST_COMMENTS:
-                            categoryHolder.icon.setImageResource(R.drawable.cat_comments);
-                            break;
-                        case EnumCategories.APTOIDE_PUBLISHERS:
-                            categoryHolder.icon.setImageResource(R.drawable.cat_publishers);
-                            break;
+                        int catid;
+                        try {
 
-                        default:
-                            String iconUrl = EnumCategories.getCategoryIcon(catid, storename);
-                            if (iconUrl != null) {
-                                ImageLoader.getInstance().displayImage(iconUrl, categoryHolder.icon);
+                            if ("group_top".equals(storeListItem.refid)) {
+                                catid = EnumCategories.TOP_APPS;
+                            } else if ("likes".equals(storeListItem.refid)) {
+                                catid = EnumCategories.LATEST_LIKES;
+                            } else if ("comments".equals(storeListItem.refid)) {
+                                catid = EnumCategories.LATEST_COMMENTS;
+                            } else if ("group_latest".equals(storeListItem.refid)) {
+                                catid = EnumCategories.LATEST_APPS;
+                            } else if ("ucat_3239".equals(storeListItem.refid)) {
+                                catid = EnumCategories.APTOIDE_PUBLISHERS;
                             } else {
-                                categoryHolder.icon.setImageResource(theme.getStoreCategoryDrawable());
+                                catid = Integer.valueOf(storeListItem.refid.replaceAll("[^-?0-9]+", ""));
                             }
-                            break;
+                        } catch (Exception e) {
+                            catid = 0;
+                        }
+
+                        EnumStoreTheme theme;
+                        try {
+                            String themeString = storeListItem.theme;
+                            theme = EnumStoreTheme.valueOf("APTOIDE_STORE_THEME_" + themeString);
+                            Log.d("FragmentListStore", "theme " + theme);
+
+                        } catch (Exception e) {
+                            theme = EnumStoreTheme.APTOIDE_STORE_THEME_ORANGE;
+                        }
+
+                        switch (catid) {
+                            case EnumCategories.APPLICATIONS:
+                                categoryHolder.icon.setImageResource(R.drawable.cat_applications);
+                                break;
+                            case EnumCategories.GAMES:
+                                categoryHolder.icon.setImageResource(R.drawable.cat_games);
+                                break;
+                            case EnumCategories.TOP_APPS:
+                                categoryHolder.icon.setImageResource(R.drawable.cat_top_apps);
+                                break;
+                            case EnumCategories.LATEST_APPS:
+                                categoryHolder.icon.setImageResource(R.drawable.cat_latest);
+                                break;
+                            case EnumCategories.LATEST_LIKES:
+                                categoryHolder.icon.setImageResource(R.drawable.cat_likes);
+                                break;
+                            case EnumCategories.LATEST_COMMENTS:
+                                categoryHolder.icon.setImageResource(R.drawable.cat_comments);
+                                break;
+                            case EnumCategories.APTOIDE_PUBLISHERS:
+                                categoryHolder.icon.setImageResource(R.drawable.cat_publishers);
+                                break;
+
+                            default:
+                                String iconUrl = EnumCategories.getCategoryIcon(catid, storename);
+                                if (iconUrl != null) {
+                                    ImageLoader.getInstance().displayImage(iconUrl, categoryHolder.icon);
+                                } else {
+                                    categoryHolder.icon.setImageResource(theme.getStoreCategoryDrawable());
+                                }
+                                break;
+                        }
                     }
 
 
@@ -900,12 +1115,16 @@ public class FragmentListStore extends Fragment {
             public final TextView appName;
             public final TextView name;
 
+            public final TextView downloads;
+
             public AppStoreListViewHolder(View itemView) {
                 super(itemView);
+                ;
                 name = (TextView) itemView.findViewById(R.id.app_name);
                 appIcon = (ImageView) itemView.findViewById(R.id.app_icon);
                 appName = (TextView) itemView.findViewById(R.id.app_name);
                 versionName = (TextView) itemView.findViewById(R.id.app_version);
+                downloads = (TextView) itemView.findViewById(R.id.downloads);
                 rating = (RatingBar) itemView.findViewById(R.id.app_rating);
             }
 

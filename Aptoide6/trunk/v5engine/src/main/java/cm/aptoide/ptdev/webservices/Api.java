@@ -57,7 +57,8 @@ public class Api {
         public String mature;
         public String lang;
         public String store_name;
-
+        public String store_user;
+        public String store_pass_sha1;
         public String country;
 
         public String q = getFilters();

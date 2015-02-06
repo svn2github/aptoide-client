@@ -13,4 +13,5 @@ public interface StoresCallback {
     void showAddStoreDialog();
 
     void reloadStores(Set<Long> checkedItems);
+
 }

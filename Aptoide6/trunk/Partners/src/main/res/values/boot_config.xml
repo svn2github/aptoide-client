@@ -25,24 +25,28 @@
 
     <!--Partner Config-->
     <string name="partnertype">premium</string>
-    <string name="partnerid">f829219cd75e9abfb6201e386d06e838</string>
-    <string name="marketname">Lisciani Market</string>
-    <string name="defaultstorename">lisciani</string>
-    <string name="aptoidetheme">default</string>
-    <string name="splashscreen">http://mirror.apk14.aptoide.com/apks/14/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/nokia-appstore/app/splashscreens/splashscreen.png</string>
-    <string name="splashscreenland">http://mirror.apk14.aptoide.com/apks/14/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/nokia-appstore/app/splashscreens/splashscreen_land.png</string>
-    <bool name="searchstores">true</bool>
+    <string name="partnerid">1ab489ccbf15a7271b2a53c5b3bfa970</string>
+    <string name="marketname">Littlescholar</string>
+    <string name="defaultstorename">littlescholar</string>
+    <string name="aptoidetheme">blue</string>
+    <string name="splashscreen">http://cdn3.aptoide.com/apks/13/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/littlescholar/app/splashscreens/splashscreen.png</string>
+    <string name="splashscreenland">http://mirror.apk13.aptoide.com/apks/13/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/littlescholar/app/splashscreens/splashscreen_land.png</string>
+    <bool name="searchstores">false</bool>
     <bool name="maturecontentswitch">false</bool>
     <bool name="maturecontentswitchvalue">true</bool>
     <bool name="multiplestores">false</bool>
     <bool name="customeditorschoice">true</bool>
     <bool name="createshortcut">true</bool>
-    <string name="adunitid"></string>
+    <string name="adunitid">8fd94533a61a1cbd99774ab323bbd74e</string>
     <bool name="showsplash">true</bool>
-    <bool name="showads">true</bool>
+    <bool name="showads">false</bool>
     <bool name="timeline">false</bool>
-    <string name="splashcolor">#FFe98023</string>
+    <string name="splashcolor">#FFFFFF</string>
     <string name="restritionlist"></string>
+
+    <string name="privacy_username">littlescholar</string>
+    <string name="privacy_password">e38ad214943daad1d64c102faec29de4afe9da3d</string>
+
 
     <!--Project Config-->
     <string name="search_authority">cm.aptoidetv.pt.aptoidetv.SearchAuthority</string>

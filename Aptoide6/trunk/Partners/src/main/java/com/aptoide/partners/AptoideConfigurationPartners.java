@@ -10,6 +10,7 @@ import com.aptoide.openiab.PaidAppPurchaseActivityPartners;
 import java.util.Locale;
 
 import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.MoreActivity;
 import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 
 /**
@@ -436,6 +437,10 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
     @Override
     public Class getSignUpActivityClass() {
         return com.aptoide.partners.SignUpActivityPartner.class;
+    }
+
+    public Class<?> getMoreActivityClass() {
+        return MoreActivityPartners.class;
     }
 
     @Override

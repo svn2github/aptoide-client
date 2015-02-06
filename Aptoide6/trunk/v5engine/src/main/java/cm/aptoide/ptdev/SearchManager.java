@@ -126,7 +126,7 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
         args.putString("query", query);
 
         getSupportActionBar().setTitle("'"+query+"'");
-
+        args.putBoolean("searchmorevisible", isSearchMoreVisible());
 
         Fragment fragment = new SearchFragment();
         fragment.setArguments(args);
@@ -329,23 +329,29 @@ public class SearchManager extends ActionBarActivity implements SearchQueryCallb
             adapter.addAdapter(searchAdapterapks);
             adapter.setActive(searchResultsLabel, false);
 
+            if(getArguments().getBoolean("searchmorevisible", true)){
+                adapter.addView(v);
+                adapter.setActive(v, false);
+            }
 
-            adapter.addView(v);
-            adapter.setActive(v, false);
 
 
             adapter.addAdapter(searchAdapterapks2);
 
             adapter.addView(pb);
             adapter.setActive(pb, false);
+            if(getArguments().getBoolean("searchmorevisible", true)){
+                adapter.addView(v2);
+                adapter.setActive(v2, false);
+            }
 
-            adapter.addView(v2);
-            adapter.setActive(v2, false);
 
 
 
 
         }
+
+
 
         @Override
         public void onListItemClick(ListView l, View v, int position, long id) {

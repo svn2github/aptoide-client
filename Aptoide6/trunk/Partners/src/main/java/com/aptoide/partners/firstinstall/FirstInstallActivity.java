@@ -1,45 +1,35 @@
-package com.aptoide.partners;
+package com.aptoide.partners.firstinstall;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.internal.view.SupportMenuInflater;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
+import android.view.Window;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.aptoide.partners.firstinstall.DividerItemDecoration;
-import com.aptoide.partners.firstinstall.FirstInstallRow;
-import com.aptoide.partners.firstinstall.SelectableAdapter;
+import com.aptoide.partners.AptoidePartner;
+import com.aptoide.partners.R;
+import com.aptoide.partners.StartPartner;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
-import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.datatype.Duration;
-
 import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
-import cm.aptoide.ptdev.utils.AptoideUtils;
-import cm.aptoide.ptdev.webservices.Api;
 import cm.aptoide.ptdev.webservices.GetAdsRequest;
 import cm.aptoide.ptdev.webservices.Response;
 import cm.aptoide.ptdev.webservices.json.ApkSuggestionJson;
-import retrofit.http.Body;
-import retrofit.http.POST;
 
 /**
  * Created by rmateus on 27-01-2015.
@@ -56,19 +46,34 @@ public class FirstInstallActivity extends ActionBarActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         Aptoide.getThemePicker().setAptoideTheme(this);
-
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.partner_firstinstall);
 
+        setContentView(R.layout.partner_firstinstall);
+        getSupportActionBar().hide();
 
         StartPartner.TestRequest request = new StartPartner.TestRequest();
+
+        Login login = ((AptoidePartner) getApplication()).getLogin();
+        if(login!=null){
+
+            login.setUsername(login.getUsername());
+            login.setPassword(login.getPassword());
+
+        }
 
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.first_install_list);
         findViewById(R.id.install_selected).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finishWithResult();
+            }
+        });
+        findViewById(R.id.skip).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
         findViewById(R.id.select_all).setOnClickListener(new View.OnClickListener() {
@@ -90,7 +95,7 @@ public class FirstInstallActivity extends ActionBarActivity {
 
             }
         });
-        final TextView viewById = (TextView) findViewById(R.id.header);
+        final TextView viewById = (TextView) findViewById(R.id.install_selected);
         SelectableAdapter selectableAdapter = new SelectableAdapter(rowList, new SelectableAdapter.OnItemSelectedListener() {
             @Override
             public void onSelect() {
@@ -101,7 +106,15 @@ public class FirstInstallActivity extends ActionBarActivity {
                     }
                 }
 
-                viewById.setText("Total items selected  - " + count);
+                if(count>0){
+                    viewById.setEnabled(true);
+                    viewById.setText(String.format(getString(R.string.install_selected_apps), count));
+                }else{
+
+                    viewById.setEnabled(false);
+                }
+
+
 
             }
         });
@@ -141,7 +154,7 @@ public class FirstInstallActivity extends ActionBarActivity {
                             row.setAppName(apk.name);
                             row.setDownloads(apk.downloads.longValue());
                             row.setIcon(apk.icon);
-                            row.setSelected(true);
+                            row.setSize(apk.size.longValue());
                             row.setId(apk.id.longValue());
                             rowList.add(row);
                             recyclerView.getAdapter().notifyDataSetChanged();
@@ -167,11 +180,12 @@ public class FirstInstallActivity extends ActionBarActivity {
 
                                 for (ApkSuggestionJson.Ads ads : apkSuggestionJson.getAds()) {
                                     FirstInstallRow row = new FirstInstallRow();
-
                                     row.setAppName(ads.getData().getName());
                                     row.setDownloads(ads.getData().getDownloads().longValue());
                                     row.setIcon(ads.getData().getIcon());
-                                    row.setSelected(true);
+                                    row.setSize(ads.getData().size.longValue());
+                                    row.setCpi_url(ads.getInfo().getCpi_url());
+                                    row.setNetwork_click_url(ads.getPartner().getPartnerData().getClick_url());
                                     row.setId(ads.getData().id.longValue());
                                     int previousCount = rowList.size();
                                     rowList.add(row);
@@ -195,15 +209,15 @@ public class FirstInstallActivity extends ActionBarActivity {
     public void finishWithResult(){
         Intent intent = new Intent();
 
-        ArrayList<Integer> rtn = new ArrayList<>();
+        ArrayList<FirstInstallRow> rtn = new ArrayList<>();
 
         for (FirstInstallRow row : rowList) {
             if(row.isSelected()){
-                rtn.add((int) row.getId());
+                rtn.add(row);
             }
         }
 
-        intent.putIntegerArrayListExtra("ids", rtn );
+        intent.putParcelableArrayListExtra("ids", rtn );
 
         setResult(RESULT_OK, intent);
         finish();

@@ -120,7 +120,7 @@ public class Response {
                     public String ref_id;
                     public int apps_count;
                     public Options options;
-
+                    public String icon;
                     public List<WidgetCategory> categories;
 
                 }
@@ -212,6 +212,7 @@ public class Response {
 
         public Ticket ticket;
         public Info info;
+        public List<Error> errors;
         public Datasets datasets;
 
         public static class Category {
@@ -225,6 +226,7 @@ public class Response {
             public Number id;
             public String name;
             public Number store_id;
+            public Number size;
 
             public String store_name;
 

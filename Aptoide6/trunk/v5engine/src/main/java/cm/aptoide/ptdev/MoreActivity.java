@@ -29,6 +29,7 @@ import java.util.List;
 
 import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.fragments.FragmentListApps;
+import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.Api;
@@ -45,6 +46,10 @@ import retrofit.http.POST;
 public class MoreActivity extends ActionBarActivity {
 
 
+    public Login getLogin(){
+        return null;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +64,18 @@ public class MoreActivity extends ActionBarActivity {
 
         if(savedInstanceState == null){
             Fragment fragment = new MoreFragment();
-            fragment.setArguments(getIntent().getExtras());
+            Bundle extras = getIntent().getExtras();
+
+            Login login = getLogin();
+
+            if(login != null){
+                Bundle bundle = new Bundle();
+                bundle.putString("username", login.getUsername());
+                bundle.putString("password", login.getPassword());
+                extras.putAll(bundle);
+            }
+
+            fragment.setArguments(extras);
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
         }
 
@@ -194,6 +210,14 @@ public class MoreActivity extends ActionBarActivity {
                             loading = true;
                             TestRequest request = new TestRequest();
 
+
+                            String username = getArguments().getString("username");
+
+                            if(username!=null){
+                                request.setUsername(username);
+                                String password = getArguments().getString("password");
+                                request.setPassword(password);
+                            }
                             request.setWidgetId(getArguments().getString("widgetid"));
                             request.setOffset(offset);
 
@@ -343,25 +367,13 @@ public class MoreActivity extends ActionBarActivity {
 
                                 addedAds = true;
 
-                                FragmentListApps.Row row = new FragmentListApps.Row();
-                                row.header = "Suggested";
+                                FragmentListApps.AdRow row = new FragmentListApps.AdRow();
+                                row.header = getString(R.string.highlighted_apps);
+                                row.widgetid = "highlighted";
 
                                 row.setMore(false);
 
-                                for (ApkSuggestionJson.Ads ads : apkSuggestionJson.getAds()) {
-                                    Response.ListApps.Apk apk = new Response.ListApps.Apk();
-
-                                    apk.icon = ads.getData().getIcon();
-                                    apk.name = ads.getData().getName();
-                                    apk.id = ads.getData().id;
-                                    apk.downloads = ads.getData().getDownloads();
-                                    apk.md5sum = ads.getData().md5sum;
-                                    apk.rating = ads.getData().getStars();
-                                    apk.vername = ads.getData().vername;
-
-
-                                    row.addItem(apk);
-                                }
+                                row.ads.addAll(apkSuggestionJson.getAds());
 
                                 if (!apkSuggestionJson.getAds().isEmpty()) {
                                     list.add(0, row);
@@ -389,6 +401,16 @@ public class MoreActivity extends ActionBarActivity {
 
 
             request.setWidgetId(getArguments().getString("widgetid"));
+
+            String username = getArguments().getString("username");
+
+            if(username!=null){
+                request.setUsername(username);
+                String password = getArguments().getString("password");
+                request.setPassword(password);
+            }
+
+
 
             manager.execute(request, getArguments().getString("widgetid") + AptoideUtils.getBucketSize() + offset, DurationInMillis.ONE_DAY,  requestListener);
             view.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
@@ -448,7 +470,19 @@ public class MoreActivity extends ActionBarActivity {
 
             private int offset;
             private String widget;
+            private String username;
 
+            public void setPassword(String password) {
+                this.password = password;
+            }
+
+            public void setUsername(String username) {
+                this.username = username;
+            }
+
+            private String password
+
+                    ;
 
 
             public TestRequest() {
@@ -493,6 +527,10 @@ public class MoreActivity extends ActionBarActivity {
                 //widgetParams.limit = 3;
                 //getStore.getDatasets_params().set(categoriesParams);
                 getStore.getDatasets_params().set(widgetParams);
+                if(username != null){
+                    api.getApi_global_params().store_user = username;
+                    api.getApi_global_params().store_pass_sha1 = password;
+                }
                 Api.ListApps listApps = new Api.ListApps();
                 listApps.datasets_params = null;
                 listApps.datasets = null;

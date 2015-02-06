@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -36,6 +37,8 @@ import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 import com.squareup.otto.Subscribe;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,17 +46,21 @@ import java.util.Map;
 
 
 import cm.aptoide.ptdev.Aptoide;
-import cm.aptoide.ptdev.MoreActivity;
+
+import cm.aptoide.ptdev.CategoryCallback;
 import cm.aptoide.ptdev.MoreFriendsInstallsActivity;
 import cm.aptoide.ptdev.MoreHighlightedActivity;
 import cm.aptoide.ptdev.MoreUserBasedActivity;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.StickyRecyclerHeadersDecoration;
 import cm.aptoide.ptdev.StickyRecyclerHeadersTouchListener;
+import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.dialogs.AdultDialog;
+import cm.aptoide.ptdev.dialogs.PasswordDialog;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.fragments.callbacks.GetStartActivityCallback;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
+import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.preferences.Preferences;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
@@ -81,6 +88,7 @@ public class FragmentListApps extends Fragment {
     SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
     private RequestListener<Response> requestListener;
     Map<String, String> flurryParams = new HashMap<String, String>();
+    private TestRequest request;
 
     @Override
     public void onStart() {
@@ -96,6 +104,10 @@ public class FragmentListApps extends Fragment {
             manager.shouldStop();
         }
 
+    }
+
+    public boolean isAdultEnabled() {
+        return true;
     }
 
     public interface TestService{
@@ -134,6 +146,16 @@ public class FragmentListApps extends Fragment {
         }
 
 
+        private String username;
+        private String password;
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
 
         @Override
         public Response loadDataFromNetwork() throws Exception {
@@ -147,7 +169,10 @@ public class FragmentListApps extends Fragment {
 
 
             Api.GetStore getStore = new Api.GetStore();
-
+            if(username != null){
+                getStore.store_user = username;
+                getStore.store_pass_sha1 = password;
+            }
             Api.GetStore.CategoriesParams categoriesParams = new Api.GetStore.CategoriesParams();
             categoriesParams.setParent_ref_id("cat_2");
 
@@ -341,10 +366,13 @@ public class FragmentListApps extends Fragment {
                 ((FrameLayout)holder.views[i].getParent()).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(v.getContext(), MoreActivity.class);
+                        Intent intent = new Intent(v.getContext(), Aptoide.getConfiguration().getMoreActivityClass());
                         intent.putExtra("widgetrefid", widgetCategory.ref_id);
                         intent.putExtra("widgetid", "apps_list:" + widgetCategory.ref_id);
                         intent.putExtra("widgetname", header);
+
+
+
                         v.getContext().startActivity(intent);
 
                         flurryParams.put("WidgetCategory", header);
@@ -672,7 +700,7 @@ public class FragmentListApps extends Fragment {
                         intent = new Intent(getActivity(), MoreHighlightedActivity.class);
                         FlurryAgent.logEvent("Home_Page_Clicked_On_More_Highlighted");
                     } else {
-                        intent = new Intent(getActivity(), MoreActivity.class);
+                        intent = new Intent(getActivity(), Aptoide.getConfiguration().getMoreActivityClass());
                         intent.putExtra("widgetid", widgetid);
                         intent.putExtra("widgetrefid", ((Row) ((RecyclerAdapter) view.getAdapter()).list.get(i)).widgetrefid);
                         intent.putExtra("widgetname", ((Row) ((RecyclerAdapter) view.getAdapter()).list.get(i)).header);
@@ -697,7 +725,7 @@ public class FragmentListApps extends Fragment {
 
         final SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
 
-        final TestRequest request = new TestRequest();
+        request = new TestRequest();
 
         requestListener = new RequestListener<Response>() {
 
@@ -747,6 +775,17 @@ public class FragmentListApps extends Fragment {
                 ArrayList<Displayable> map = new ArrayList<>();
 
                 try {
+                    if (response.responses.getStore.errors!=null && !response.responses.getStore.errors.isEmpty() && response.responses.getStore.errors.get(0).code.equals("STORE-3") || response.responses.getStore.errors.get(0).code.equals("STORE-5")) {
+                        DialogFragment fragment = new PasswordDialog();
+                        fragment.setTargetFragment(FragmentListApps.this, 20);
+                        fragment.show(getFragmentManager(), "passwordDialog");
+                        return;
+                    }
+                }catch (Exception e){
+
+                }
+
+                try {
                     List<Response.GetStore.Widgets.Widget> list = response.responses.getStore.datasets.widgets.data.list;
                     HashMap<String, Response.ListApps.Category> dataset = response.responses.listApps.datasets.getDataset();
 
@@ -792,12 +831,12 @@ public class FragmentListApps extends Fragment {
                         } else if ("categs_list".equals(widget.type)) {
 
                             ArrayList<Response.GetStore.Widgets.Widget.WidgetCategory> inElements = new ArrayList<Response.GetStore.Widgets.Widget.WidgetCategory>(widget.data.categories);
-
+                            int num_columns = getResources().getInteger(R.integer.num_categories_columns);
                             while (!inElements.isEmpty()) {
                                 CategoryRow row = new CategoryRow();
                                 row.header = widget.name;
 
-                                for (int i = 0; i < 2 && !inElements.isEmpty(); i++) {
+                                for (int i = 0; i < num_columns && !inElements.isEmpty(); i++) {
                                     Response.GetStore.Widgets.Widget.WidgetCategory widgetCategory = inElements.remove(0);
 
                                     row.addItem(widgetCategory);
@@ -814,7 +853,9 @@ public class FragmentListApps extends Fragment {
 
                     }
 
-                    map.add(new AdultContentRow(adultInterface));
+                    if(isAdultEnabled()) {
+                        map.add(new AdultContentRow(adultInterface));
+                    }
 
                     string.clear();
                     string.addAll(map);
@@ -881,6 +922,7 @@ public class FragmentListApps extends Fragment {
                         recommendedRequest.setLimit(BUCKET_SIZE);
 
                         manager.execute(recommendedRequest, new RequestListener<ListRecomended>() {
+
                             @Override
                             public void onRequestFailure(SpiceException spiceException) {
 
@@ -1006,7 +1048,12 @@ public class FragmentListApps extends Fragment {
 //                }
 //            }
 //        });
+        Login login = getLogin();
 
+        if(login!=null){
+            request.setUsername(login.getUsername());
+            request.setPassword(login.getPassword());
+        }
 
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -1015,12 +1062,55 @@ public class FragmentListApps extends Fragment {
             }
         });
 
+
+
+
         manager.execute(request, "home" + BUCKET_SIZE, DurationInMillis.ONE_WEEK, requestListener);
 
         rootView.findViewById(R.id.please_wait).setVisibility(View.VISIBLE);
         rootView.findViewById(R.id.list).setVisibility(View.GONE);
 
         return rootView;
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case 20:
+                String username = data.getStringExtra("username");
+                String password = null;
+                try {
+                    password = AptoideUtils.Algorithms.computeSHA1sum(data.getStringExtra("password"));
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+
+                Bundle bundle = new Bundle();
+                bundle.putString("username", username);
+                bundle.putString("password", password);
+
+                Login login = new Login();
+                login.setUsername(username);
+                login.setPassword(password);
+                ((CategoryCallback)getActivity()).setLogin(login);
+
+                request.setUsername(login.getUsername());
+                request.setPassword(login.getPassword());
+
+
+                manager.execute(request, "home" + BUCKET_SIZE, DurationInMillis.ALWAYS_EXPIRED, requestListener);
+
+                break;
+        }
+    }
+
+    public Login getLogin() {
+        return null;
     }
 
 /*    private int previousTotal = 0;

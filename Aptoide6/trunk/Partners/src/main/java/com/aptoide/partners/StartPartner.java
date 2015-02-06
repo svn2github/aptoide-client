@@ -6,21 +6,31 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
+import com.aptoide.partners.firstinstall.FirstInstallActivity;
+import com.aptoide.partners.firstinstall.FirstInstallRow;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 import com.squareup.otto.Subscribe;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,6 +38,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -37,23 +48,24 @@ import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.CategoryCallback;
 import cm.aptoide.ptdev.StoreActivity;
 import cm.aptoide.ptdev.adapters.MenuListAdapter;
+import cm.aptoide.ptdev.configuration.AptoideConfiguration;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.dialogs.AdultDialog;
-import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.fragments.FragmentDownloadManager;
 import cm.aptoide.ptdev.fragments.FragmentListApps;
+import cm.aptoide.ptdev.fragments.FragmentListStore;
 import cm.aptoide.ptdev.fragments.FragmentUpdates2;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.model.Download;
 import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.model.Store;
+import cm.aptoide.ptdev.parser.RunnableWithPriority;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.Api;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromId;
 import cm.aptoide.ptdev.webservices.Response;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
-import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.http.Body;
 import retrofit.http.POST;
@@ -69,6 +81,7 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
     private boolean categories;
     private static boolean startPartner = true;
     private Fragment fragmentStore;
+    private Login login;
 
 
 //    @Override
@@ -156,6 +169,11 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
 
         sort = StoreActivity.Sort.values()[PreferenceManager.getDefaultSharedPreferences(this).getInt("order_list", 0)];
         categories = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("orderByCategory", true);
+        if(!TextUtils.isEmpty(getString(R.string.privacy_username))){
+            login = new Login();
+            login.setUsername(getString(R.string.privacy_username));
+            login.setPassword(getString(R.string.privacy_password));
+        }
 
         super.onCreate(savedInstanceState);
 
@@ -229,8 +247,17 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
 
         private int offset;
         private String widget;
+        private String username;
+        private String password;
 
 
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
 
         public TestRequest() {
             super(Response.class, GetFirstInstall.class);
@@ -255,7 +282,7 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
             Api api = new Api();
 
             api.getApi_global_params().setLang(AptoideUtils.getMyCountry(Aptoide.getContext()));
-            api.getApi_global_params().setStore_name("savou");
+            api.getApi_global_params().setStore_name(Aptoide.getConfiguration().getDefaultStore());
             int BUCKET_SIZE = AptoideUtils.getBucketSize();
 
             SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
@@ -274,7 +301,10 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
             //widgetParams.limit = 3;
             //getStore.getDatasets_params().set(categoriesParams);
             getStore.getDatasets_params().set(widgetParams);
-
+            if(username!=null){
+                getStore.store_user = username;
+                getStore.store_pass_sha1 = password;
+            }
             //getStore.addDataset(categoriesParams.getDatasetName());
             getStore.addDataset(widgetParams.getDatasetName());
 
@@ -286,6 +316,7 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
         }
 
     }
+
 
 
 
@@ -306,6 +337,15 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
                 store.setBaseUrl(AptoideUtils.RepoUtils.formatRepoUri(repoUrl));
                 store.setName(AptoideUtils.RepoUtils.split(repoUrl));
                 store.setDelta(null);
+
+                if(!TextUtils.isEmpty(getString(R.string.privacy_username))){
+
+
+                    store.setLogin(login);
+
+                }
+
+
                 store.setView(config.getStoreView());
                 store.setTheme(config.getStoreTheme());
                 store.setAvatar(config.getStoreAvatar());
@@ -321,7 +361,14 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
                 sharedPreferences.edit().putInt("version", getPackageManager().getPackageInfo(getPackageName(), 0).versionCode).apply();
 
                 TestRequest request = new TestRequest();
+                Login login = ((AptoidePartner) getApplication()).getLogin();
 
+                if(login!=null){
+
+                    login.setUsername(login.getUsername());
+                    login.setPassword(login.getPassword());
+
+                }
                 getSpiceManager().execute(request, "firstInstallRequest", DurationInMillis.ONE_MINUTE, new RequestListener<Response>() {
                     @Override
                     public void onRequestFailure(SpiceException spiceException) {
@@ -363,6 +410,8 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
 
     }
 
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -370,13 +419,16 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
             case 365:
 
                 if(resultCode == RESULT_OK){
-                    ArrayList<Integer> ids = data.getIntegerArrayListExtra("ids");
+                    ArrayList<FirstInstallRow> ids = data.getParcelableArrayListExtra("ids");
 
-                    for (Integer id : ids) {
+                    new ReferrerGetter(this, ids);
+
+                    for (final FirstInstallRow id : ids) {
+
 
                         try{
                             GetApkInfoRequestFromId getApkInfoRequestFromId = new GetApkInfoRequestFromId(Aptoide.getContext());
-                            getApkInfoRequestFromId.setAppId(String.valueOf(id));
+                            getApkInfoRequestFromId.setAppId(String.valueOf(id.getId()));
                             getSpiceManager().execute(getApkInfoRequestFromId, new RequestListener<GetApkInfoJson>() {
                                 @Override
                                 public void onRequestFailure(SpiceException spiceException) {
@@ -399,6 +451,8 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
                                         download.setIcon(getApkInfoJson.getApk().getIcon());
                                         download.setPackageName(getApkInfoJson.getApk().getPackage());
                                         download.setMd5(getApkInfoJson.getApk().getMd5sum());
+
+                                        download.setCpiUrl(id.getCpi_url());
 
                                         //download.setReferrer(referrer);
 
@@ -428,6 +482,90 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
 
     }
 
+
+    public class ReferrerGetter{
+
+
+
+        public ReferrerGetter(Context context, ArrayList<FirstInstallRow> installRows){
+
+
+            for(FirstInstallRow row : installRows){
+                Log.d("AptoideAds" ,"Install row with " + row.getNetwork_click_url());
+
+                if(!TextUtils.isEmpty(row.getNetwork_click_url())){
+                    WebView webview = new WebView(context);
+                    webview.getSettings().setJavaScriptEnabled(true);
+                    webview.setWebViewClient(new ReferrerWebViewClient(row.getId()));
+                    webview.loadUrl(row.getNetwork_click_url());
+                }
+
+
+            }
+
+        }
+        public String getReferrer(String uri){
+            List<NameValuePair> params = URLEncodedUtils.parse(URI.create(uri), "UTF-8");
+
+            String referrer = null;
+            for (NameValuePair param : params) {
+
+                if(param.getName().equals("referrer")){
+                    referrer = param.getValue();
+                }
+
+                Log.d("AptoideAds" ,param.getName() + " : " + param.getValue());
+            }
+            return referrer;
+        }
+
+
+        public class ReferrerWebViewClient extends WebViewClient {
+
+
+
+
+            private long downloadId;
+            private boolean destroying;
+            public ReferrerWebViewClient(long downloadId) {
+                this.downloadId = downloadId;
+
+            }
+
+            @Override
+            public void onPageFinished(final WebView view, String url) {
+                super.onPageFinished(view, url);
+            }
+
+            @Override
+            public void onLoadResource(WebView view, String url) {
+                super.onLoadResource(view, url);
+
+                Log.d("AptoideAds" ,"loading: " + url);
+
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String clickUrl) {
+                if (clickUrl.startsWith("market://") || clickUrl.startsWith("https://play.google.com") || clickUrl.startsWith("http://play.google.com")) {
+                    String referrer = getReferrer(clickUrl);
+                    getDownloadService().setReferrer(downloadId, referrer);
+                    view.destroy();
+                } else {
+                    destroying = false;
+                    view.loadUrl(clickUrl);
+                }
+                return true;
+            }
+
+
+
+
+        }
+
+
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -446,21 +584,11 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
 
     }
 
-    @Subscribe
-    public void onStoreCompleted(RepoCompleteEvent event) {
-        if (event.getRepoId() == storeid) {
-            refreshList();
-        }
-    }
 
 
 
-    public void refreshList() {
-        if(service!=null){
-            isRefreshing = service.repoIsParsing(storeid);
 
-        }
-    }
+
 
 
 
@@ -548,6 +676,16 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
 
     }
 
+    @Override
+    public void setLogin(Login login) {
+        ((AptoidePartner)getApplication()).setLogin(login);
+    }
+
+    @Override
+    public Login getLogin() {
+        return ((AptoidePartner)getApplication()).getLogin();
+    }
+
 
     public void toggleCategories() {
         categories = !categories;
@@ -604,7 +742,7 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
 
             switch (position){
                 case 0:
-                    return new FragmentListApps();
+                    return new FragmentListAppsPartners();
                 case 1:
                     return new FragmentListTopAppsPartners();
                 case 2:

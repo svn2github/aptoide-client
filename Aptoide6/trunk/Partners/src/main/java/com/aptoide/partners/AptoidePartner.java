@@ -1,12 +1,17 @@
 package com.aptoide.partners;
 
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 
 import com.crashlytics.android.Crashlytics;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.AptoideThemePicker;
+import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.database.schema.Schema;
+import cm.aptoide.ptdev.model.Login;
 import cm.aptoide.ptdev.preferences.ManagerPreferences;
 
 /**
@@ -15,6 +20,45 @@ import cm.aptoide.ptdev.preferences.ManagerPreferences;
 public class AptoidePartner extends Aptoide {
 
 
+
+    public Login getLogin() {
+
+        if(!TextUtils.isEmpty(getContext().getString(R.string.privacy_username))){
+
+            Login login = new Login();
+            Database database = new Database(Aptoide.getDb());
+            Cursor store = database.getStore(-200);
+            String username = null;
+            String password = null;
+            for(store.moveToFirst(); !store.isAfterLast(); store.moveToNext()){
+                username = store.getString(store.getColumnIndex(Schema.Repo.COLUMN_USERNAME));
+                password = store.getString(store.getColumnIndex(Schema.Repo.COLUMN_PASSWORD));
+            }
+
+            if(username==null){
+                username = getContext().getString(R.string.privacy_username);
+                password = getContext().getString(R.string.privacy_password);
+            }
+
+            if(username==null){
+                return null;
+            }
+
+            login.setUsername(username);
+            login.setPassword(password);
+
+            return login;
+        }
+
+        return null;
+
+    }
+
+
+    public void setLogin(Login login) {
+        Database database = new Database(Aptoide.getDb());
+        database.updateStoreLogin(Aptoide.getConfiguration().getDefaultStore(), login.getUsername(), login.getPassword());
+    }
 
     @Override
     public void bootImpl(ManagerPreferences managerPreferences) {

@@ -654,5 +654,8 @@
     <string name="setting_category_autoupdate_title">Enable Aptoide auto update</string>
     <string name="dont_show_again">Don\'t show this dialog again</string>
     <string name="hidden_adult">There are apps not shown because Adult content filters are active. Do you want to list Adult content apps?</string>
+    <string name="first_install_text">Welcome to first install wizard. Please select the apps you want to install:</string>
+    <string name="no_selected_apps">No selected apps</string>
+    <string name="install_selected_apps">Install %d selected apps</string>
 
 </resources>

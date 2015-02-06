@@ -1591,9 +1591,9 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
             @Override
             public void onRequestSuccess(ApkSuggestionJson apkSuggestionJson) {
 
-                if (apkSuggestionJson!=null && apkSuggestionJson.getAds()!=null && apkSuggestionJson.getAds().size()==0) {
+                if (apkSuggestionJson!=null && apkSuggestionJson.getAds()!=null && apkSuggestionJson.getAds().size()==0 && apkSuggestionJson.options.getMediation()) {
                     loadMoPub();
-                } else if(apkSuggestionJson != null ) {
+                } else if(apkSuggestionJson != null  && apkSuggestionJson.getAds().size()>0) {
 
                     HashMap<String, String> adTypeArgs = new HashMap<String, String>();
 

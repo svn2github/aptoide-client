@@ -4,7 +4,7 @@
     package="com.aptoide.partners"
     android:installLocation="auto"
     android:versionCode="450"
-    android:versionName="6.0.0">
+    android:versionName="6.3.1">
 
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -37,7 +37,9 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/app_id" />
-
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
         <activity
             android:name="com.aptoide.partners.StartPartner"
@@ -91,6 +93,7 @@
         <activity android:name="cm.aptoide.ptdev.MoreTopAppsActivity" />
 
         <activity android:name="cm.aptoide.ptdev.MyAccountActivity" />
+        <activity android:name="com.aptoide.partners.MoreActivityPartners" />
 
         <activity android:name="cm.aptoide.ptdev.MoreRelatedActivity" />
 
@@ -98,10 +101,10 @@
 
         <activity android:name="cm.aptoide.ptdev.LoginActivity" />
         <activity android:name="cm.aptoide.ptdev.MoreHighlightedActivity" />
-        <activity android:name="com.aptoide.partners.FirstInstallActivity" />
+        <activity android:name=".firstinstall.FirstInstallActivity" />
 
         <activity android:name="com.aptoide.partners.SignUpActivityPartner" />
-        <activity android:name="cm.aptoide.ptdev.MoreActivity" />
+
 
 
         <activity android:name="cm.aptoide.ptdev.StoreActivity" />

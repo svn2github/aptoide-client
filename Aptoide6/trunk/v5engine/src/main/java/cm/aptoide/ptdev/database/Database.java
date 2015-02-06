@@ -165,13 +165,7 @@ public class Database {
 
         if (store.getLogin() != null) {
             values.put(Schema.Repo.COLUMN_USERNAME, store.getLogin().getUsername());
-            try {
-                values.put(Schema.Repo.COLUMN_PASSWORD, AptoideUtils.Algorithms.computeSHA1sum(store.getLogin().getPassword()));
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
+            values.put(Schema.Repo.COLUMN_PASSWORD, store.getLogin().getPassword());
         }
         values.put(Schema.Repo.COLUMN_IS_USER, true);
         return values;
@@ -1546,6 +1540,17 @@ public class Database {
         cursor.getCount();
 
         return cursor;
+
+    }
+
+    public void updateStoreLogin(String storename, String username, String password) {
+
+        ContentValues values = new ContentValues();
+
+        values.put(Schema.Repo.COLUMN_PASSWORD, password);
+        values.put(Schema.Repo.COLUMN_USERNAME, username);
+
+        database.update(Schema.Repo.getName(), values, Schema.Repo.COLUMN_NAME +" = ?", new String[]{storename});
 
     }
 }
