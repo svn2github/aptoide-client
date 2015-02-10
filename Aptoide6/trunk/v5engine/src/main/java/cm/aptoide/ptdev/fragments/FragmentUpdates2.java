@@ -673,7 +673,7 @@ public class FragmentUpdates2 extends Fragment {
                         @Override
                         public void onClick(View v) {
 
-                            Intent i = new Intent(v.getContext(), AppViewActivity.class);
+                            Intent i = new Intent(v.getContext(), Aptoide.getConfiguration().getAppViewActivityClass());
                             i.putExtra("fromRelated", true);
                             i.putExtra("md5sum", item.md5sum);
                             i.putExtra("repoName", item.store_name);

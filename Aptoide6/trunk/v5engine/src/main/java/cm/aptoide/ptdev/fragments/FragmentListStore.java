@@ -237,7 +237,7 @@ public class FragmentListStore extends Fragment {
         items = new ArrayList<StoreListItem>();
         this.view = view;
         rRiew  = (RecyclerView) view.findViewById(R.id.list);
-        LinearLayoutManager linearLayoutManager = new GridLayoutManager(getActivity(), 3);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rRiew.setLayoutManager(linearLayoutManager);
         StoreListAdapter adapter = new StoreListAdapter(getActivity(), items, getFragmentManager(), getArguments());
