@@ -1597,7 +1597,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
                     HashMap<String, String> adTypeArgs = new HashMap<String, String>();
 
-                    final ApkSuggestionJson.Ads appSuggested = (ApkSuggestionJson.Ads) apkSuggestionJson.getAds().get(0);
+                    final ApkSuggestionJson.Ads appSuggested = apkSuggestionJson.getAds().get(0);
 
                     if (appSuggested.getInfo().getAd_type().equals("app:suggested")) {
 

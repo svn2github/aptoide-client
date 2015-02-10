@@ -12,6 +12,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -236,7 +237,7 @@ public class FragmentListStore extends Fragment {
         items = new ArrayList<StoreListItem>();
         this.view = view;
         rRiew  = (RecyclerView) view.findViewById(R.id.list);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        LinearLayoutManager linearLayoutManager = new GridLayoutManager(getActivity(), 3);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rRiew.setLayoutManager(linearLayoutManager);
         StoreListAdapter adapter = new StoreListAdapter(getActivity(), items, getFragmentManager(), getArguments());
