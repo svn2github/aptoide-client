@@ -54,6 +54,7 @@ import cm.aptoide.ptdev.dialogs.AdultDialog;
 import cm.aptoide.ptdev.fragments.FragmentDownloadManager;
 import cm.aptoide.ptdev.fragments.FragmentListApps;
 import cm.aptoide.ptdev.fragments.FragmentListStore;
+import cm.aptoide.ptdev.fragments.FragmentStores;
 import cm.aptoide.ptdev.fragments.FragmentUpdates2;
 import cm.aptoide.ptdev.fragments.callbacks.RepoCompleteEvent;
 import cm.aptoide.ptdev.model.Download;
@@ -80,7 +81,7 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
     private StoreActivity.Sort sort;
     private boolean categories;
     private static boolean startPartner = true;
-    private Fragment fragmentStore;
+    private android.support.v4.app.Fragment fragmentStore;
     private Login login;
 
 
@@ -746,7 +747,12 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
                 case 1:
                     return new FragmentListTopAppsPartners();
                 case 2:
-                    fragmentStore = new Fragment();
+
+                    if(((AptoideConfigurationPartners)AptoidePartner.getConfiguration()).getMultistores()){
+                        fragmentStore = new FragmentStores();
+                    }else{
+                        fragmentStore = new Fragment();
+                    }
                     return fragmentStore;
                 case 3:
                     return new FragmentUpdates2();
