@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.DialogFragment;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -29,6 +30,7 @@ import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
+import fortumo.FortumoPaymentActivity;
 import openiab.webservices.BasePurchaseStatusRequest;
 import openiab.webservices.PaidAppPurchaseStatusRequest;
 import openiab.webservices.PaypalPurchaseAuthorizationRequest;
@@ -39,7 +41,7 @@ import openiab.webservices.json.PaymentServices;
  * Created by asantos on 15-09-2014.
  */
 public class PaidAppPurchaseActivity extends BasePurchaseActivity{
-
+    private static final int REQUEST_CODE_FORTUMO = 5465;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,12 +52,10 @@ public class PaidAppPurchaseActivity extends BasePurchaseActivity{
         final ArrayList<PaymentServices> paymentServicesList = getIntent().getParcelableArrayListExtra("PaymentServices");
 
         if (user == null) {
-
             AccountManager.get(this).addAccount(Aptoide.getConfiguration().getAccountType(), AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS, null, null, this, new AccountManagerCallback<Bundle>() {
 
                 @Override
                 public void run(AccountManagerFuture<Bundle> future) {
-
                     try {
                         String account = future.getResult().getString(AccountManager.KEY_ACCOUNT_NAME);
 
@@ -101,7 +101,7 @@ public class PaidAppPurchaseActivity extends BasePurchaseActivity{
             noPaymentsFound.setText(R.string.no_payments_available);
             paymentMethodsLayout.addView(noPaymentsFound);
         }else if(paymentServicesList !=null ){
-            for (PaymentServices service : paymentServicesList) {
+            for (final PaymentServices service : paymentServicesList) {
 
                 int serviceCode = servicesList.get(service.getShort_name());
 
@@ -150,9 +150,6 @@ public class PaidAppPurchaseActivity extends BasePurchaseActivity{
                     case UNITEL_CODE:
 
                         if(telephonyManager!=null && telephonyManager.getSimState()== TelephonyManager.SIM_STATE_READY){
-
-
-
                             for (PaymentServices.PaymentType type : service.getTypes()) {
                                 button = (Button) LayoutInflater.from(this).inflate(R.layout.button_carrier, null);
 
@@ -172,12 +169,41 @@ public class PaidAppPurchaseActivity extends BasePurchaseActivity{
 
                         }
                         break;
+                    case FORTUMO_CODE:
+                        if(telephonyManager!=null && telephonyManager.getSimState()== TelephonyManager.SIM_STATE_READY){
+                            for (PaymentServices.PaymentType type : service.getTypes()) {
+                                button = (Button) LayoutInflater.from(this).inflate(R.layout.button_carrier, null);
+
+                                if (button != null) {
+                                    button.setText(type.getLabel() + " - " + service.getPrice() + " " + service.getSign());
+                                    paymentMethodsLayout.addView(button);
+                                    button.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Log.d("pois", "clicked on the cena!");
+                                            Intent i = new Intent(getBaseContext(), FortumoPaymentActivity.class);
+                                            i.putExtra(FortumoPaymentActivity.EXTRA_PACKAGE,packageName);
+                                            i.putExtra(FortumoPaymentActivity.EXTRA_PAYMENTSERVICE,service);
+                                            startActivityForResult(i,REQUEST_CODE_FORTUMO);
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                        break;
                 }
-
-
             }
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode==REQUEST_CODE_FORTUMO){
+
+        }else
+            super.onActivityResult(requestCode, resultCode, data);
+    }
+
     @Override
     protected void processPaymentConfirmation(final ProofOfPayment confirmation) {
         DialogFragment df = new ProgressDialogFragment();
@@ -201,15 +227,9 @@ public class PaidAppPurchaseActivity extends BasePurchaseActivity{
             public void onRequestSuccess(IabPurchaseStatusJson iabPurchaseStatusJson) {
                 Intent intent = new Intent();
                 dismissAllowingStateLoss();
-
-                if (iabPurchaseStatusJson != null) {
-                    if ("OK".equals(iabPurchaseStatusJson.getStatus())) {
-                        setResult(RESULT_OK, intent);
-                        finish();
-                    }else{
-                        Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
-                    }
-
+                if (iabPurchaseStatusJson != null && "OK".equals(iabPurchaseStatusJson.getStatus())) {
+                    setResult(RESULT_OK, intent);
+                    finish();
                 } else {
                     Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
                 }

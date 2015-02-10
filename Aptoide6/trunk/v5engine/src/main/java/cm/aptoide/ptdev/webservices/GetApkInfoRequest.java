@@ -1,6 +1,7 @@
 package cm.aptoide.ptdev.webservices;
 
 import android.content.Context;
+import android.telephony.TelephonyManager;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -144,11 +145,28 @@ public abstract class  GetApkInfoRequest extends RetrofitSpiceRequest<GetApkInfo
         ArrayList<WebserviceOptions> options = new ArrayList<WebserviceOptions>();
         options.add(new WebserviceOptions("cmtlimit", "5"));
         options.add(new WebserviceOptions("payinfo", "true"));
+        final TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        if (telephonyManager != null && telephonyManager.getSimState()==TelephonyManager.SIM_STATE_READY) {
+            options.add(new WebserviceOptions("mnc", getMncCode(telephonyManager.getNetworkOperator())));
+            options.add(new WebserviceOptions("mcc", getMccCode(telephonyManager.getNetworkOperator())));
+        }
+
+
         options.add(new WebserviceOptions("q", AptoideUtils.filters(context)));
         options.add(new WebserviceOptions("lang", AptoideUtils.getMyCountryCode(context)));
         return options;
     }
+    private String getMccCode(String networkOperator) {
+        return networkOperator == null ? "" : networkOperator.substring(0, mncPortionLength(networkOperator));
 
+    }
+    private int mncPortionLength(String networkOperator) {
+        return Math.min(3, networkOperator.length());
+    }
+    private String getMncCode(String networkOperator) {
+        return networkOperator == null ? "" : networkOperator.substring(mncPortionLength(networkOperator));
+
+    }
     protected String buildOptions(ArrayList<WebserviceOptions> options){
         StringBuilder sb = new StringBuilder();
         sb.append("(");

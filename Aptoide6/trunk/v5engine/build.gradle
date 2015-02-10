@@ -46,7 +46,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
-
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
     compile project(':hanselandgretel')
     compile project(':android-websockets')
@@ -55,13 +54,11 @@ dependencies {
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.android.support:recyclerview-v7:21.0.3'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.1.0'
-
     compile 'com.timehop.stickyheadersrecyclerview:library:0.3.3@aar'
-    compile ('com.squareup.retrofit:converter-jackson:1.7.1'){
+    compile('com.squareup.retrofit:converter-jackson:1.7.1') {
 
     }
-
-    compile ('com.octo.android.robospice:robospice-retrofit:1.4.14'){
+    compile('com.octo.android.robospice:robospice-retrofit:1.4.14') {
         exclude(group: 'org.apache.httpcomponents', module: 'httpclient') //by both name and group
         exclude group: 'commons-io', module: 'commons-io'
         exclude group: 'com.google.code.gson'
@@ -70,7 +67,7 @@ dependencies {
     }
     compile project(':mopub-sdk')
     compile fileTree(dir: 'lib', include: '*.jar')
-
+    compile files('lib/FortumoInApp-android-9.3.0.jar')
 }
 
 

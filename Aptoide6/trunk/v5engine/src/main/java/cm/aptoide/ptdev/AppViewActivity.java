@@ -511,12 +511,11 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 final AccountManager accountManager = AccountManager.get(thisActivity);
                 final Account[] accounts = accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType());
 
-                Intent i = new Intent(thisActivity, Aptoide.getConfiguration().getPaidAppPurchaseActivityClass());
-
-                i.putExtra("packageName", package_name);
-                i.putExtra("ID", payment.getMetadata().getId());
                 if(accounts.length>0) {
+                    Intent i = new Intent(thisActivity, Aptoide.getConfiguration().getPaidAppPurchaseActivityClass());
 
+                    i.putExtra("packageName", package_name);
+                    i.putExtra("ID", payment.getMetadata().getId());
                     i.putExtra("user", accounts[0].name);
                     i.putParcelableArrayListExtra("PaymentServices", new ArrayList<Parcelable>(payment.getPayment_services()));
                     thisActivity.startActivityForResult(i, Purchase_REQUEST_CODE);

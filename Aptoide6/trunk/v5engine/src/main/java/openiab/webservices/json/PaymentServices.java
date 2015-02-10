@@ -13,7 +13,6 @@ import java.util.List;
  */
 public class PaymentServices implements Parcelable {
 
-
     public int id;
     public String short_name;
     public String name;
@@ -22,6 +21,12 @@ public class PaymentServices implements Parcelable {
     public String currency;
     public double taxRate;
     public String sign;
+
+    //used in fortumo
+    public String service_id;
+    public String inapp_secret;
+    public String keyword;
+    public String shortcode;
 
     public double getPrice() {
         return price;
@@ -65,6 +70,8 @@ public class PaymentServices implements Parcelable {
         out.writeString(currency);
         out.writeDouble(taxRate);
         out.writeString(sign);
+        out.writeString(service_id);
+        out.writeString(inapp_secret);
 
     }
 
@@ -94,6 +101,8 @@ public class PaymentServices implements Parcelable {
         currency=in.readString();
         taxRate=in.readDouble();
         sign= in.readString();
+        service_id= in.readString();
+        inapp_secret= in.readString();
     }
 
 
