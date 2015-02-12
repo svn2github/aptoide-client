@@ -7,6 +7,7 @@ import android.os.Environment;
 import com.aptoide.openiab.IABPurchaseActivityPartners;
 import com.aptoide.openiab.PaidAppPurchaseActivityPartners;
 
+import java.io.File;
 import java.util.Locale;
 
 import cm.aptoide.ptdev.Aptoide;
@@ -67,6 +68,16 @@ public class AptoideConfigurationPartners extends AptoideConfiguration {
         return String.format(OEM_AUTO_UPDATE_URL, DEFAULTSTORENAME, DEFAULTSTORENAME);
     }
 
+    @Override
+    public String getPathCacheIcons() {
+        String pathCacheIcons = super.getPathCacheIcons();
+
+        pathCacheIcons = pathCacheIcons + getDefaultStore()+ "/";
+
+        new File(pathCacheIcons).mkdirs();
+
+        return pathCacheIcons;
+    }
 
     public String getDefaultTopAppsUrl(){
         return super.getTopAppsUrl();
