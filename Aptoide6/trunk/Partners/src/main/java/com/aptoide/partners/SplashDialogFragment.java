@@ -28,6 +28,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 
+import cm.aptoide.ptdev.Aptoide;
+
 /**
  * Created by rmateus on 21-03-2014.
  */
@@ -60,9 +62,9 @@ public class SplashDialogFragment extends DialogFragment {
             Log.e("Start-onLoadingFailed", "Failed to load splashscreen");
             getView().findViewById(R.id.progressBar).setVisibility(View.GONE);
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                saveSplashscreenImageToSDCard("splashscreen_land.png");
+                saveSplashscreenImageToSDCard("splashscreen_land_"+ ((AptoideConfigurationPartners)AptoidePartner.getConfiguration()).getDefaultStore()+".png");
             }else{
-                saveSplashscreenImageToSDCard("splashscreen.png");
+                saveSplashscreenImageToSDCard("splashscreen"+ ((AptoideConfigurationPartners)AptoidePartner.getConfiguration()).getDefaultStore()+".png");
             }
             startTimer();
         }

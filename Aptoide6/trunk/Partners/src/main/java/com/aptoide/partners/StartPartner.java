@@ -167,7 +167,7 @@ public class StartPartner extends cm.aptoide.ptdev.Start implements CategoryCall
 	    startPartner = false;
         }
 
-
+        PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("showadulthidden", false).apply();
         sort = StoreActivity.Sort.values()[PreferenceManager.getDefaultSharedPreferences(this).getInt("order_list", 0)];
         categories = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("orderByCategory", true);
         if(!TextUtils.isEmpty(getString(R.string.privacy_username))){
