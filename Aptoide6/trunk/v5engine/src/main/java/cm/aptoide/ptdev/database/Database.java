@@ -58,6 +58,8 @@ import cm.aptoide.ptdev.utils.AptoideUtils;
 public class Database {
 
 
+
+
     public SQLiteDatabase getDatabaseInstance() {
         return database;
     }
@@ -1550,8 +1552,30 @@ public class Database {
         values.put(Schema.Repo.COLUMN_PASSWORD, password);
         values.put(Schema.Repo.COLUMN_USERNAME, username);
 
+
         database.update(Schema.Repo.getName(), values, Schema.Repo.COLUMN_NAME +" = ?", new String[]{storename});
 
+    }
+
+    public void addToAdsExcluded(String packageName){
+
+        ContentValues values = new ContentValues();
+        values.put(Schema.ExcludedAds.COLUMN_PACKAGE, packageName);
+        database.insert(Schema.ExcludedAds.getName(), null, values);
+
+    }
+
+    public ArrayList<String> getExcludedAds() {
+
+        ArrayList<String> excludedAds = new ArrayList<>();
+
+        Cursor cursor = database.rawQuery("select * from excludedads", null);
+
+        for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
+            excludedAds.add(cursor.getString(cursor.getColumnIndex(Schema.ExcludedAds.COLUMN_PACKAGE)));
+        }
+
+        return excludedAds;
     }
 }
 

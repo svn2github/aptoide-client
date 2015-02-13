@@ -184,6 +184,8 @@ public class AptoidePartner extends Aptoide {
     }
 
 
+
+
     @Override
     public AptoideConfigurationPartners getAptoideConfiguration() {
         return new AptoideConfigurationPartners();

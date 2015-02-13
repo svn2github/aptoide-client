@@ -18,6 +18,7 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
+import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.OkHttpClient;
@@ -31,6 +32,8 @@ import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
@@ -156,7 +159,6 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
                     OkHttpClient client = new OkHttpClient();
 
 
-
                     FormEncodingBuilder formBody = new FormEncodingBuilder();
                     String oemid = Aptoide.getConfiguration().getExtraId();
 
@@ -177,6 +179,12 @@ public class DownloadExecutorImpl implements DownloadExecutor, Serializable {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
+                    HashMap<String, String> map = new HashMap<String, String>();
+
+                    map.put("referrer", String.valueOf(apk.getReferrer()!=null));
+
+                    FlurryAgent.logEvent("CPI_URL_REFERRER", map);
                     apk.setCpiUrl(null);
                 }
             }).start();

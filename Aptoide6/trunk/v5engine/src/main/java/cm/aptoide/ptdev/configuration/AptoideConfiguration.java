@@ -170,9 +170,10 @@ public class AptoideConfiguration {
 
     public String getPathCacheIcons() {
 
-        String pathIcons = sPref.getString(PREF_PATH_CACHE_ICONS, Defaults.PATH_CACHE_ICONS);;
+        String pathIcons = sPref.getString(PREF_PATH_CACHE_ICONS, Defaults.PATH_CACHE_ICONS);
 
         new File(pathIcons).mkdirs();
+        
         return pathIcons;
     }
 

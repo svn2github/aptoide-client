@@ -37,6 +37,8 @@ import java.util.concurrent.Executors;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.services.TimelineActivitySyncService;
+import cm.aptoide.ptdev.services.TimelinePostsSyncService;
 import cm.aptoide.ptdev.services.UpdatesService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.IconSizes;
@@ -112,23 +114,46 @@ public class PushNotificationReceiver extends BroadcastReceiver {
 
     }
 
+
+    public void createPendingIntent(AlarmManager am, Context context, String action, long time, int broadcastid){
+        Intent i = new Intent(context, PushNotificationReceiver.class);
+        i.setAction(action);
+        PendingIntent pi = PendingIntent.getBroadcast(context, broadcastid, i, PendingIntent.FLAG_UPDATE_CURRENT);
+        am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, time , pi);
+    }
+
+
     @Override
     public void onReceive(final Context context, final Intent intent) {
         String action = intent.getAction();
         if (action != null) {
             if (action.equals(Intent.ACTION_BOOT_COMPLETED) ) {
                 AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                Intent i = new Intent(context, PushNotificationReceiver.class);
-                i.setAction(PUSH_NOTIFICATION_Action);
-                PendingIntent pi = PendingIntent.getBroadcast(context, 982764, i, PendingIntent.FLAG_UPDATE_CURRENT);
-                am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, PUSH_NOTIFICATION_TIME_INTERVAL, pi);
 
-                Intent i2 = new Intent(context, PushNotificationReceiver.class);
-                i.setAction("updates_service");
-                PendingIntent pi2 = PendingIntent.getBroadcast(context, 982765, i2, PendingIntent.FLAG_UPDATE_CURRENT);
-                am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, AlarmManager.INTERVAL_HALF_DAY / 2, pi2);
+                createPendingIntent(am, context, PUSH_NOTIFICATION_Action, PUSH_NOTIFICATION_TIME_INTERVAL, 982764);
+                createPendingIntent(am, context, "updates_service", AlarmManager.INTERVAL_HALF_DAY / 2, 982765);
+
+                createPendingIntent(am, context, "timelinepostsservice", AlarmManager.INTERVAL_HALF_DAY / 2, 982766);
+                createPendingIntent(am, context, "timelineactivityservice", AlarmManager.INTERVAL_HALF_DAY / 2, 982767);
+
+
 //                Log.i("PushNotificationReceiver", "Alarm Registed Received");
 
+            }else if(action.equals("timelineactivityservice")) {
+                Executors.newSingleThreadExecutor().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        TimelineActivitySyncService syncService = new TimelineActivitySyncService();
+                        syncService.sync(context , context.getPackageName());
+                    }});
+
+            }else if(action.equals("timelinepostsservice")) {
+                Executors.newSingleThreadExecutor().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        TimelinePostsSyncService syncService = new TimelinePostsSyncService();
+                        syncService.sync(context, context.getPackageName());
+                    }});
             }else if(action.equals("updates_service")) {
 
                 Intent i = new Intent(context, UpdatesService.class);

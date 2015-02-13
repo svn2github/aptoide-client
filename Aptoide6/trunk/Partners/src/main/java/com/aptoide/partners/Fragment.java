@@ -148,6 +148,7 @@ public class Fragment extends android.support.v4.app.Fragment  {
 
             Bundle args = new Bundle();
             args.putLong("storeid", -200);
+            args.putString("view", storeView);
             args.putString("storename", Aptoide.getConfiguration().getDefaultStore());
             args.putString("theme", ((AptoideConfigurationPartners) Aptoide.getConfiguration()).getTheme());
             fragment.setArguments(args);

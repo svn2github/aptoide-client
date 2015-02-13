@@ -237,10 +237,19 @@ public class FragmentListStore extends Fragment {
         items = new ArrayList<StoreListItem>();
         this.view = view;
         rRiew  = (RecyclerView) view.findViewById(R.id.list);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        LinearLayoutManager linearLayoutManager;
+
+        if("grid".equals(getArguments().getString("view"))){
+            linearLayoutManager = new GridLayoutManager(getActivity(), AptoideUtils.getGridBucketSize());
+        }else{
+            linearLayoutManager = new LinearLayoutManager(getActivity());
+        }
+
+
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rRiew.setLayoutManager(linearLayoutManager);
         StoreListAdapter adapter = new StoreListAdapter(getActivity(), items, getFragmentManager(), getArguments());
+
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -544,7 +553,7 @@ public class FragmentListStore extends Fragment {
                         @Override
                         public void onRequestSuccess(ApkSuggestionJson apkSuggestionJson) {
 
-
+                            adsLoaded = true;
                             for (ApkSuggestionJson.Ads ad : apkSuggestionJson.getAds()) {
 
                                 AdApp app = new AdApp();
@@ -804,6 +813,7 @@ public class FragmentListStore extends Fragment {
 
         private String storename;
 
+
         public StoreListAdapter(Context context, List<StoreListItem> list, FragmentManager fragmentManager, Bundle bundle) {
             this.list = list;
             this.context = context;
@@ -992,7 +1002,7 @@ public class FragmentListStore extends Fragment {
                                 bundle.putString("widgetrefid", widgetid);
                                 bundle.putString("refid", refid);
                                 bundle.putString("storename", storename);
-
+                                bundle.putString("view", parentBundle.getString("view"));
 
 
                                 Map<String, String> flurryParams = new HashMap<String, String>();
@@ -1107,6 +1117,8 @@ public class FragmentListStore extends Fragment {
         public void setStorename(String storename) {
             this.storename = storename;
         }
+
+
 
         public static class AppStoreListViewHolder extends StoreListViewHolder{
 

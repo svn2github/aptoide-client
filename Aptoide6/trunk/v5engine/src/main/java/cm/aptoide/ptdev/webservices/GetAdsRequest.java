@@ -4,6 +4,8 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.flurry.android.FlurryAgent;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
@@ -11,13 +13,17 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.ads.AptoideAdNetworks;
+import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.model.InstalledPackage;
 import cm.aptoide.ptdev.preferences.EnumPreferences;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.webservices.json.ApkSuggestionJson;
@@ -68,6 +74,7 @@ public class GetAdsRequest extends RetrofitSpiceRequest<ApkSuggestionJson, GetAd
     public ApkSuggestionJson loadDataFromNetwork() throws Exception {
 
         HashMap<String, String> parameters = new HashMap<String, String>();
+        final Database database = new Database(Aptoide.getDb());
 
         parameters.put("q", AptoideUtils.filters(Aptoide.getContext()));
         parameters.put("lang", AptoideUtils.getMyCountryCode(Aptoide.getContext()));
@@ -83,7 +90,11 @@ public class GetAdsRequest extends RetrofitSpiceRequest<ApkSuggestionJson, GetAd
 
         parameters.put("location","native-aptoide:" + location);
         parameters.put("type", "1-3");
-        parameters.put("flag", "gms");
+
+        if(GooglePlayServicesUtil.isGooglePlayServicesAvailable(Aptoide.getContext())==0){
+            parameters.put("flag", "gms");
+        }
+
         parameters.put("keywords", keyword);
 
         parameters.put("categories", categories);
@@ -95,6 +106,12 @@ public class GetAdsRequest extends RetrofitSpiceRequest<ApkSuggestionJson, GetAd
             parameters.put("oemid", oemid);
         }
 
+        final ArrayList<String> excludedAds = database.getExcludedAds();
+        String join = TextUtils.join(",", excludedAds);
+
+        if(!TextUtils.isEmpty(join)){
+            parameters.put("excluded_pkg", join);
+        }
 
         parameters.put("limit", String.valueOf(limit));
 
@@ -130,13 +147,17 @@ public class GetAdsRequest extends RetrofitSpiceRequest<ApkSuggestionJson, GetAd
 
         ApkSuggestionJson result = getService().getAds(parameters);
 
+
+
         Map<String, String> adsParams = new HashMap<String, String>();
         adsParams.put("placement", location);
-
+        final ArrayList<String> arrayList = new ArrayList<>();
 
         for(ApkSuggestionJson.Ads suggestionJson : result.getAds()) {
             String ad_type = suggestionJson.getInfo().getAd_type();
             adsParams.put("type", ad_type);
+
+            arrayList.add(suggestionJson.getData().getPackageName());
 
             FlurryAgent.logEvent("Get_Sponsored_Ad", adsParams);
 
@@ -171,6 +192,34 @@ public class GetAdsRequest extends RetrofitSpiceRequest<ApkSuggestionJson, GetAd
 
 //            Log.d("AdsFlurry", "Map is " + adsParams);
         }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                ArrayList<String> installedPackages = new ArrayList<>();
+                List<InstalledPackage> startupInstalled = database.getStartupInstalled();
+
+                for (InstalledPackage installedPackage : startupInstalled) {
+                    installedPackages.add(installedPackage.getPackage_name());
+                }
+
+                arrayList.retainAll(installedPackages);
+                arrayList.removeAll(excludedAds);
+
+                for (String excludedAd : arrayList) {
+                    database.addToAdsExcluded(excludedAd);
+                }
+
+
+            }
+        }).start();
+
+
+
+
+
+
 
 
         return result;

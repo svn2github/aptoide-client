@@ -51,37 +51,9 @@ import cm.aptoide.ptdev.webservices.timeline.json.ListUserFriendsJson;
 /**
  * Created by j-pac on 28-01-2014.
  */
-public class TimelineActivitySyncService extends Service  {
+public class TimelineActivitySyncService {
 
-    private static TimelineActivitySyncAdapter syncAdapter = null;
-
-    private static final Object wiSyncAdapterLock = new Object();
-
-    @Override
-    public void onCreate() {
-
-        synchronized (wiSyncAdapterLock) {
-            if(syncAdapter == null) {
-                syncAdapter = new TimelineActivitySyncAdapter(getApplicationContext(), true);
-            }
-        }
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return syncAdapter.getSyncAdapterBinder();
-    }
-
-    public class TimelineActivitySyncAdapter extends AbstractThreadedSyncAdapter{
-
-        public TimelineActivitySyncAdapter(Context context, boolean autoInitialize) {
-
-            super(context, autoInitialize);
-
-        }
-
-        @Override
-        public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
+        public void sync(Context context, String packageName) {
 
             try {
 
@@ -94,30 +66,30 @@ public class TimelineActivitySyncService extends Service  {
                     String notificationText;
 
                     if (total_comments == 0) {
-                        notificationText = getString(R.string.notification_timeline_new_likes, total_likes);
+                        notificationText = context.getString(R.string.notification_timeline_new_likes, total_likes);
                     } else if (total_likes == 0) {
-                        notificationText = getString(R.string.notification_timeline_new_comments, total_comments);
+                        notificationText = context.getString(R.string.notification_timeline_new_comments, total_comments);
                     } else {
-                        notificationText = getString(R.string.notification_timeline_activity, total_comments, total_likes);
+                        notificationText = context.getString(R.string.notification_timeline_activity, total_comments, total_likes);
                     }
 
 
-                    Intent intent = new Intent(getContext(), Start.class);
+                    Intent intent = new Intent(context, Start.class);
                     intent.putExtra("fromTimeline", true);
 
-                    intent.setClassName(getPackageName(), Aptoide.getConfiguration().getStartActivityClass().getName());
+                    intent.setClassName(packageName, Aptoide.getConfiguration().getStartActivityClass().getName());
                     intent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.setAction(Intent.ACTION_VIEW);
 
-                    PendingIntent resultPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    PendingIntent resultPendingIntent = PendingIntent.getActivity(Aptoide.getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-                    Notification notification = new NotificationCompat.Builder(getContext())
+                    Notification notification = new NotificationCompat.Builder(context)
                             .setSmallIcon(R.drawable.ic_stat_aptoide_fb_notification)
                             .setContentIntent(resultPendingIntent)
                             .setOngoing(false)
                             .setAutoCancel(true)
                             .setContentTitle(notificationText)
-                            .setContentText(getString(R.string.notification_social_timeline)).build();
+                            .setContentText(context.getString(R.string.notification_social_timeline)).build();
                     ArrayList<String> avatarLinks = new ArrayList<String>();
 
                     try {
@@ -128,13 +100,13 @@ public class TimelineActivitySyncService extends Service  {
                             setAvatares(avatarLinks, timelineActivityJson.getRelated_activity().getFriends());
 
                         if (Build.VERSION.SDK_INT >= 16) {
-                            RemoteViews expandedView = new RemoteViews(getContext().getPackageName(), R.layout.push_notification_timeline_activity);
+                            RemoteViews expandedView = new RemoteViews(context.getPackageName(), R.layout.push_notification_timeline_activity);
                             expandedView.setTextViewText(R.id.description, notificationText);
                             expandedView.removeAllViews(R.id.linearLayout2);
 
                             for (String avatar : avatarLinks) {
                                 Bitmap loadedImage = ImageLoader.getInstance().loadImageSync(avatar);
-                                RemoteViews imageView = new RemoteViews(getContext().getPackageName(), R.layout.timeline_friend_iv);
+                                RemoteViews imageView = new RemoteViews(context.getPackageName(), R.layout.timeline_friend_iv);
                                 imageView.setImageViewBitmap(R.id.friend_avatar, loadedImage);
                                 expandedView.addView(R.id.linearLayout2, imageView);
                             }
@@ -143,7 +115,7 @@ public class TimelineActivitySyncService extends Service  {
                         }
 
                         if (!avatarLinks.isEmpty()) {
-                            final NotificationManager managerNotification = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                            final NotificationManager managerNotification = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                             managerNotification.notify(86458, notification);
                         }
 
@@ -158,7 +130,7 @@ public class TimelineActivitySyncService extends Service  {
 
         }
 
-    }
+
 
 
     public void setAvatares(List<String> avatares, List<TimelineActivityJson.Friend> friends){

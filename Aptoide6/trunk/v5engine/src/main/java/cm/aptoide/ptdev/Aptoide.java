@@ -155,7 +155,7 @@ public class Aptoide extends Application {
 
                 if(s!=null){
                     return s.substring(s.lastIndexOf('/') + 1);
-                }else{
+                } else {
                     return null;
                 }
             }

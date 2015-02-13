@@ -424,4 +424,14 @@ public class Schema {
         }
     }
 
+    public static class ExcludedAds {
+
+        @ColumnDefinition(type = SQLType.TEXT)
+        public static final String COLUMN_PACKAGE = "package_name";
+
+        public static String getName() {
+            return "excludedads";
+        }
+
+    }
 }

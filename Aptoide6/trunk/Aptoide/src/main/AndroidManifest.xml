@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="cm.aptoide.pt"
     android:installLocation="auto"
-    android:versionCode="455"
-    android:versionName="6.3.0" >
+    android:versionCode="456"
+    android:versionName="6.4.0" >
 
 
     <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="21"/>

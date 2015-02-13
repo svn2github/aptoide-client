@@ -27,6 +27,7 @@ import com.squareup.otto.Subscribe;
 import java.util.concurrent.Executors;
 
 import cm.aptoide.ptdev.database.Database;
+import cm.aptoide.ptdev.database.schema.Schema;
 import cm.aptoide.ptdev.dialogs.AdultDialog;
 import cm.aptoide.ptdev.events.BusProvider;
 import cm.aptoide.ptdev.events.RepoAddedEvent;
@@ -41,6 +42,7 @@ import cm.aptoide.ptdev.services.ParserService;
 import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.webservices.Api;
 import cm.aptoide.ptdev.webservices.Response;
+import retrofit.RetrofitError;
 import retrofit.http.Body;
 import retrofit.http.POST;
 
@@ -209,6 +211,7 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
 
         String name = c.getString(c.getColumnIndex("name"));
         String theme = c.getString(c.getColumnIndex("theme"));
+        String view = c.getString(c.getColumnIndex(Schema.Repo.COLUMN_VIEW));
 
         c.close();
 
@@ -225,6 +228,7 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
         Bundle args = new Bundle();
         args.putString("storename", name);
         args.putString("theme", theme);
+        args.putString("view", view);
         args.putLong("storeid", storeid);
 
         if(getIntent().hasExtra("username")){

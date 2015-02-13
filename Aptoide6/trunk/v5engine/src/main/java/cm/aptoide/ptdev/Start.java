@@ -974,12 +974,11 @@ public class Start extends ActionBarActivity implements
 
         if (sPref.getBoolean("firstrun", true)) {
 
-
             Intent newToAptoideTutorial = new Intent(mContext, Tutorial.class);
             startActivityForResult(newToAptoideTutorial, WIZARD_REQ_CODE);
-            sPref.edit().putBoolean("firstrun", false).commit();
+            sPref.edit().putBoolean("firstrun", false).apply();
             try {
-                PreferenceManager.getDefaultSharedPreferences(this).edit().putInt("version", getPackageManager().getPackageInfo(getPackageName(), 0).versionCode).commit();
+                PreferenceManager.getDefaultSharedPreferences(this).edit().putInt("version", getPackageManager().getPackageInfo(getPackageName(), 0).versionCode).apply();
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }

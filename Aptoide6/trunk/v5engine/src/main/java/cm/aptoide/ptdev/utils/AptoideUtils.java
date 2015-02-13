@@ -293,6 +293,17 @@ public class AptoideUtils {
 
     }
 
+    public static int getGridBucketSize(){
+        float screenWidth = getScreenWidthInDip();
+
+        if (250 >= screenWidth) {
+            return  1;
+        } else {
+            return (int) (screenWidth / 250);
+        }
+
+    }
+
     protected static float getScreenWidthInDip() {
         WindowManager wm = ((WindowManager) Aptoide.getContext().getSystemService(Context.WINDOW_SERVICE));
         DisplayMetrics dm = new DisplayMetrics();
