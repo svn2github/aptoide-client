@@ -1,19 +1,24 @@
 package openiab;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
+import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
 import com.octo.android.robospice.SpiceManager;
+import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.octo.android.robospice.retry.RetryPolicy;
@@ -30,6 +35,7 @@ import org.json.JSONException;
 import org.onepf.oms.BillingBinder;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 
 import cm.aptoide.ptdev.Aptoide;
@@ -37,13 +43,17 @@ import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
+import fortumo.FortumoPaymentActivity;
 import openiab.webservices.BasePurchaseStatusRequest;
+import openiab.webservices.IabPurchaseStatusRequest;
+import openiab.webservices.PaidAppPurchaseStatusRequest;
 import openiab.webservices.PayProductRequestBase;
 import openiab.webservices.PayProductRequestPayPal;
 import openiab.webservices.PayProductRequestUnitel;
 import openiab.webservices.PaypalPurchaseAuthorizationRequest;
 import openiab.webservices.json.IabPurchaseStatusJson;
 import openiab.webservices.json.IabSimpleResponseJson;
+import openiab.webservices.json.PaymentServices;
 
 public abstract class BasePurchaseActivity extends ActionBarActivity implements Callback {
 
@@ -155,225 +165,6 @@ public abstract class BasePurchaseActivity extends ActionBarActivity implements 
         }
 
     }
-/*
-
-
-    private String getMccCode(String networkOperator) {
-        return networkOperator == null ? "" : networkOperator.substring(0, mncPortionLength(networkOperator));
-
-    }
-
-    private String getMncCode(String networkOperator) {
-        return networkOperator == null ? "" : networkOperator.substring(mncPortionLength(networkOperator));
-
-    }
-
-    private int mncPortionLength(String networkOperator) {
-        return Math.min(3, networkOperator.length());
-    }
-
-
-
-    protected abstract boolean TestifPurchased(IBinder service);
-    protected abstract IabSkuDetailsRequest AddWhatevertoConnectionRequest(IabSkuDetailsRequest request);
-
-    protected ServiceConnection mConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, final IBinder service) {
-            isBound = true;
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-
-                    try{
-                        repo = new Database(Aptoide.getDb()).getRollbackRepo(packageName);
-                    }catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    if(TestifPurchased(service)){
-                        Intent intent = new Intent();
-                        intent.putExtra(BillingBinder.RESPONSE_CODE, BillingBinder.RESULT_ITEM_ALREADY_OWNED);
-                        setResult(RESULT_OK, intent);
-                        finish();
-                    }
-
-                        //token = accountManager.blockingGetAuthToken(accountManager.getAccountsByType(AccountGeneral.ACCOUNT_TYPE)[0], "Full access", true);
-
-                        //String token =  "27286b943179065fcef3b6adcafe8680d8515e4652010602c45f6";
-                        final TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-
-                        IabSkuDetailsRequest request = new IabSkuDetailsRequest();
-
-                        request.setPackageName(packageName);
-                        request.setToken(token);
-                        //request.setOemid(((AptoideConfigurationPartners) Aptoide.getConfiguration()).PARTNERID);
-
-                        if (telephonyManager != null && telephonyManager.getSimState()==TelephonyManager.SIM_STATE_READY) {
-                            request.setMcc(getMccCode(telephonyManager.getNetworkOperator()));
-                            request.setMnc(getMncCode(telephonyManager.getNetworkOperator()));
-                            simcc = telephonyManager.getSimCountryIso();
-                            request.setSimcc(simcc);
-                        }
-                        request= AddWhatevertoConnectionRequest(request);
-
-                        spiceManager.execute(request, packageName + "-getSkuDetails-" + request.getSkuList() + token, DurationInMillis.ONE_MINUTE, new RequestListener<IabSkuDetailsJson>() {
-                            @Override
-                            public void onRequestFailure(SpiceException spiceException) {
-                                Intent intent = new Intent();
-                                intent.putExtra(BillingBinder.RESPONSE_CODE, BillingBinder.RESULT_ERROR);
-                                setResult(RESULT_OK, intent);
-                                finish();
-                            }
-
-                            @Override
-                            public void onRequestSuccess(IabSkuDetailsJson response) {
-                                ArrayList<String> detailsList = new ArrayList<String>();
-
-                                if ("OK".equals(response.getStatus())) {
-
-                                    for (IabSkuDetailsJson.PublisherResponse.PurchaseDataObject details : response.getPublisher_response().getDetailss_list()) {
-                                        detailsList.add(details.json());
-                                        Log.d("AptoideBillingService", "Sku Details: " + details.json());
-                                    }
-
-
-                                    LinearLayout paymentMethodsLayout = (LinearLayout) findViewById(R.id.payment_methods);
-                                    paymentMethodsLayout.removeAllViews();
-                                    Button button;
-
-                                    if (response.getPayment_services()!=null && response.getPayment_services().isEmpty()) {
-                                        TextView noPaymentsFound = new TextView(BasePurchaseActivity.this);
-                                        noPaymentsFound.setText(R.string.no_payments_available);
-                                        paymentMethodsLayout.addView(noPaymentsFound);
-                                    }else if(response.getPayment_services() !=null ){
-
-                                        for (PaymentServices service : response.getPayment_services()) {
-
-                                            int serviceCode = servicesList.get(service.getShort_name());
-
-                                            switch (serviceCode) {
-                                                case PAYPAL_CODE:
-                                                    for (PaymentServices.PaymentType type : service.getTypes()) {
-
-                                                        if ("future".equals(type.getReqType())) {
-
-                                                            button = (Button) LayoutInflater.from(BasePurchaseActivity.this).inflate(R.layout.button_paypal, null);
-                                                            button.setText(type.getLabel() + " - " + service.getPrice() + " " + service.getSign());
-                                                            paymentMethodsLayout.addView(button);
-
-                                                            IabPurchaseAuthorizationRequest request = new IabPurchaseAuthorizationRequest();
-                                                            request.setToken(token);
-                                                            HasAuthorization hasAuthorization = new HasAuthorization(button);
-                                                            hasAuthorization.setCurrency(service.getCurrency());
-                                                            hasAuthorization.setPrice(service.getPrice());
-                                                            hasAuthorization.setTax(service.getTaxRate());
-                                                            spiceManager.execute(request, "authorization-" + token, DurationInMillis.ONE_DAY, hasAuthorization);
-
-
-                                                        } else if ("single".equals(type.getReqType())) {
-
-                                                            button = (Button) LayoutInflater.from(BasePurchaseActivity.this).inflate(R.layout.button_visa, null);
-
-                                                            button.setText(type.getLabel() + " - " + service.getPrice() + " " + service.getSign());
-                                                            OnPaypalClick onPaypalClick = new OnPaypalClick();
-                                                            onPaypalClick.setCurrency(service.getCurrency());
-                                                            onPaypalClick.setPrice(service.getPrice());
-                                                            onPaypalClick.setTax(service.getTaxRate());
-                                                            onPaypalClick.setRepo(repo);
-
-
-                                                            try {
-                                                                JSONObject sku_details = new JSONObject(detailsList.get(0));
-                                                                onPaypalClick.setDescription(sku_details.getString("title") + " - " + sku_details.getString("description"));
-
-                                                            } catch (Exception e) {
-                                                                e.printStackTrace();
-                                                                onPaypalClick.setDescription("No description");
-                                                            }
-
-                                                            button.setOnClickListener(onPaypalClick);
-                                                            paymentMethodsLayout.addView(button);
-
-                                                            if(response.getPayment_services().size() == 1 && service.getTypes().size() == 1){
-                                                                onPaypalClick.onClick(null);
-                                                            }
-
-                                                        }
-                                                    }
-                                                    break;
-                                                case UNITEL_CODE:
-
-                                                    if(telephonyManager!=null && telephonyManager.getSimState()==TelephonyManager.SIM_STATE_READY){
-
-
-
-                                                        for (PaymentServices.PaymentType type : service.getTypes()) {
-                                                            button = (Button) LayoutInflater.from(BasePurchaseActivity.this).inflate(R.layout.button_carrier, null);
-
-                                                            if (button != null) {
-                                                                button.setText(type.getLabel() + " - " + service.getPrice() + " " + service.getSign());
-                                                                paymentMethodsLayout.addView(button);
-                                                                DecimalFormat df = new DecimalFormat("######.#");
-                                                                button.setOnClickListener(new UnitelPurchaseListener(getSupportFragmentManager(), String.valueOf(response.getPublisher_response().getDetailss_list().get(0).getPrice()), telephonyManager.getSimOperatorName(), response.getPublisher_response().getDetailss_list().get(0).getTitle(), service.getId(), telephonyManager.getSubscriberId(), service.getCurrency(), df.format(service.getPrice())));
-                                                            }
-                                                        }
-
-                                                    }
-
-
-                                                    break;
-//                                            case FORTUMO_CODE:
-//
-//                                                for (PaymentServices.PaymentType type : service.getTypes()) {
-//                                                    button = (Button) LayoutInflater.from(PurchaseActivity.this).inflate(R.layout.button_carrier, null);
-//                                                    button.setText(type.getLabel());
-//                                                    paymentMethodsLayout.addView(button);
-//                                                }
-//
-//
-//                                                break;
-                                            }
-
-
-                                        }
-                                    }
-
-                                    if(!detailsList.isEmpty()) Log.d("AptoideSkudetailsForPurchase", "SkuDetails: " + detailsList.get(0));
-
-                                    //if(detailsJson != null) {
-                                    try {
-                                        findViewById(R.id.progress).setVisibility(View.GONE);
-                                        findViewById(R.id.content).setVisibility(View.VISIBLE);
-
-                                        JSONObject sku_details = new JSONObject(detailsList.get(0));
-                                        aptoideProductId = response.getMetadata().getId();
-                                        ((TextView) findViewById(R.id.title)).setText(sku_details.getString("title"));
-                                        ((TextView) findViewById(R.id.price)).setText(sku_details.getString("price"));
-                                        ImageLoader.getInstance().displayImage(response.getMetadata().getIcon(), (ImageView) findViewById(R.id.icon));
-                                        ((TextView) findViewById(R.id.app_purchase_description)).setText(sku_details.getString("description"));
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                        Intent intent = new Intent();
-                                        intent.putExtra(BillingBinder.RESPONSE_CODE, BillingBinder.RESULT_ERROR);
-                                        setResult(RESULT_OK, intent);
-                                        finish();
-                                    }
-                                }
-                            }
-
-                        });
-                }
-            }).start();
-        }
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            isBound = false;
-        }
-    };
-*/
-
     protected void requestsetExtra(PayProductRequestBase pprb){
         return;
     }
@@ -403,9 +194,6 @@ public abstract class BasePurchaseActivity extends ActionBarActivity implements 
 
     }
 
-
-
-
     public class ValuesToVerify {
 
         public double tax;
@@ -415,10 +203,7 @@ public abstract class BasePurchaseActivity extends ActionBarActivity implements 
 
     }
 
-
-
     public class OnPaypalClick implements View.OnClickListener {
-
 
         private String description;
         private double price;
@@ -435,9 +220,7 @@ public abstract class BasePurchaseActivity extends ActionBarActivity implements 
         }
 
         public void setDescription(String description) {
-
             this.description = description;
-
         }
 
         @Override
@@ -478,11 +261,9 @@ public abstract class BasePurchaseActivity extends ActionBarActivity implements 
         private double price;
         private double tax;
 
-
         public void setProductId(String price) {
             this.productId = price;
         }
-
 
         @Override
         public void onClick(View view) {
@@ -563,67 +344,116 @@ public abstract class BasePurchaseActivity extends ActionBarActivity implements 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(resultCode, resultCode, data);
+        Log.d("pois","BasePurchaseActivity onActivityResult");
+        switch (requestCode){
+            case REQUEST_CODE_PAYMENT:
+                if (resultCode == Activity.RESULT_OK) {
+                    PaymentConfirmation confirm =
+                            data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
 
-        if (requestCode == REQUEST_CODE_PAYMENT) {
-            if (resultCode == Activity.RESULT_OK) {
-                PaymentConfirmation confirm =
-                        data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
+                    if (confirm != null) {
+                        try {
+                            Log.i(TAG, confirm.toJSONObject().toString(4));
+                            Log.i(TAG, confirm.getProofOfPayment().toJSONObject().toString(4));
+                            Log.i(TAG, confirm.getPayment().toJSONObject().toString(4));
 
-                if (confirm != null) {
-                    try {
-                        Log.i(TAG, confirm.toJSONObject().toString(4));
-                        Log.i(TAG, confirm.getProofOfPayment().toJSONObject().toString(4));
-                        Log.i(TAG, confirm.getPayment().toJSONObject().toString(4));
-
-                        /**
-                         *  TODO: send 'confirm' (and possibly confirm.getPayment() to your server for verification
-                         * or consent completion.
-                         * See https://developer.paypal.com/webapps/developer/docs/integration/mobile/verify-mobile-payment/
-                         * for more details.
-                         *
-                         * For sample mobile backend interactions, see
-                         * https://github.com/paypal/rest-api-sdk-python/tree/master/samples/mobile_backend
-                         */
-                        processPaymentConfirmation(confirm.getProofOfPayment());
+                            /**
+                             *  TODO: send 'confirm' (and possibly confirm.getPayment() to your server for verification
+                             * or consent completion.
+                             * See https://developer.paypal.com/webapps/developer/docs/integration/mobile/verify-mobile-payment/
+                             * for more details.
+                             *
+                             * For sample mobile backend interactions, see
+                             * https://github.com/paypal/rest-api-sdk-python/tree/master/samples/mobile_backend
+                             */
+                            processPaymentConfirmation(confirm.getProofOfPayment());
 
 
-                    } catch (JSONException e) {
-                        Log.e(TAG, "an extremely unlikely failure occurred: ", e);
+                        } catch (JSONException e) {
+                            Log.e(TAG, "an extremely unlikely failure occurred: ", e);
+                        }
                     }
-                }
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                Log.i(TAG, "The user canceled.");
-            } else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID) {
-                Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
+                } else if (resultCode == Activity.RESULT_CANCELED) {
+                    Log.i(TAG, "The user canceled.");
+                } else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID) {
+                    Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
 
-                Log.i(TAG,
-                        "An invalid Payment or PayPalConfiguration was submitted. Please see the docs.");
-            }
-        } else if (requestCode == REQUEST_CODE_FUTURE_PAYMENT) {
-            if (resultCode == Activity.RESULT_OK) {
-                PayPalAuthorization auth =
-                        data.getParcelableExtra(PayPalFuturePaymentActivity.EXTRA_RESULT_AUTHORIZATION);
-                if (auth != null) {
-                    try {
-                        Log.i("FuturePaymentExample", auth.toJSONObject().toString(4));
-                        String authorization_code = auth.getAuthorizationCode();
-                        Log.i("FuturePaymentExample", authorization_code);
-                        sendAuthorizationToServer(auth);
-                    } catch (JSONException e) {
-                        Log.e("FuturePaymentExample", "an extremely unlikely failure occurred: ", e);
-                    }
+                    Log.i(TAG,
+                            "An invalid Payment or PayPalConfiguration was submitted. Please see the docs.");
                 }
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                Log.i("FuturePaymentExample", "The user canceled.");
-                Log.i("FuturePaymentExample",
-                        "Probably the attempt to previously start the PayPalService had an invalid PayPalConfiguration." +
-                                " Please see the docs.");
-            } else {
-                Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
-            }
+                break;
+            case REQUEST_CODE_FUTURE_PAYMENT:
+                if (resultCode == Activity.RESULT_OK) {
+                    PayPalAuthorization auth =
+                            data.getParcelableExtra(PayPalFuturePaymentActivity.EXTRA_RESULT_AUTHORIZATION);
+                    if (auth != null) {
+                        try {
+                            Log.i("FuturePaymentExample", auth.toJSONObject().toString(4));
+                            String authorization_code = auth.getAuthorizationCode();
+                            Log.i("FuturePaymentExample", authorization_code);
+                            sendAuthorizationToServer(auth);
+                        } catch (JSONException e) {
+                            Log.e("FuturePaymentExample", "an extremely unlikely failure occurred: ", e);
+                        }
+                    }
+                } else if (resultCode == Activity.RESULT_CANCELED) {
+                    Log.i("FuturePaymentExample", "The user canceled.");
+                    Log.i("FuturePaymentExample",
+                            "Probably the attempt to previously start the PayPalService had an invalid PayPalConfiguration." +
+                                    " Please see the docs.");
+                } else {
+                    Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
+                }
+                break;
+            case FORTUMO_CODE:
+                Log.d("pois","Request Code FORTUMO_CODE");
+                if (resultCode == RESULT_OK) {
+
+                    boolean isconsumable = data.getBooleanExtra(FortumoPaymentActivity.RESULT_EXTRA_ISCONSUMABLE_BOOL,false);
+                    String payCode = data.getStringExtra(FortumoPaymentActivity.RESULT_EXTRA_PAYCODE_STRING);
+                    int prodID = data.getIntExtra(FortumoPaymentActivity.RESULT_EXTRA_PRODID_INT,0);
+
+                    Log.d("pois","prodID: "+prodID);
+                    Log.d("pois","payCode: "+payCode);
+                    Log.d("pois","isconsumable: "+isconsumable);
+                    BasePurchaseStatusRequest request = isconsumable ? new IabPurchaseStatusRequest() : new PaidAppPurchaseStatusRequest();
+                    request.setPayKey(payCode);
+                    request.setProductId(prodID);
+                    request.setPayreqtype("notification");
+
+                    Log.d("pois", "request built");
+
+                    spiceManager.execute(request,1, DurationInMillis.ALWAYS_EXPIRED,new RequestListener<IabPurchaseStatusJson>(){
+
+                        @Override
+                        public void onRequestFailure(SpiceException spiceException) {
+                            Log.d("pois", "RequestListener onRequestFailure");
+                            setResult(RESULT_CANCELED);
+                            finish();
+                        }
+
+                        @Override
+                        public void onRequestSuccess(IabPurchaseStatusJson iabPurchaseStatusJson) {
+                            Log.d("pois", "RequestListener onRequestSuccess");
+
+                            if("OK".equals(iabPurchaseStatusJson.getStatus())){
+                                Log.d("pois", "RequestListener onOK");
+                                Intent i = new Intent();
+                                i.putExtra("Package",packageName);
+                                Log.d("pois", "Fortumo Result ok.");
+                                setResult(RESULT_OK,i);
+                            }else {
+                                setResult(RESULT_CANCELED);
+                            }
+                            finish();
+                        }
+                    });
+
+                }else{
+                    Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
+                }
+
         }
-
-
     }
 
     private void sendAuthorizationToServer(final PayPalAuthorization authorization) {
@@ -780,6 +610,7 @@ public abstract class BasePurchaseActivity extends ActionBarActivity implements 
             } else {
                 intent.putExtra(BillingBinder.RESPONSE_CODE, BillingBinder.RESULT_ERROR);
             }
+            Log.d("pois", "PurchaseRequestListener finish setResult Result ok.");
             setResult(RESULT_OK, intent);
             finish();
         }
@@ -788,4 +619,45 @@ public abstract class BasePurchaseActivity extends ActionBarActivity implements 
     protected boolean makeExtraTestsOnPurchaseOk(IabPurchaseStatusJson iabPurchaseStatusJson){
         return false;
     }
+
+    private void telephonyPayment(PaymentServices service,LinearLayout paymentMethodsLayout,int buttonResource,View.OnClickListener onClick){
+        Button button;
+        final TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        if(telephonyManager!=null && telephonyManager.getSimState()== TelephonyManager.SIM_STATE_READY){
+            for (PaymentServices.PaymentType type : service.getTypes()) {
+                button = (Button) LayoutInflater.from(this).inflate(buttonResource, null);
+                if (button != null) {
+                    button.setText(type.getLabel() + " - " + service.getPrice() + " " + service.getSign());
+                    paymentMethodsLayout.addView(button);
+                    button.setOnClickListener(onClick);
+                }
+            }
+        }
+    }
+
+    protected void caseUNITEL(PaymentServices service,LinearLayout paymentMethodsLayout){
+        final TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        final DecimalFormat df = new DecimalFormat("######.#");
+        telephonyPayment(service,paymentMethodsLayout,R.layout.button_unitel,new UnitelPurchaseListener(getSupportFragmentManager(),
+                            String.valueOf(service.getPrice()),
+                            telephonyManager.getSimOperatorName(),
+                            service.getName(),
+                            service.getId(), telephonyManager.getSubscriberId(),
+                            service.getCurrency(),
+                            df.format(service.getPrice())));
+    }
+    protected void caseFortumo(final int id,final PaymentServices service,LinearLayout paymentMethodsLayout){
+        telephonyPayment(service,paymentMethodsLayout,R.layout.button_fortumo,new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Intent i = new Intent(getBaseContext(), FortumoPaymentActivity.class);
+                i.putExtra(FortumoPaymentActivity.EXTRA_ID,id);
+                i.putExtra(FortumoPaymentActivity.EXTRA_PAYMENTSERVICE,service);
+                i.putExtra(FortumoPaymentActivity.EXTRA_ISCONSUMABLE,false);
+                Log.d("pois", "clicked on fortumo!");
+                startActivityForResult(i,FORTUMO_CODE);
+            }
+        });
+    }
+
 }

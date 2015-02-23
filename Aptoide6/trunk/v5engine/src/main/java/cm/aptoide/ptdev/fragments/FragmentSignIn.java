@@ -217,43 +217,7 @@ public class FragmentSignIn extends Fragment {
                 }
 
 
-                if ("OK".equals(checkUserCredentialsJson.getStatus())) {
-                    SharedPreferences.Editor preferences = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit();
-
-                    if (null !=(checkUserCredentialsJson.getQueue())) {
-                        //hasQueue = true;
-                        preferences.putString("queueName", checkUserCredentialsJson.getQueue());
-                    }
-                    if (null !=(checkUserCredentialsJson.getAvatar())) {
-                        preferences.putString("useravatar", checkUserCredentialsJson.getAvatar());
-                    }
-
-                    if (null !=(checkUserCredentialsJson.getRepo())) {
-                        preferences.putString("userRepo", checkUserCredentialsJson.getRepo());
-                    }
-
-                    if (null !=(checkUserCredentialsJson.getUsername())) {
-                        preferences.putString("username", checkUserCredentialsJson.getUsername());
-                    }
-
-
-                    if(checkUserCredentialsJson.getSettings() != null ){
-                        boolean timeline = checkUserCredentialsJson.getSettings().getTimeline().equals("active");
-                        preferences.putBoolean(Preferences.TIMELINE_ACEPTED_BOOL, timeline);
-                    }
-
-
-                    preferences.putString(Configs.LOGIN_USER_LOGIN, username);
-
-                    preferences.putString("loginType", mode.name());
-                    preferences.commit();
-
-                    SharedPreferences.Editor securePreferences = SecurePreferences.getInstance().edit();
-                    securePreferences.putString("access_token", oAuth.getAccess_token());
-                    securePreferences.putString("devtoken",checkUserCredentialsJson.getToken());
-
-                    securePreferences.commit();
-
+                if (LoginActivity.updatePreferences(checkUserCredentialsJson,username,mode.name(),oAuth.getAccess_token())) {
                     Bundle data = new Bundle();
                     data.putString(AccountManager.KEY_ACCOUNT_NAME, username);
                     data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);

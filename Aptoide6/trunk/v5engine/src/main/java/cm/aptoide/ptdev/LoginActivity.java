@@ -634,23 +634,8 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     }
 
     private void getUserInfo(final OAuth oAuth, final String username, final Mode mode, final String accountType, final String passwordOrToken) {
-        request = new CheckUserCredentialsRequest();
-
-
-        String deviceId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
-
+        request = CheckUserCredentialsRequest.buildDefaultRequest(this,oAuth.getAccess_token());
         request.setRegisterDevice(registerDevice != null && registerDevice.isChecked());
-
-        request.setSdk(String.valueOf(AptoideUtils.HWSpecifications.getSdkVer()));
-        request.setDeviceId(deviceId);
-        request.setCpu(AptoideUtils.HWSpecifications.getCpuAbi() + "," + AptoideUtils.HWSpecifications.getCpuAbi2());
-        request.setDensity(String.valueOf(AptoideUtils.HWSpecifications.getNumericScreenSize(this)));
-        request.setOpenGl(String.valueOf(AptoideUtils.HWSpecifications.getGlEsVer(this)));
-        request.setModel(Build.MODEL);
-        request.setScreenSize(Filters.Screen.values()[AptoideUtils.HWSpecifications.getScreenSize(this)].name().toLowerCase(Locale.ENGLISH));
-
-        request.setToken(oAuth.getAccess_token());
-
         spiceManager.execute(request, new RequestListener<CheckUserCredentialsJson>() {
 
             @Override
@@ -685,40 +670,10 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
                 }
 
 
-                if ("OK".equals(checkUserCredentialsJson.getStatus())) {
-                    SharedPreferences.Editor preferences = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit();
-
+                if (updatePreferences(checkUserCredentialsJson,username,mode.name(),oAuth.getAccess_token())) {
                     if (null != checkUserCredentialsJson.getQueue()) {
                         hasQueue = true;
-
-                        preferences.putString("queueName", checkUserCredentialsJson.getQueue());
                     }
-                    if (null != (checkUserCredentialsJson.getAvatar())) {
-                        preferences.putString("useravatar", checkUserCredentialsJson.getAvatar());
-                    }
-
-                    if (null != (checkUserCredentialsJson.getRepo())) {
-                        preferences.putString("userRepo", checkUserCredentialsJson.getRepo());
-                    }
-
-                    if (null != (checkUserCredentialsJson.getUsername())) {
-                        preferences.putString("username", checkUserCredentialsJson.getUsername());
-                    }
-
-                    preferences.putString(Configs.LOGIN_USER_LOGIN, username);
-                    if(checkUserCredentialsJson.getSettings() != null ){
-                        boolean timeline = checkUserCredentialsJson.getSettings().getTimeline().equals("active");
-                        preferences.putBoolean(Preferences.TIMELINE_ACEPTED_BOOL, timeline);
-                    }
-
-                    preferences.putString("loginType", mode.name());
-                    preferences.commit();
-
-                    SharedPreferences.Editor securePreferences = SecurePreferences.getInstance().edit();
-                    securePreferences.putString("access_token", oAuth.getAccess_token());
-                    securePreferences.putString("devtoken",checkUserCredentialsJson.getToken());
-
-                    securePreferences.commit();
 
                     Bundle data = new Bundle();
                     data.putString(AccountManager.KEY_ACCOUNT_NAME, username);
@@ -825,6 +780,47 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public static boolean updatePreferences(CheckUserCredentialsJson checkUserCredentialsJson,
+                                            String username,String modeName,String token){
+        if ("OK".equals(checkUserCredentialsJson.getStatus())) {
+            SharedPreferences.Editor preferences = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).edit();
+            if (null !=(checkUserCredentialsJson.getQueue())) {
+                //hasQueue = true;
+                preferences.putString("queueName", checkUserCredentialsJson.getQueue());
+            }
+            if (null !=(checkUserCredentialsJson.getAvatar())) {
+                preferences.putString("useravatar", checkUserCredentialsJson.getAvatar());
+            }
+
+            if (null !=(checkUserCredentialsJson.getRepo())) {
+                preferences.putString("userRepo", checkUserCredentialsJson.getRepo());
+            }
+            if (null !=(checkUserCredentialsJson.getUsername())) {
+                preferences.putString("username", checkUserCredentialsJson.getUsername());
+            }
+
+            if(checkUserCredentialsJson.getSettings() != null ){
+                boolean timeline = checkUserCredentialsJson.getSettings().getTimeline().equals("active");
+                preferences.putBoolean(Preferences.TIMELINE_ACEPTED_BOOL, timeline);
+            }
+
+            preferences.putString(Configs.LOGIN_USER_LOGIN, username);
+
+            preferences.putString("loginType", modeName);
+            preferences.commit();
+
+            SharedPreferences.Editor securePreferences = SecurePreferences.getInstance().edit();
+            securePreferences.putString("access_token", token);
+            securePreferences.putInt("User_ID", checkUserCredentialsJson.getId());
+            Log.d("pois","updatePreferences, setting user id to "+ checkUserCredentialsJson.getId());
+            securePreferences.putString("devtoken",checkUserCredentialsJson.getToken());
+            securePreferences.commit();
+
+            return true;
+        }
+        return false;
     }
 }
 

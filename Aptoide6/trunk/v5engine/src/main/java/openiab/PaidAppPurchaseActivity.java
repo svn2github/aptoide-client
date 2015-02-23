@@ -3,10 +3,13 @@ package openiab;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -20,7 +23,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
 import com.paypal.android.sdk.payments.ProofOfPayment;
 
 import java.text.DecimalFormat;
@@ -30,8 +35,11 @@ import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
+import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import fortumo.FortumoPaymentActivity;
+import fortumo.PaymentStatusReceiver;
 import openiab.webservices.BasePurchaseStatusRequest;
+import openiab.webservices.IabPurchaseStatusRequest;
 import openiab.webservices.PaidAppPurchaseStatusRequest;
 import openiab.webservices.PaypalPurchaseAuthorizationRequest;
 import openiab.webservices.json.IabPurchaseStatusJson;
@@ -41,13 +49,13 @@ import openiab.webservices.json.PaymentServices;
  * Created by asantos on 15-09-2014.
  */
 public class PaidAppPurchaseActivity extends BasePurchaseActivity{
-    private static final int REQUEST_CODE_FORTUMO = 5465;
+    String user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_app_purchase);
 
-        String user = getIntent().getStringExtra("user");
+        user = getIntent().getStringExtra("user");
         aptoideProductId = getIntent().getIntExtra("ID",0);
         final ArrayList<PaymentServices> paymentServicesList = getIntent().getParcelableArrayListExtra("PaymentServices");
 
@@ -60,14 +68,17 @@ public class PaidAppPurchaseActivity extends BasePurchaseActivity{
                         String account = future.getResult().getString(AccountManager.KEY_ACCOUNT_NAME);
 
                         if(account!=null){
-                            updateUI(account,paymentServicesList);
+                            user = account;
+                            updateUI(aptoideProductId,account,paymentServicesList);
                             ((TextView) findViewById(R.id.username)).setText(getString(R.string.account) + ": " + account);
                         }else {
+                            Log.d("pois", "PaidAppPurchaseActivity finish no else do AccountManager.");
                             finish();
                         }
 
                     } catch (Exception e) {
                         e.printStackTrace();
+                        Log.d("pois", "PaidAppPurchaseActivity finish na exception AccountManager.");
                         finish();
                     }
 
@@ -76,25 +87,24 @@ public class PaidAppPurchaseActivity extends BasePurchaseActivity{
             }, new Handler(Looper.getMainLooper()));
 
         } else {
-            updateUI(user,paymentServicesList);
+            updateUI(aptoideProductId,user,paymentServicesList);
         }
 
         findViewById(R.id.buttonCancel).setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setResult(RESULT_CANCELED, getIntent());
+                Log.d("pois", "PaidAppPurchaseActivity finish no cancel button.");
                 finish();
             }
         });
     }
 
-    private void updateUI(String user, ArrayList<PaymentServices> paymentServicesList){
+    private void updateUI(final int aptoideProductId,String user, ArrayList<PaymentServices> paymentServicesList){
         ((TextView) findViewById(R.id.username)).setText(getString(R.string.account) + ": " + user);
         LinearLayout paymentMethodsLayout = (LinearLayout) findViewById(R.id.payment_methods);
         paymentMethodsLayout.removeAllViews();
         Button button;
-
-        final TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
         if (paymentServicesList!=null && paymentServicesList.isEmpty()) {
             TextView noPaymentsFound = new TextView(this);
@@ -102,13 +112,11 @@ public class PaidAppPurchaseActivity extends BasePurchaseActivity{
             paymentMethodsLayout.addView(noPaymentsFound);
         }else if(paymentServicesList !=null ){
             for (final PaymentServices service : paymentServicesList) {
-
                 int serviceCode = servicesList.get(service.getShort_name());
 
                 switch (serviceCode) {
                     case PAYPAL_CODE:
                         for (PaymentServices.PaymentType type : service.getTypes()) {
-
                             if ("future".equals(type.getReqType())) {
 
                                 button = (Button) LayoutInflater.from(this).inflate(R.layout.button_paypal, null);
@@ -136,7 +144,6 @@ public class PaidAppPurchaseActivity extends BasePurchaseActivity{
 
                                 onPaypalClick.setDescription( Aptoide.getConfiguration().getMarketName() + " Paid App - " + packageName);
 
-
                                 button.setOnClickListener(onPaypalClick);
                                 paymentMethodsLayout.addView(button);
 
@@ -148,61 +155,42 @@ public class PaidAppPurchaseActivity extends BasePurchaseActivity{
                         }
                         break;
                     case UNITEL_CODE:
-
-                        if(telephonyManager!=null && telephonyManager.getSimState()== TelephonyManager.SIM_STATE_READY){
-                            for (PaymentServices.PaymentType type : service.getTypes()) {
-                                button = (Button) LayoutInflater.from(this).inflate(R.layout.button_carrier, null);
-
-                                if (button != null) {
-                                    button.setText(type.getLabel() + " - " + service.getPrice() + " " + service.getSign());
-                                    paymentMethodsLayout.addView(button);
-                                    DecimalFormat df = new DecimalFormat("######.#");
-                                    button.setOnClickListener(new UnitelPurchaseListener(getSupportFragmentManager(),
-                                            String.valueOf(service.getPrice()),
-                                            telephonyManager.getSimOperatorName(),
-                                            service.getName(),
-                                            service.getId(), telephonyManager.getSubscriberId(),
-                                            service.getCurrency(),
-                                            df.format(service.getPrice())));
-                                }
-                            }
-
-                        }
+                        caseUNITEL(service,paymentMethodsLayout);
                         break;
                     case FORTUMO_CODE:
-                        if(telephonyManager!=null && telephonyManager.getSimState()== TelephonyManager.SIM_STATE_READY){
-                            for (PaymentServices.PaymentType type : service.getTypes()) {
-                                button = (Button) LayoutInflater.from(this).inflate(R.layout.button_carrier, null);
-
-                                if (button != null) {
-                                    button.setText(type.getLabel() + " - " + service.getPrice() + " " + service.getSign());
-                                    paymentMethodsLayout.addView(button);
-                                    button.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            Log.d("pois", "clicked on the cena!");
-                                            Intent i = new Intent(getBaseContext(), FortumoPaymentActivity.class);
-                                            i.putExtra(FortumoPaymentActivity.EXTRA_PACKAGE,packageName);
-                                            i.putExtra(FortumoPaymentActivity.EXTRA_PAYMENTSERVICE,service);
-                                            startActivityForResult(i,REQUEST_CODE_FORTUMO);
-                                        }
-                                    });
-                                }
-                            }
-                        }
+                        caseFortumo(aptoideProductId,service,paymentMethodsLayout);
                         break;
                 }
             }
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==REQUEST_CODE_FORTUMO){
+/*    public void FortumoCallBack(boolean ok,boolean isconsumable,String payment_code){
+        if(ok) {
+            Log.d("pois", "FortumoCallBack called!");
+            BasePurchaseStatusRequest request = isconsumable ? new IabPurchaseStatusRequest() : new PaidAppPurchaseStatusRequest();
+            request.setPayKey(payment_code);
+            spiceManager.execute(request, new RequestListener<IabPurchaseStatusJson>() {
+                @Override
+                public void onRequestFailure(SpiceException spiceException) {
+                    Log.d("pois", "RequestListener onRequestFailure");
+                    dismissAllowingStateLoss();
+                    Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
+                }
 
-        }else
-            super.onActivityResult(requestCode, resultCode, data);
-    }
+                @Override
+                public void onRequestSuccess(IabPurchaseStatusJson iabPurchaseStatusJson) {
+                    Log.d("pois", "RequestListener onRequestSuccess");
+                    dismissAllowingStateLoss();
+                    setResult(RESULT_OK);
+                    finish();
+                }
+            });
+        }else{
+            dismissAllowingStateLoss();
+            Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
+        }
+    }*/
 
     @Override
     protected void processPaymentConfirmation(final ProofOfPayment confirmation) {
@@ -229,6 +217,7 @@ public class PaidAppPurchaseActivity extends BasePurchaseActivity{
                 dismissAllowingStateLoss();
                 if (iabPurchaseStatusJson != null && "OK".equals(iabPurchaseStatusJson.getStatus())) {
                     setResult(RESULT_OK, intent);
+                    Log.d("pois", "PaidAppPurchaseActivity finish no processPaymentConfirmation.");
                     finish();
                 } else {
                     Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();

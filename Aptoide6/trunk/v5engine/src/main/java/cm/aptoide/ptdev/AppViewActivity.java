@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -115,6 +116,7 @@ import cm.aptoide.ptdev.model.MultiStoreItem;
 import cm.aptoide.ptdev.model.Screenshot;
 import cm.aptoide.ptdev.model.Video;
 import cm.aptoide.ptdev.preferences.Preferences;
+import cm.aptoide.ptdev.preferences.SecurePreferences;
 import cm.aptoide.ptdev.services.DownloadService;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
 import cm.aptoide.ptdev.utils.AptoideUtils;
@@ -124,6 +126,7 @@ import cm.aptoide.ptdev.utils.SimpleCursorLoader;
 import cm.aptoide.ptdev.webservices.AddApkCommentVoteRequest;
 import cm.aptoide.ptdev.webservices.AddApkFlagRequest;
 import cm.aptoide.ptdev.webservices.AddCommentRequest;
+import cm.aptoide.ptdev.webservices.CheckUserCredentialsRequest;
 import cm.aptoide.ptdev.webservices.GetAdsRequest;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromId;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromMd5;
@@ -131,6 +134,7 @@ import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromPackageName;
 import cm.aptoide.ptdev.webservices.GetApkInfoRequestFromVercode;
 import cm.aptoide.ptdev.webservices.UpdateUserRequest;
 import cm.aptoide.ptdev.webservices.json.ApkSuggestionJson;
+import cm.aptoide.ptdev.webservices.json.CheckUserCredentialsJson;
 import cm.aptoide.ptdev.webservices.json.CreateUserJson;
 import cm.aptoide.ptdev.webservices.json.GenericResponseV2;
 import cm.aptoide.ptdev.webservices.json.GetApkInfoJson;
@@ -500,10 +504,36 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     }
 
     private void changebtInstalltoBuy(TextView btinstall){
+        Log.d("pois","User_ID: "+ SecurePreferences.getInstance().getInt("User_ID",0));
         supportInvalidateOptionsMenu();
         btinstall.setText(getString(R.string.buy) + " (" +payment.getSymbol() + " " + payment.getAmount() + ")");
         btinstall.setEnabled(true);
         final Activity thisActivity = this;
+        if(SecurePreferences.getInstance().getInt("User_ID",0)==0){
+            Log.d("pois","is 0, making request");
+            CheckUserCredentialsRequest request = CheckUserCredentialsRequest.buildDefaultRequest(thisActivity,SecurePreferences.getInstance().getString("access_token", null));
+            spiceManager.execute(request, new RequestListener<CheckUserCredentialsJson>() {
+
+                @Override
+                public void onRequestFailure(SpiceException spiceException) {
+                    Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onRequestSuccess(CheckUserCredentialsJson checkUserCredentialsJson) {
+                    if ("OK".equals(checkUserCredentialsJson.getStatus())) {
+                        SharedPreferences.Editor securePreferences = SecurePreferences.getInstance().edit();
+
+                        securePreferences.putInt("User_ID", checkUserCredentialsJson.getId());
+                        Log.d("pois","updating user id to "+ checkUserCredentialsJson.getId());
+                        securePreferences.commit();
+                    }else{
+                        Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+        }
         btinstall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -512,12 +542,12 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 final Account[] accounts = accountManager.getAccountsByType(Aptoide.getConfiguration().getAccountType());
 
                 if(accounts.length>0) {
-                    Intent i = new Intent(thisActivity, Aptoide.getConfiguration().getPaidAppPurchaseActivityClass());
-
+                    final Intent i = new Intent(thisActivity, Aptoide.getConfiguration().getPaidAppPurchaseActivityClass());
                     i.putExtra("packageName", package_name);
                     i.putExtra("ID", payment.getMetadata().getId());
                     i.putExtra("user", accounts[0].name);
                     i.putParcelableArrayListExtra("PaymentServices", new ArrayList<Parcelable>(payment.getPayment_services()));
+
                     thisActivity.startActivityForResult(i, Purchase_REQUEST_CODE);
 
                 } else {
@@ -2580,7 +2610,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        Log.d("pois","AppViewActivity onActivityResult");
         if (requestCode != LOGIN_REQUEST_CODE) {
             if (requestCode == DOWGRADE_REQUEST_CODE) {
 
@@ -2599,16 +2629,11 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
                 //Log.d( "commentsUpdate", "AppViewActivity : onActivityResult" );
                 refreshOnResume = true;
             } else if(requestCode == Purchase_REQUEST_CODE){
-
-
+                Log.d("pois","AppViewActivity onActivityResult Purchase_REQUEST_CODE");
                 if(resultCode == RESULT_OK){
                     refreshOnResume = true;
-                    autoDownload = true;
+                    autoDownload = false;
                 }
-
-                //Toast.makeText(this, "OnActivityResult " + getCacheKey(), Toast.LENGTH_LONG).show();
-
-
             }
         }
     }

@@ -1,9 +1,6 @@
 package cm.aptoide.ptdev.webservices.json;
 
-
-import cm.aptoide.ptdev.model.*;
 import cm.aptoide.ptdev.model.Error;
-
 
 import java.util.List;
 
@@ -12,24 +9,18 @@ import java.util.List;
  */
 
 public class CheckUserCredentialsJson {
-
-
     public String status;
-
 
     public String token;
 
-     String repo;
-
+    public int id;
+    String repo;
 
     public String avatar;
 
-
     public String username;
 
-
     public String queueName;
-
 
     public List<Error> errors;
 
@@ -83,6 +74,13 @@ public class CheckUserCredentialsJson {
         public String getTimeline() {
             return timeline;
         }
+    }
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
 }

@@ -410,42 +410,11 @@ public class IABPurchaseActivity extends BasePurchaseActivity{
                                             }
                                             break;
                                         case UNITEL_CODE:
-
-                                            if(telephonyManager!=null && telephonyManager.getSimState()==TelephonyManager.SIM_STATE_READY){
-
-
-
-                                                for (PaymentServices.PaymentType type : service.getTypes()) {
-                                                    button = (Button) LayoutInflater.from(THIS).inflate(R.layout.button_carrier, null);
-
-                                                    if (button != null) {
-                                                        button.setText(type.getLabel() + " - " + service.getPrice() + " " + service.getSign());
-                                                        paymentMethodsLayout.addView(button);
-                                                        DecimalFormat df = new DecimalFormat("######.#");
-                                                        button.setOnClickListener(new UnitelPurchaseListener(getSupportFragmentManager(),
-                                                                String.valueOf(response.getPublisher_response().getDetailss_list().get(0).getPrice()),
-                                                                telephonyManager.getSimOperatorName(),
-                                                                response.getPublisher_response().getDetailss_list().get(0).getTitle(),
-                                                                service.getId(), telephonyManager.getSubscriberId(),
-                                                                service.getCurrency(),
-                                                                df.format(service.getPrice())));
-                                                    }
-                                                }
-
-                                            }
-
-
+                                            caseUNITEL(service,paymentMethodsLayout);
                                             break;
-//                                            case FORTUMO_CODE:
-//
-//                                                for (PaymentServices.PaymentType type : service.getTypes()) {
-//                                                    button = (Button) LayoutInflater.from(PurchaseActivity.this).inflate(R.layout.button_carrier, null);
-//                                                    button.setText(type.getLabel());
-//                                                    paymentMethodsLayout.addView(button);
-//                                                }
-//
-//
-//                                                break;
+                                        case FORTUMO_CODE:
+                                            caseFortumo(aptoideProductId,service,paymentMethodsLayout);
+                                            break;
                                     }
 
 

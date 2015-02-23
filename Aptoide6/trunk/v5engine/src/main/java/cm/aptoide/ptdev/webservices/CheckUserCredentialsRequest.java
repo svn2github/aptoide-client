@@ -1,12 +1,19 @@
 package cm.aptoide.ptdev.webservices;
 
+import android.content.Context;
+import android.os.Build;
+import android.provider.Settings;
+
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
 import java.util.HashMap;
+import java.util.Locale;
 
 import cm.aptoide.ptdev.LoginActivity;
+import cm.aptoide.ptdev.utils.AptoideUtils;
+import cm.aptoide.ptdev.utils.Filters;
 import cm.aptoide.ptdev.webservices.json.CheckUserCredentialsJson;
 import retrofit.converter.Converter;
 import retrofit.converter.JacksonConverter;
@@ -182,5 +189,22 @@ public class CheckUserCredentialsRequest extends RetrofitSpiceRequest<CheckUserC
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public static CheckUserCredentialsRequest buildDefaultRequest(Context c, String token){
+        CheckUserCredentialsRequest request = new CheckUserCredentialsRequest();
+
+        String deviceId = Settings.Secure.getString(c.getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        request.setSdk(String.valueOf(AptoideUtils.HWSpecifications.getSdkVer()));
+        request.setDeviceId(deviceId);
+        request.setCpu(AptoideUtils.HWSpecifications.getCpuAbi() + "," + AptoideUtils.HWSpecifications.getCpuAbi2());
+        request.setDensity(String.valueOf(AptoideUtils.HWSpecifications.getNumericScreenSize(c)));
+        request.setOpenGl(String.valueOf(AptoideUtils.HWSpecifications.getGlEsVer(c)));
+        request.setModel(Build.MODEL);
+        request.setScreenSize(Filters.Screen.values()[AptoideUtils.HWSpecifications.getScreenSize(c)].name().toLowerCase(Locale.ENGLISH));
+
+        request.setToken(token);
+        return request;
     }
 }

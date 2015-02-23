@@ -26,6 +26,12 @@ public abstract class BasePurchaseStatusRequest extends BaseRequest<IabPurchaseS
     private String simcc;
     private String repo;
 
+    public void setPayreqtype(String payreqtype) {
+        this.payreqtype = payreqtype;
+    }
+
+    private String payreqtype;
+
     public interface Webservice{
         @POST("/webservices.aptoide.com/webservices/3/processInAppBilling")
         @FormUrlEncoded
@@ -39,6 +45,7 @@ public abstract class BasePurchaseStatusRequest extends BaseRequest<IabPurchaseS
 
     public BasePurchaseStatusRequest() {
         super(IabPurchaseStatusJson.class, Webservice.class);
+        payreqtype=null;
     }
 
 //    protected abstract GenericUrl getURL();
@@ -79,7 +86,9 @@ public abstract class BasePurchaseStatusRequest extends BaseRequest<IabPurchaseS
         parameters.put("apiversion", String.valueOf(apiVersion));
         parameters.put("reqtype",getReqType());
         parameters.put("paykey", payKey);
-        parameters.put("payreqtype", "rest");
+        if(payreqtype==null)
+            payreqtype = "rest";
+        parameters.put("payreqtype",payreqtype);
         parameters.put("paytype", String.valueOf(payType));
 
         parameters.put("repo", repo);
