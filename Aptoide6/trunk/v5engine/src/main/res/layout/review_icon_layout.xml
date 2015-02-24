@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_icon_container"
+    android:layout_width="126dp"
+    android:layout_alignParentLeft="true"
+    android:layout_centerVertical="true"
+    android:layout_height="126dp"
+    tools:showIn="@layout/row_review">
+
+    <ImageView
+        android:id="@+id/app_icon"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:src="@drawable/icon_brand_aptoide"
+        android:layout_centerInParent="true" />
+
+    <FrameLayout
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/rating_shape">
+
+        <TextView
+            android:id="@+id/rating"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="4.9"
+            android:gravity="center"
+            android:textColor="@android:color/white" />
+
+    </FrameLayout>
+
+</RelativeLayout>

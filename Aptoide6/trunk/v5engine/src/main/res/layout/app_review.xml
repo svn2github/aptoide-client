@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent" android:padding="5dp"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <include android:id="@+id/icon_layout" layout="@layout/review_icon_layout"/>
+
+            <LinearLayout
+                android:layout_toRightOf="@id/icon_layout" android:layout_centerVertical="true"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/app_name"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_marginLeft="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"  android:text="Plants vs Zombies"/>
+
+
+            <LinearLayout
+                android:layout_marginLeft="10dp"
+
+                android:layout_width="match_parent" android:orientation="horizontal"
+                android:layout_height="wrap_content">
+
+
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp" android:id="@+id/avatar" />
+
+                <TextView
+                    android:id="@+id/reviewer"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="match_parent" android:gravity="center_vertical" android:textSize="12sp"
+                    android:layout_height="match_parent" android:text="Review by - John Hancock"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+
+        </RelativeLayout>
+        <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="@color/dark_custom_gray" android:layout_margin="10dp"/>
+
+    <include layout="@layout/review_cons_pros_layout" />
+
+    <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="@color/dark_custom_gray" android:layout_margin="10dp"/>
+
+    <include layout="@layout/review_graphs_layout" />
+        <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="@color/dark_custom_gray" android:layout_margin="10dp"/>
+
+        <TextView
+            android:padding="5dp"
+            android:layout_width="match_parent" android:gravity="center_vertical" android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_height="wrap_content" android:text="Final Veredict"/>
+        
+        <TextView
+            android:padding="10dp"
+            android:id="@+id/final_veredict"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</ScrollView>

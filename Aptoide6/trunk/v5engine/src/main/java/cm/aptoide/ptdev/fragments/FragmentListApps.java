@@ -930,36 +930,38 @@ public class FragmentListApps extends Fragment {
 
                             @Override
                             public void onRequestSuccess(ListRecomended listRecomended) {
-                                Row row = new Row();
-                                int location = ((RecyclerAdapter) view.getAdapter()).getPlaceholders().get("xml_recommended");
+                                try {
+                                    Row row = new Row();
+                                    int location = ((RecyclerAdapter) view.getAdapter()).getPlaceholders().get("xml_recommended");
 
-                                if (listRecomended != null && listRecomended.getRepository() != null) {
-                                    for (ListRecomended.Repository apkSuggestion : listRecomended.getRepository()) {
+                                    if (listRecomended != null && listRecomended.getRepository() != null) {
+                                        for (ListRecomended.Repository apkSuggestion : listRecomended.getRepository()) {
 
-                                        row.header = getString(R.string.recommended_for_you);
-                                        Response.ListApps.Apk apk = new Response.ListApps.Apk();
-                                        row.widgetid = "recommended";
+                                            row.header = getString(R.string.recommended_for_you);
+                                            Response.ListApps.Apk apk = new Response.ListApps.Apk();
+                                            row.widgetid = "recommended";
 
-                                        if (apkSuggestion.getPackage() != null) {
-                                            for (ListRecomended.Repository.Package apkRecommended : apkSuggestion.getPackage()) {
-                                                apk.name = apkRecommended.getName();
-                                                apk.icon = apkSuggestion.getIconspath() + apkRecommended.getIcon_hd();
-                                                apk.downloads = apkRecommended.getDwn();
-                                                apk.md5sum = apkRecommended.getMd5h();
+                                            if (apkSuggestion.getPackage() != null) {
+                                                for (ListRecomended.Repository.Package apkRecommended : apkSuggestion.getPackage()) {
+                                                    apk.name = apkRecommended.getName();
+                                                    apk.icon = apkSuggestion.getIconspath() + apkRecommended.getIcon_hd();
+                                                    apk.downloads = apkRecommended.getDwn();
+                                                    apk.md5sum = apkRecommended.getMd5h();
 
-                                                row.addItem(apk);
+                                                    row.addItem(apk);
+                                                }
+
                                             }
-
                                         }
                                     }
-                                }
 
-                                if (!row.apks.isEmpty()) {
+                                    if (!row.apks.isEmpty()) {
 
-                                    ((RecyclerAdapter) view.getAdapter()).list.add(location, row);
-                                    (view.getAdapter()).notifyDataSetChanged();
+                                        ((RecyclerAdapter) view.getAdapter()).list.add(location, row);
+                                        (view.getAdapter()).notifyDataSetChanged();
 
-                                }
+                                    }
+                                }catch (Exception ignored){}
 
                             }
                         });

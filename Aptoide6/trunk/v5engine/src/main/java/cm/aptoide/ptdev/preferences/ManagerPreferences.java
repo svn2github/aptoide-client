@@ -31,6 +31,7 @@ import android.util.Log;
 import java.util.UUID;
 
 import cm.aptoide.ptdev.Aptoide;
+import cm.aptoide.ptdev.ReviewActivity;
 
 /**
  * ManagerPreferences, manages aptoide's preferences I/O
@@ -64,8 +65,7 @@ public class ManagerPreferences {
 
         //removeLauncherShortcut(context);
 
-        Intent shortcutIntent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
-
+        Intent shortcutIntent = new Intent(context, ReviewActivity.class);
         Log.d("Aptoide-Shortcut", "Creating Intent");
         final Intent intent = new Intent();
         intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
