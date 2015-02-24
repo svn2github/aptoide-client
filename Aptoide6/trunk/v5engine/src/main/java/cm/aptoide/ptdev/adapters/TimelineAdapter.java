@@ -6,19 +6,25 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.ads.NativeAd;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.text.ParseException;
@@ -39,6 +45,9 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
     private static final int ACTIVE = 0;
     private static final int HIDDEN = 1;
 
+    private NativeAd ad;
+    private static final int AD_INDEX = 3;
+    private View adView;
 
     private TimeLineManager mTimeLineManager;
 
@@ -48,7 +57,6 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
         super(context,0,apks);
         mInflater = LayoutInflater.from(context);
         mTimeLineManager = callback;
-
     }
 
     @Override
@@ -58,13 +66,19 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
 
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
-        switch (getItemViewType(position)){
-            case ACTIVE:
-                return getViewActive(position,convertView,parent);
-            case HIDDEN:
-                return getViewHidden(position, convertView, parent);
-            default:
-                return null;
+        if (position == AD_INDEX && ad != null) {
+            // Return the native ad view
+            return (View) adView;
+        }
+        else {
+            switch (getItemViewType(position)) {
+                case ACTIVE:
+                    return getViewActive(position, convertView, parent);
+                case HIDDEN:
+                    return getViewHidden(position, convertView, parent);
+                default:
+                    return null;
+            }
         }
     }
 
@@ -375,5 +389,91 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
     @Override
     public boolean isEnabled(int position) {
         return false;
+    }
+
+
+    public synchronized TimelineListAPKsJson.UserApk addNativeAd(NativeAd ad,Context context,ArrayList<TimelineListAPKsJson.UserApk> list) {
+        if (ad == null) {
+            Log.d("pois","addNativeAd , was null");
+            return null;
+        }
+        if (this.ad != null) {
+            Log.d("pois","addNativeAd , was old");
+            // Clean up the old ad before inserting the new one
+            this.ad.unregisterView();
+            list.remove(AD_INDEX);
+            this.ad = null;
+            this.notifyDataSetChanged();
+        }
+        Log.d("pois","addNativeAd , adding native ad");
+        this.ad = ad;
+        adView = mInflater.inflate(R.layout.facebook_ad_unit, null);
+        TimelineListAPKsJson.UserApk ret = new UserAPKAd(ad);
+        inflateAd(ad, adView, context);
+        list.add(AD_INDEX, ret);
+        Log.d("pois","addNativeAd , position on "+AD_INDEX);
+        this.notifyDataSetChanged();
+        return new UserAPKAd(ad);
+    }
+
+    public void inflateAd(NativeAd nativeAd, View adView, Context context) {
+        // Create native UI using the ad metadata.
+
+        ImageView nativeAdIcon = (ImageView) adView.findViewById(R.id.nativeAdIcon);
+        TextView nativeAdTitle = (TextView) adView.findViewById(R.id.nativeAdTitle);
+        TextView nativeAdBody = (TextView) adView.findViewById(R.id.nativeAdBody);
+        ImageView nativeAdImage = (ImageView) adView.findViewById(R.id.nativeAdImage);
+        TextView nativeAdSocialContext = (TextView) adView.findViewById(R.id.nativeAdSocialContext);
+        Button nativeAdCallToAction = (Button) adView.findViewById(R.id.nativeAdCallToAction);
+        RatingBar nativeAdStarRating = (RatingBar) adView.findViewById(R.id.nativeAdStarRating);
+
+        // Setting the Text
+        nativeAdSocialContext.setText(nativeAd.getAdSocialContext());
+        nativeAdCallToAction.setText(nativeAd.getAdCallToAction());
+        nativeAdCallToAction.setVisibility(View.VISIBLE);
+        nativeAdTitle.setText(nativeAd.getAdTitle());
+        nativeAdBody.setText(nativeAd.getAdBody());
+
+        // Downloading and setting the ad icon.
+        NativeAd.Image adIcon = nativeAd.getAdIcon();
+        NativeAd.downloadAndDisplayImage(adIcon, nativeAdIcon);
+
+        // Downloading and setting the cover image.
+        NativeAd.Image adCoverImage = nativeAd.getAdCoverImage();
+        int bannerWidth = adCoverImage.getWidth();
+        int bannerHeight = adCoverImage.getHeight();
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        DisplayMetrics metrics = new DisplayMetrics();
+        display.getMetrics(metrics);
+        int screenWidth = metrics.widthPixels;
+        int screenHeight = metrics.heightPixels;
+        nativeAdImage.setLayoutParams(new LinearLayout.LayoutParams(
+                screenWidth,
+                Math.min((int) (((double) screenWidth / (double) bannerWidth) * bannerHeight), screenHeight / 3)
+        ));
+        NativeAd.downloadAndDisplayImage(adCoverImage, nativeAdImage);
+
+        NativeAd.Rating rating = nativeAd.getAdStarRating();
+        if (rating != null) {
+            nativeAdStarRating.setVisibility(View.VISIBLE);
+            nativeAdStarRating.setNumStars((int) rating.getScale());
+            nativeAdStarRating.setRating((float) rating.getValue());
+        } else {
+            nativeAdStarRating.setVisibility(View.GONE);
+        }
+
+        // Wire up the View with the native ad, the whole nativeAdContainer will be clickable
+        nativeAd.registerViewForInteraction(adView);
+
+        // Or you can replace the above call with the following function to specify the clickable areas.
+        // nativeAd.registerViewForInteraction(nativeAdContainer, Arrays.asList(nativeAdCallToAction, nativeAdImage));
+    }
+
+    public static class UserAPKAd extends TimelineListAPKsJson.UserApk{
+        NativeAd ad;
+        public UserAPKAd(NativeAd ad){
+            this.ad = ad;
+        }
     }
 }

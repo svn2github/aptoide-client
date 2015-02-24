@@ -345,29 +345,6 @@
         </service>
 
         <service
-            android:name="cm.aptoide.ptdev.services.TimelinePostsSyncService"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.content.SyncAdapter" />
-            </intent-filter>
-            <meta-data
-                android:name="android.content.SyncAdapter"
-                android:resource="@xml/timeline_posts_sync_adapter" />
-        </service>
-
-        <service
-            android:name="cm.aptoide.ptdev.services.TimelineActivitySyncService"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.content.SyncAdapter" />
-            </intent-filter>
-            <meta-data
-                android:name="android.content.SyncAdapter"
-                android:resource="@xml/timeline_activity_sync_adapter" />
-        </service>
-
-
-        <service
             android:name="cm.aptoide.ptdev.services.UpdatesSyncService"
             android:exported="true">
             <intent-filter>

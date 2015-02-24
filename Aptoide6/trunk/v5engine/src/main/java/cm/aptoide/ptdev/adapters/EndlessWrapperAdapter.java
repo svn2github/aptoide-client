@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.commonsware.cwac.endless.EndlessAdapter;
+import com.facebook.ads.NativeAd;
 
 import java.util.ArrayList;
 
@@ -20,13 +21,15 @@ import cm.aptoide.ptdev.webservices.timeline.json.TimelineListAPKsJson;
 public class EndlessWrapperAdapter extends EndlessAdapter {
 
     private final Callback callback;
+    TimelineAdapter tla;
 
     public interface Callback{
         public void runRequest();
     }
 
-    public EndlessWrapperAdapter(FragmentSocialTimeline.SubFragmentSocialTimeline callback, Context context, ArrayList<TimelineListAPKsJson.UserApk> list) {
-        super(context, new TimelineAdapter(callback, context, list), 0);
+    public EndlessWrapperAdapter(TimelineAdapter tla,FragmentSocialTimeline.SubFragmentSocialTimeline callback, Context context) {
+        super(context, tla, 0);
+        this.tla=tla;
         this.callback = callback;
     }
 
@@ -45,5 +48,8 @@ public class EndlessWrapperAdapter extends EndlessAdapter {
     @Override
     protected void appendCachedData() {}
 
+    public synchronized TimelineListAPKsJson.UserApk addNativeAd(NativeAd ad,Context context,ArrayList<TimelineListAPKsJson.UserApk> list) {
+        return tla.addNativeAd(ad,context,list);
+    }
 
 }

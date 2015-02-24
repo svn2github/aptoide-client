@@ -34,6 +34,10 @@ import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.AdListener;
+import com.facebook.ads.NativeAd;
 import com.facebook.model.GraphUser;
 import com.flurry.android.FlurryAgent;
 
@@ -54,6 +58,7 @@ import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.TimeLineFriendsInviteActivity;
 import cm.aptoide.ptdev.TimeLineNoFriendsInviteActivity;
 import cm.aptoide.ptdev.adapters.EndlessWrapperAdapter;
+import cm.aptoide.ptdev.adapters.TimelineAdapter;
 import cm.aptoide.ptdev.dialogs.TimeLineCommentsDialog;
 import cm.aptoide.ptdev.dialogs.TimeLineWhoLikesDialog;
 import cm.aptoide.ptdev.events.BusProvider;
@@ -140,8 +145,6 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
 
     @TargetApi(Build.VERSION_CODES.FROYO)
     private void startTimeline(boolean force) {
-
-
         if(force) {
             Preferences.putBooleanAndCommit(Preferences.TIMELINE_ACEPTED_BOOL, true);
             Executors.newSingleThreadExecutor().execute(new Runnable() {
@@ -207,8 +210,8 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if(savedInstanceState == null ) {
+
             init();
         }
 
@@ -366,7 +369,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
         outState.putBoolean("loginMode", loginMode);
     }
 
-    public static class SubFragmentSocialTimeline extends ListFragment implements SwipeRefreshLayout.OnRefreshListener, TimeLineManager, EndlessWrapperAdapter.Callback {
+    public static class SubFragmentSocialTimeline extends ListFragment implements SwipeRefreshLayout.OnRefreshListener, TimeLineManager, EndlessWrapperAdapter.Callback,AdListener {
 
         private static final int COMMENTSLIMIT = 10;
         private static final String COMMENTSDIALOGTAG = "CD";
@@ -636,8 +639,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
 
 
         private void init() {
-
-            adapter = new EndlessWrapperAdapter(this, getActivity(), apks);
+            adapter = new EndlessWrapperAdapter(new TimelineAdapter(this, getActivity(), apks),this,getActivity());
             adapter.setRunInBackground(false);
             username = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("username", "");
 
@@ -700,7 +702,6 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
         @Override
         public void onResume() {
             super.onResume();
-
             if(forceRefresh){
                 refreshRequest();
                 forceRefresh = false;
@@ -711,6 +712,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
         public void onStart() {
             super.onStart();
             manager.start(getActivity());
+            initFACEBOOKNativeAd();
         }
 
         @Override
@@ -736,6 +738,38 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
             }
             return super.onOptionsItemSelected(item);
         }
+
+           /*FACEBOOK ads stuff*/
+
+
+        private NativeAd listNativeAd;
+
+        private void initFACEBOOKNativeAd(){
+            listNativeAd = new NativeAd(getActivity(), "381014172054741_426066357549522");
+            listNativeAd.setAdListener(this);
+            Log.d("pois"," initFACEBOOKNativeAd ");
+            listNativeAd.loadAd();
+        }
+
+        @Override
+        public void onAdClicked(Ad ad) {
+            Log.d("pois","onAdClicked , ad: "+ad.toString());
+            Toast.makeText(getActivity(), "Ad Clicked", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onAdLoaded(Ad ad) {
+            Log.d("pois","onAdLoaded , ad: "+ad.toString());
+            adapter.addNativeAd((NativeAd) ad,getActivity(),apks);
+        }
+
+        @Override
+        public void onError(Ad ad, AdError error) {
+            Log.d("pois"," onError "+error.getErrorMessage());
+            Log.d("pois"," onError code:"+error.getErrorCode());
+            Toast.makeText(getActivity(), "Ad failed to load: " +  error.getErrorMessage(), Toast.LENGTH_SHORT).show();
+        }
+
 
     /* *************** Methods of the TimeLineManager Interface *************** */
 
@@ -889,7 +923,4 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
         }
 
     }
-
-
-
 }
