@@ -127,9 +127,6 @@ public class ReviewActivity extends ActionBarActivity {
 
                 }
 
-
-
-
                 speedChart.startDataAnimation();
                 usabilityChart.startDataAnimation();
                 addictiveChart.startDataAnimation();
