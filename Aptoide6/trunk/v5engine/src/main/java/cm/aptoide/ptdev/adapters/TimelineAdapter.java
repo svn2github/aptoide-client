@@ -2,8 +2,6 @@ package cm.aptoide.ptdev.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.DisplayMetrics;
@@ -44,6 +42,7 @@ import cm.aptoide.ptdev.webservices.timeline.json.TimelineListAPKsJson;
 public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> {
     private static final int ACTIVE = 0;
     private static final int HIDDEN = 1;
+    private static final int ADTYPE = 2;
 
     private NativeAd ad;
     private static final int AD_INDEX = 3;
@@ -60,26 +59,33 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
     }
 
     @Override
+    public int getViewTypeCount() {
+        return 3;
+    }
+
+    @Override
     public int getItemViewType(int position) {
-        return getItem(position).getInfo().isStatusActive()?ACTIVE:HIDDEN;
+        int type;
+        if(getItem(position).getInfo()==null)
+            type = ADTYPE;
+        else type = getItem(position).getInfo().isStatusActive()?ACTIVE:HIDDEN;
+        Log.d("pois","getItemViewType :"+type);
+        return type;
     }
 
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
-        if (position == AD_INDEX && ad != null) {
-            // Return the native ad view
-            return (View) adView;
+        switch (getItemViewType(position)) {
+            case ADTYPE:
+                return adView;
+            case ACTIVE:
+                return getViewActive(position, convertView, parent);
+            case HIDDEN:
+                return getViewHidden(position, convertView, parent);
+            default:
+                return null;
         }
-        else {
-            switch (getItemViewType(position)) {
-                case ACTIVE:
-                    return getViewActive(position, convertView, parent);
-                case HIDDEN:
-                    return getViewHidden(position, convertView, parent);
-                default:
-                    return null;
-            }
-        }
+
     }
 
     public View getViewHidden(final int position, View convertView, final ViewGroup parent) {
@@ -392,10 +398,10 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
     }
 
 
-    public synchronized TimelineListAPKsJson.UserApk addNativeAd(NativeAd ad,Context context,ArrayList<TimelineListAPKsJson.UserApk> list) {
+    public synchronized void addNativeAd(NativeAd ad,Context context,ArrayList<TimelineListAPKsJson.UserApk> list) {
         if (ad == null) {
             Log.d("pois","addNativeAd , was null");
-            return null;
+            return;
         }
         if (this.ad != null) {
             Log.d("pois","addNativeAd , was old");
@@ -407,13 +413,12 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
         }
         Log.d("pois","addNativeAd , adding native ad");
         this.ad = ad;
-        adView = mInflater.inflate(R.layout.facebook_ad_unit, null);
+        adView = mInflater.inflate(R.layout.row_timeline_ad_unit, null);
         TimelineListAPKsJson.UserApk ret = new UserAPKAd(ad);
         inflateAd(ad, adView, context);
         list.add(AD_INDEX, ret);
         Log.d("pois","addNativeAd , position on "+AD_INDEX);
         this.notifyDataSetChanged();
-        return new UserAPKAd(ad);
     }
 
     public void inflateAd(NativeAd nativeAd, View adView, Context context) {

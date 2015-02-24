@@ -209,6 +209,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d("pois"," onCreate ");
         super.onCreate(savedInstanceState);
         if(savedInstanceState == null ) {
 
@@ -467,9 +468,8 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
         }
 
         public void onItemsReady(ArrayList<TimelineListAPKsJson.UserApk> data) {
-
+            Log.d("pois"," onItemsReady ");
             try {
-
                 if (data.isEmpty()) {
                     if (apks.isEmpty()) {
 
@@ -478,7 +478,6 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
                         args.putInt(FragmentSocialTimelineLayouts.STATE_ARG, FragmentSocialTimelineLayouts.State.FRIENDS_INVITE.ordinal());
                         fragmentSocialTimelineLayouts.setArguments(args);
                         getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragmentSocialTimelineLayouts).commitAllowingStateLoss();
-
                     }
                     adapter.stopAppending();
                 } else {
@@ -488,17 +487,14 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
                     data.get(0).animate = true;
 
                     if (AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true)) {
-
                         for (TimelineListAPKsJson.UserApk apk : data) {
                             if (!apk.getApk().getAge().equals("Mature")) {
                                 apks.add(apk);
                             }
                         }
-
                     } else {
                         apks.addAll(data);
                     }
-
                     lastId = apks.get(apks.size() - 1).getInfo().getId();
 
                 }   // Tell the EndlessAdapter to
@@ -506,6 +502,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
                 // view and call
                 // notifyDataSetChanged()
                 adapter.onDataReady();
+                initFACEBOOKNativeAd();
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -513,7 +510,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
         }
 
         public void onItemsReadyRefresh(ArrayList<TimelineListAPKsJson.UserApk> data) {
-
+            Log.d("pois"," onItemsReadyRefresh ");
             if(AptoideUtils.getSharedPreferences().getBoolean("matureChkBox", true)){
 
                 for(TimelineListAPKsJson.UserApk apk : data){
@@ -712,7 +709,6 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
         public void onStart() {
             super.onStart();
             manager.start(getActivity());
-            initFACEBOOKNativeAd();
         }
 
         @Override
@@ -745,9 +741,12 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
         private NativeAd listNativeAd;
 
         private void initFACEBOOKNativeAd(){
+            Log.d("pois"," initFACEBOOKNativeAd ");
+            if(listNativeAd!=null)
+                return;
+            Log.d("pois"," initFACEBOOKNativeAd new ad");
             listNativeAd = new NativeAd(getActivity(), "381014172054741_426066357549522");
             listNativeAd.setAdListener(this);
-            Log.d("pois"," initFACEBOOKNativeAd ");
             listNativeAd.loadAd();
         }
 

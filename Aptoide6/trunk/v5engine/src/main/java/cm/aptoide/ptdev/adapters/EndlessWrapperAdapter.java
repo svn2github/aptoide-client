@@ -48,8 +48,8 @@ public class EndlessWrapperAdapter extends EndlessAdapter {
     @Override
     protected void appendCachedData() {}
 
-    public synchronized TimelineListAPKsJson.UserApk addNativeAd(NativeAd ad,Context context,ArrayList<TimelineListAPKsJson.UserApk> list) {
-        return tla.addNativeAd(ad,context,list);
+    public void addNativeAd(NativeAd ad,Context context,ArrayList<TimelineListAPKsJson.UserApk> list) {
+        tla.addNativeAd(ad,context,list);
     }
 
 }
