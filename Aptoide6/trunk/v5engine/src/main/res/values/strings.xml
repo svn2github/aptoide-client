@@ -581,6 +581,7 @@
     <string name="facebook_friends_list_using_timeline_empty">Social Timeline allows you to share your applications with your Facebook friends. Do you want to join the network?</string>
     <string name="share_on_timeline">Share on Timeline</string>
     <string name="do_you_accept_timeline">Do you accept the Aptoide Timeline?</string>
+    <string name="timeline_ad">Suggested App by Facebook</string>
     <string name="and">and</string>
     <string name="more_friends">more</string>
     <string name="hide_post">HIDE</string>

@@ -760,6 +760,7 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
         public void onAdLoaded(Ad ad) {
             Log.d("pois","onAdLoaded , ad: "+ad.toString());
             adapter.addNativeAd((NativeAd) ad,getActivity(),apks);
+
         }
 
         @Override

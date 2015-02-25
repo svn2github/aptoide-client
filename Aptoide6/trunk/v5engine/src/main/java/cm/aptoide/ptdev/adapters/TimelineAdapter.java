@@ -22,15 +22,20 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.AdListener;
 import com.facebook.ads.NativeAd;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.ads.FaceBookAdButton;
 import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.utils.IconSizes;
 import cm.aptoide.ptdev.webservices.timeline.TimeLineManager;
@@ -69,7 +74,6 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
         if(getItem(position).getInfo()==null)
             type = ADTYPE;
         else type = getItem(position).getInfo().isStatusActive()?ACTIVE:HIDDEN;
-        Log.d("pois","getItemViewType :"+type);
         return type;
     }
 
@@ -426,17 +430,19 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
 
         ImageView nativeAdIcon = (ImageView) adView.findViewById(R.id.nativeAdIcon);
         TextView nativeAdTitle = (TextView) adView.findViewById(R.id.nativeAdTitle);
+        TextView nativeAdTitleRating = (TextView) adView.findViewById(R.id.nativeAdTitleRating);
         TextView nativeAdBody = (TextView) adView.findViewById(R.id.nativeAdBody);
+
         ImageView nativeAdImage = (ImageView) adView.findViewById(R.id.nativeAdImage);
         TextView nativeAdSocialContext = (TextView) adView.findViewById(R.id.nativeAdSocialContext);
-        Button nativeAdCallToAction = (Button) adView.findViewById(R.id.nativeAdCallToAction);
+        FaceBookAdButton nativeAdCallToAction = (FaceBookAdButton) adView.findViewById(R.id.nativeAdCallToAction);
         RatingBar nativeAdStarRating = (RatingBar) adView.findViewById(R.id.nativeAdStarRating);
 
         // Setting the Text
         nativeAdSocialContext.setText(nativeAd.getAdSocialContext());
         nativeAdCallToAction.setText(nativeAd.getAdCallToAction());
-        nativeAdCallToAction.setVisibility(View.VISIBLE);
         nativeAdTitle.setText(nativeAd.getAdTitle());
+        nativeAdTitleRating.setText(nativeAd.getAdTitle());
         nativeAdBody.setText(nativeAd.getAdBody());
 
         // Downloading and setting the ad icon.
@@ -469,10 +475,11 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
         }
 
         // Wire up the View with the native ad, the whole nativeAdContainer will be clickable
-        nativeAd.registerViewForInteraction(adView);
+        //nativeAd.registerViewForInteraction(adView);
+
 
         // Or you can replace the above call with the following function to specify the clickable areas.
-        // nativeAd.registerViewForInteraction(nativeAdContainer, Arrays.asList(nativeAdCallToAction, nativeAdImage));
+         nativeAd.registerViewForInteraction(adView, Arrays.asList(nativeAdCallToAction));
     }
 
     public static class UserAPKAd extends TimelineListAPKsJson.UserApk{
