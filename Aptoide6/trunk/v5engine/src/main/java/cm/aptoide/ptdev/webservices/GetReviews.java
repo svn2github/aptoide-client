@@ -18,7 +18,7 @@ public abstract class GetReviews<T> extends RetrofitSpiceRequest<T,GetReviews.Ge
 
     private int store_id;
     private int offset;
-
+    private int limit;
 
 
 
@@ -54,12 +54,20 @@ public abstract class GetReviews<T> extends RetrofitSpiceRequest<T,GetReviews.Ge
             args.put("offset", String.valueOf(offset));
         }
 
+        if(limit>0){
+            args.put("limit", String.valueOf(limit));
+        }
+
 
 
         return response(args);
     }
 
     public abstract T response(HashMap<String, String> args);
+
+    public void setLimit(int limit) {
+        this.limit = limit;
+    }
 
     public interface GetReviewListWebservice{
         @POST("/webservices.aptoide.com/webservices/3/getReviewList")
@@ -93,24 +101,78 @@ public abstract class GetReviews<T> extends RetrofitSpiceRequest<T,GetReviews.Ge
         }
     }
 
+
     public static class GetReviewList extends GetReviews<ReviewListJson>{
-        private int id;
+        private int store_id;
+        private boolean homePage;
+
+        private String order_by = "rand";
+
+
+
+        private String order = "asc";
+
+
+
 
         public GetReviewList() {
             super(ReviewListJson.class);
         }
 
+
+
         @Override
         public ReviewListJson response(HashMap<String, String> args) {
+
+            if(homePage){
+                args.put("editors", "true");
+            }
+
+            if(store_id>0){
+                args.put("repo_id", String.valueOf(store_id));
+            }
+
+            args.put("order_by", order_by);
+            args.put("order", order);
+
             return getService().getReviewList(args);
         }
 
-        public int getId() {
-            return id;
+        public int getStoreId() {
+            return store_id;
         }
 
-        public void setId(int id) {
-            this.id = id;
+        public void setStoreId(int id) {
+            this.store_id = id;
+        }
+
+        public void setHomePage(boolean homePage) {
+            this.homePage = homePage;
+        }
+
+
+        /**
+         *
+         * @param order_by
+         *
+         * Sort by: options are: id, rand
+         *
+         *
+         *
+         */
+
+        public void setOrderBy(String order_by) {
+            this.order_by = order_by;
+        }
+
+        /**
+         *
+         * @param order
+         *
+         * Sort order: options are: asc, desc
+         */
+        public void setOrder(String order) {
+            this.order = order;
         }
     }
 

@@ -2207,7 +2207,7 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
         public AppViewPager(FragmentManager fm, Context context) {
             super(fm);
-            TITLES = new String[]{context.getString(R.string.info), context.getString(R.string.review), context.getString(R.string.related), context.getString(R.string.advanced)};
+            TITLES = new String[]{context.getString(R.string.info), context.getString(R.string.comments), context.getString(R.string.related), context.getString(R.string.advanced)};
         }
 
         @Override

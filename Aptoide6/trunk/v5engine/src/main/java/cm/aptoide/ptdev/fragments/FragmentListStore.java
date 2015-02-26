@@ -39,9 +39,12 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 import com.squareup.otto.Subscribe;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +54,7 @@ import cm.aptoide.ptdev.CategoryCallback;
 import cm.aptoide.ptdev.EnumCategories;
 import cm.aptoide.ptdev.EnumStoreTheme;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.ReviewsActivity;
 import cm.aptoide.ptdev.StoreActivity;
 import cm.aptoide.ptdev.database.Database;
 import cm.aptoide.ptdev.dialogs.AdultHiddenDialog;
@@ -484,16 +488,17 @@ public class FragmentListStore extends Fragment {
 
                     for (Response.GetStore.Widgets.Widget widget : list) {
 
-
-                        WidgetCategory item = new WidgetCategory();
-                        item.refid = widget.data.ref_id;
-                        item.widgetid = widget.widgetid;
-                        item.icon = widget.data.icon;
-                        item.name = widget.name;
-                        item.theme = theme;
-                        item.apps_count = widget.data.apps_count;
-                        item.store_id = getArguments().getLong("storeid");
-                        map.add(item);
+                        if(isValidWidget(widget)) {
+                            WidgetCategory item = new WidgetCategory();
+                            item.refid = widget.data.ref_id;
+                            item.widgetid = widget.widgetid;
+                            item.icon = widget.data.icon;
+                            item.name = widget.name;
+                            item.theme = theme;
+                            item.apps_count = widget.data.apps_count;
+                            item.store_id = getArguments().getLong("storeid");
+                            map.add(item);
+                        }
 
 
                     }
@@ -673,6 +678,11 @@ public class FragmentListStore extends Fragment {
         }
     };
 
+    private final List<String> apps_list = Arrays.asList("apps_list", "reviews_list", "comm_list");
+
+    private boolean isValidWidget(Response.GetStore.Widgets.Widget widget) {
+        return apps_list.contains(widget.type);
+    }
 
 
     public class WidgetCategory implements StoreListItem{
@@ -994,7 +1004,13 @@ public class FragmentListStore extends Fragment {
                                 bundle.putLong("storeid", storeListItem.store_id);
                                 fragment = new LatestLikesFragment();
                                 FlurryAgent.logEvent("Store_Clicked_On_Latest_Likes");
+                            } else if("latest".equals(refid)){
 
+                                Intent intent = new Intent(context, ReviewsActivity.class);
+                                intent.putExtra("store_id", (int) storeListItem.store_id);
+                                context.startActivity(intent);
+
+                                return;
                             }else {
 
                                 fragment = new FragmentListStore();

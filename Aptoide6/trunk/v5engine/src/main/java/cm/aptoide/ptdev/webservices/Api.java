@@ -60,6 +60,7 @@ public class Api {
         public String store_user;
         public String store_pass_sha1;
         public String country;
+        public int aptoide_vercode = getVercode();
 
         public String q = getFilters();
 
@@ -67,7 +68,8 @@ public class Api {
             this.lang = lang;
         }
 
-        public String getFilters(){
+        @JsonIgnore
+        private String getFilters(){
 
             if(PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("hwspecsChkBox", true)){
                 return AptoideUtils.filters(Aptoide.getContext());
@@ -75,6 +77,11 @@ public class Api {
                 return null;
             }
             
+        }
+
+        @JsonIgnore
+        private int getVercode(){
+            return PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getInt("version", 0);
         }
 
         public void setStore_name(String store_name) {

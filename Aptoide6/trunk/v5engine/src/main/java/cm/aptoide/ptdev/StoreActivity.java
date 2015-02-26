@@ -152,7 +152,7 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
         Aptoide.getThemePicker().setAptoideTheme(this);
         super.onCreate(savedInstanceState);
 
-        Intent i = new Intent(this, ParserService.class);
+
         setContentView(R.layout.page_store_list);
 
         sort = Sort.values()[PreferenceManager.getDefaultSharedPreferences(this).getInt("order_list", 0)];
@@ -173,15 +173,11 @@ public class StoreActivity extends ActionBarActivity implements CategoryCallback
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
-        bindService(i, conn, BIND_AUTO_CREATE);
         bindService(new Intent(this, DownloadService.class), conn2, BIND_AUTO_CREATE);
 
-
-
-
-
     }
+
+
 
     public Login getLogin(){
         return login;

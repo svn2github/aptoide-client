@@ -3,5 +3,5 @@
 
     android:gravity="center_vertical"
     android:drawablePadding="5dp"
-    android:layout_width="match_parent" android:layout_height="wrap_content" android:drawableLeft="@drawable/bad_icon">
+    android:layout_width="match_parent" android:layout_height="wrap_content" android:drawableLeft="@drawable/con_red">
 </TextView>

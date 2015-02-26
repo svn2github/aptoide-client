@@ -381,6 +381,11 @@ public class Review {
         this.additionalProperties.put(name, value);
     }
 
+    @JsonIgnore
+    public float getRating(){
+        return Math.round((performance * 10 + usability * 10 + addiction * 10+ stability * 10) / 4.0f) / 10f;
+    }
+
     @Override
     public String toString() {
         return "Review{" +

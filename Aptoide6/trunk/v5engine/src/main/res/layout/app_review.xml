@@ -1,75 +1,177 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent" android:padding="5dp"
-    android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:orientation="vertical">
 
     <LinearLayout
-        android:orientation="vertical" android:layout_width="match_parent"
-        android:layout_height="0dp">
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content" android:clipChildren="false">
 
-        <include android:id="@+id/icon_layout" layout="@layout/review_icon_layout"/>
 
-            <LinearLayout
-                android:layout_toRightOf="@id/icon_layout" android:layout_centerVertical="true"
-                android:orientation="vertical"
+
+            <FrameLayout
+                android:id="@+id/bigImageContainer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="100dp" android:foreground="#AA000000">
+
+            <ImageView
+                android:id="@+id/bigImage"
+                android:scaleType="centerCrop"
+                android:src="@drawable/generic_image"
+                android:layout_width="match_parent"
+                android:layout_height="100dp" />
+            </FrameLayout>
+
+
+
+            <RelativeLayout
+                android:layout_toRightOf="@+id/app_icon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/app_icon"
+                android:gravity="center_vertical"
+
+                android:layout_marginTop="25dp"
+                android:orientation="horizontal">
+                <TextView
+                    style="?attr/customButtonColor"
+                    android:id="@+id/getapp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="Get App" android:layout_alignParentRight="true"/>
+                <TextView
+
+                    android:id="@+id/app_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="10"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:layout_toLeftOf="@id/getapp"
+                    android:textColor="@android:color/white"
+                    android:shadowColor="@color/dark_custom_gray"
+                    android:text="Sample text"
+                    android:textSize="24sp" />
+
+
+
+
+            </RelativeLayout>
+
+
 
             <TextView
-                android:id="@+id/app_name"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:layout_marginLeft="10dp"
+                android:id="@+id/vername_date"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"  android:text="Plants vs Zombies"/>
+                android:background="@color/background_holo_light"
+                android:padding="2dp" android:gravity="right"
+                android:layout_height="wrap_content" android:layout_below="@id/bigImageContainer"/>
+
+            <com.makeramen.RoundedImageView
+                android:id="@+id/app_icon"
+                android:layout_marginTop="25dp"
+                android:layout_width="96dp"
+                app:riv_corner_radius="70dp"
+                android:layout_height="96dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_margin="5dp"
+            android:layout_marginTop="-10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <FrameLayout
+                android:id="@+id/rating_container"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/rating_shape">
+
+                <TextView
+                    android:id="@+id/rating"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textSize="20sp"
+                    android:gravity="center"
+                    android:textColor="@android:color/white" />
 
 
-            <LinearLayout
+            </FrameLayout>
+            <RelativeLayout
+                android:layout_centerVertical="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
+                android:gravity="center_vertical"
+                android:layout_toLeftOf="@id/rating_container"
+                android:orientation="horizontal">
 
-                android:layout_width="match_parent" android:orientation="horizontal"
-                android:layout_height="wrap_content">
 
-
-                <ImageView
+                <com.makeramen.RoundedImageView
+                    android:id="@+id/avatar"
+                    app:riv_border_width="2dip"
+                    app:riv_border_color="#fff"
+                    app:riv_corner_radius="70dp"
                     android:layout_width="35dp"
-                    android:layout_height="35dp" android:id="@+id/avatar" />
+                    android:layout_height="35dp"
+                    android:layout_alignParentLeft="true"/>
 
                 <TextView
                     android:id="@+id/reviewer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
-                    android:layout_width="match_parent" android:gravity="center_vertical" android:textSize="12sp"
-                    android:layout_height="match_parent" android:text="Review by - John Hancock"/>
+                    android:layout_toLeftOf="@+id/score_label"
+                    android:layout_toRightOf="@+id/avatar"
+                    android:gravity="center_vertical"
+                    android:layout_centerVertical="true"
+                     />
 
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/score_label"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:textStyle="bold"
+                    android:layout_height="match_parent" android:text="Score:" android:layout_alignParentRight="true"/>
 
-            </LinearLayout>
+            </RelativeLayout>
 
 
 
         </RelativeLayout>
-        <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="@color/dark_custom_gray" android:layout_margin="10dp"/>
 
-    <include layout="@layout/review_cons_pros_layout" />
+        <include layout="@layout/review_cons_pros_layout" android:layout_marginLeft="5dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginRight="5dp" />
 
-    <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="@color/dark_custom_gray" android:layout_margin="10dp"/>
-
-    <include layout="@layout/review_graphs_layout" />
-        <View android:layout_width="match_parent" android:layout_height="0.5dp" android:background="@color/dark_custom_gray" android:layout_margin="10dp"/>
+        <include layout="@layout/review_graphs_layout" android:layout_marginLeft="5dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginRight="5dp"  />
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
             android:padding="5dp"
-            android:layout_width="match_parent" android:gravity="center_vertical" android:textAppearance="?android:attr/textAppearanceLarge"
-            android:layout_height="wrap_content" android:text="Final Veredict"/>
-        
+            android:text="Final Veredict"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
         <TextView
-            android:padding="10dp"
             android:id="@+id/final_veredict"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:padding="10dp" />
 
     </LinearLayout>
 </ScrollView>

@@ -33,6 +33,8 @@ public class Apk {
     private String _package;
     @JsonProperty("vercode")
     private Integer vercode;
+    @JsonProperty("vername")
+    private String vername;
     @JsonProperty("title")
     private String title;
     @JsonProperty("icon")
@@ -41,6 +43,23 @@ public class Apk {
     private List<Screenshot> screenshots = new ArrayList<Screenshot>();
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+
+    /**
+     *
+     * @return
+     */
+    public String getVername() {
+        return vername;
+    }
+
+
+    /**
+     *
+     * @param vername
+     */
+    public void setVername(String vername) {
+        this.vername = vername;
+    }
 
     /**
      *

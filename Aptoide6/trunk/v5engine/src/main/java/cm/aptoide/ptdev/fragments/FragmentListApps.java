@@ -52,6 +52,8 @@ import cm.aptoide.ptdev.MoreFriendsInstallsActivity;
 import cm.aptoide.ptdev.MoreHighlightedActivity;
 import cm.aptoide.ptdev.MoreUserBasedActivity;
 import cm.aptoide.ptdev.R;
+import cm.aptoide.ptdev.ReviewActivity;
+import cm.aptoide.ptdev.ReviewsActivity;
 import cm.aptoide.ptdev.StickyRecyclerHeadersDecoration;
 import cm.aptoide.ptdev.StickyRecyclerHeadersTouchListener;
 import cm.aptoide.ptdev.database.Database;
@@ -67,10 +69,13 @@ import cm.aptoide.ptdev.utils.AptoideUtils;
 import cm.aptoide.ptdev.views.RoundedImageView;
 import cm.aptoide.ptdev.webservices.Api;
 import cm.aptoide.ptdev.webservices.GetAdsRequest;
+import cm.aptoide.ptdev.webservices.GetReviews;
 import cm.aptoide.ptdev.webservices.ListUserbasedApkRequest;
 import cm.aptoide.ptdev.webservices.Response;
 import cm.aptoide.ptdev.webservices.json.ApkSuggestionJson;
 import cm.aptoide.ptdev.webservices.json.ListRecomended;
+import cm.aptoide.ptdev.webservices.json.reviews.Review;
+import cm.aptoide.ptdev.webservices.json.reviews.ReviewListJson;
 import cm.aptoide.ptdev.webservices.timeline.ListApksInstallsRequest;
 import cm.aptoide.ptdev.webservices.timeline.json.TimelineListAPKsJson;
 import retrofit.http.Body;
@@ -126,6 +131,74 @@ public class FragmentListApps extends Fragment {
         void bindView(RecyclerView.ViewHolder viewHolder);
 
         void onBindHeaderViewHolder(FragmentListApps.RecyclerAdapter.HeaderViewHolder viewHolder);
+    }
+
+    public static final int REVIEW_TYPE = 193872;
+
+    public static class ReviewRow extends Row{
+
+        private String header;
+        private Review review;
+
+        public ReviewRow(String header, Review review) {
+            this.header = header;
+            this.review = review;
+        }
+
+        @Override
+        public int getViewType() {
+            return REVIEW_TYPE;
+        }
+
+        @Override
+        public boolean isMore() {
+            return true;
+        }
+
+        @Override
+        public long getHeaderId() {
+
+            return Math.abs(header.hashCode());
+
+        }
+
+        @Override
+        public void bindView(RecyclerView.ViewHolder viewHolder) {
+
+            RecyclerAdapter.ReviewViewHolder holder = (RecyclerAdapter.ReviewViewHolder) viewHolder;
+
+            holder.rating.setText(String.valueOf(review.getRating()));
+            holder.appName.setText(review.getApk().getTitle());
+            holder.description.setText(review.getFinalVerdict());
+            ImageLoader.getInstance().displayImage(review.getApk().getIcon(), holder.appIcon);
+            ImageLoader.getInstance().displayImage(review.getUser().getAvatar(), holder.avatar);
+
+            holder.reviewer.setText("Reviewed by - " + review.getUser().getName());
+
+
+            final Integer id = review.getId();
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Context context = v.getContext();
+
+                    Intent i = new Intent(context, ReviewActivity.class);
+
+                    i.putExtra("id", id);
+
+                    context.startActivity(i);
+
+                }
+            });
+
+        }
+
+        @Override
+        public void onBindHeaderViewHolder(RecyclerAdapter.HeaderViewHolder viewHolder) {
+            viewHolder.tv.setText(header);
+
+        }
     }
 
 
@@ -699,6 +772,10 @@ public class FragmentListApps extends Fragment {
                     } else if (widgetid.equals("highlighted")) {
                         intent = new Intent(getActivity(), MoreHighlightedActivity.class);
                         FlurryAgent.logEvent("Home_Page_Clicked_On_More_Highlighted");
+                    } else if (widgetid.equals("reviews_list")) {
+                        intent = new Intent(getActivity(), ReviewsActivity.class);
+                        intent.putExtra("store_id", 15);
+                        intent.putExtra("editors", true);
                     } else {
                         intent = new Intent(getActivity(), Aptoide.getConfiguration().getMoreActivityClass());
                         intent.putExtra("widgetid", widgetid);
@@ -788,6 +865,7 @@ public class FragmentListApps extends Fragment {
                 try {
                     List<Response.GetStore.Widgets.Widget> list = response.responses.getStore.datasets.widgets.data.list;
                     HashMap<String, Response.ListApps.Category> dataset = response.responses.listApps.datasets.getDataset();
+
 
 
                     for (Response.GetStore.Widgets.Widget widget : list) {
@@ -966,6 +1044,35 @@ public class FragmentListApps extends Fragment {
                             }
                         });
                     }
+
+
+                    GetReviews.GetReviewList reviewRequest = new GetReviews.GetReviewList();
+
+                    reviewRequest.setOrderBy("rand");
+                    reviewRequest.setStoreId(15);
+                    reviewRequest.setHomePage(true);
+                    reviewRequest.setLimit(1);
+
+                    manager.execute(reviewRequest,"review-homepage",DurationInMillis.ONE_MINUTE/10, new RequestListener<ReviewListJson>() {
+                        @Override
+                        public void onRequestFailure(SpiceException spiceException) {
+
+                        }
+
+                        @Override
+                        public void onRequestSuccess(ReviewListJson reviewListJson) {
+                            int location = ((RecyclerAdapter) view.getAdapter()).getPlaceholders().get("reviews_list");
+
+                            ReviewRow reviewRow = new ReviewRow("Reviews", reviewListJson.getReviews().get(0));
+                            reviewRow.widgetid = "reviews_list";
+                            ((RecyclerAdapter) view.getAdapter()).list.add(location, reviewRow);
+
+                            (view.getAdapter()).notifyDataSetChanged();
+
+                        }
+                    });
+
+
                     manager.execute(request, ((GetStartActivityCallback) getActivity()).getSponsoredCache() + BUCKET_SIZE, DurationInMillis.ALWAYS_RETURNED, new RequestListener<ApkSuggestionJson>() {
                         @Override
                         public void onRequestFailure(SpiceException spiceException) {
@@ -1148,14 +1255,20 @@ public class FragmentListApps extends Fragment {
             Context context = parent.getContext();
             int BUCKET_SIZE = AptoideUtils.getBucketSize();
 
-            if(viewType == 8723487 ){
+            if(viewType == 8723487 ) {
                 View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.widget_switch, parent, false);
 
-                ((CompoundButton)inflate.findViewById(R.id.adult_content)).setChecked(!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true));
+                ((CompoundButton) inflate.findViewById(R.id.adult_content)).setChecked(!PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).getBoolean("matureChkBox", true));
 
                 return new RecyclerView.ViewHolder(inflate) {
                 };
 
+
+            } else if (viewType == REVIEW_TYPE){
+
+                View inflate = LayoutInflater.from(context).inflate(R.layout.row_review, parent, false);
+
+                return new ReviewViewHolder(inflate);
             } else if(viewType>=3000) {
                 LinearLayout inflate = new LinearLayout(context);
                 inflate.setOrientation(LinearLayout.HORIZONTAL);
@@ -1266,6 +1379,32 @@ public class FragmentListApps extends Fragment {
                     frameLayouts[i] = (FrameLayout) itemView.findViewById(frameLayoutRes[i]);
                     images[i] = (ImageView) itemView.findViewById(imageRes[i]);
                 }
+            }
+        }
+
+        public static class ReviewViewHolder extends cm.aptoide.ptdev.widget.RecyclerView.ViewHolder{
+
+            ImageView appIcon;
+            TextView appName;
+            TextView description;
+            TextView rating;
+            TextView reviewer;
+            ImageView avatar;
+
+
+
+
+            public ReviewViewHolder(View itemView) {
+                super(itemView);
+
+                avatar = (ImageView) itemView.findViewById(R.id.avatar);
+                reviewer = (TextView) itemView.findViewById(R.id.reviewer);
+                appIcon = (ImageView) itemView.findViewById(R.id.app_icon);
+                appName = (TextView) itemView.findViewById(R.id.app_name);
+                description = (TextView) itemView.findViewById(R.id.description);
+                rating = (TextView) itemView.findViewById(R.id.rating);
+
+
             }
         }
 
