@@ -659,4 +659,10 @@
     <string name="no_selected_apps">No selected apps</string>
     <string name="install_selected_apps">Install %d selected apps</string>
 
+    <string name="review_speed">Speed</string>
+    <string name="review_usability">Usability</string>
+    <string name="review_addictive">Addictive</string>
+    <string name="review_stability">Stability</string>
+    <string name="review_title">Reviews</string>
+
 </resources>

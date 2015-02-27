@@ -44,7 +44,6 @@ public abstract class GetReviews<T> extends RetrofitSpiceRequest<T,GetReviews.Ge
 
     @Override
     public T loadDataFromNetwork() throws Exception {
-
         HashMap<String, String > args = new HashMap<>();
 
         args.put("mode","json");
@@ -57,8 +56,6 @@ public abstract class GetReviews<T> extends RetrofitSpiceRequest<T,GetReviews.Ge
         if(limit>0){
             args.put("limit", String.valueOf(limit));
         }
-
-
 
         return response(args);
     }
@@ -107,19 +104,11 @@ public abstract class GetReviews<T> extends RetrofitSpiceRequest<T,GetReviews.Ge
         private boolean homePage;
 
         private String order_by = "rand";
-
-
-
         private String order = "asc";
-
-
-
 
         public GetReviewList() {
             super(ReviewListJson.class);
         }
-
-
 
         @Override
         public ReviewListJson response(HashMap<String, String> args) {

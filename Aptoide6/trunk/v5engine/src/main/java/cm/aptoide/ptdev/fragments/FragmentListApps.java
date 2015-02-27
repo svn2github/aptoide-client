@@ -87,12 +87,9 @@ import static cm.aptoide.ptdev.utils.AptoideUtils.withSuffix;
  * Created by rmateus on 21-11-2014.
  */
 public class FragmentListApps extends Fragment {
-
-
-
     SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
     private RequestListener<Response> requestListener;
-    Map<String, String> flurryParams = new HashMap<String, String>();
+    Map<String, String> flurryParams = new HashMap<>();
     private TestRequest request;
 
     @Override
@@ -116,7 +113,6 @@ public class FragmentListApps extends Fragment {
     }
 
     public interface TestService{
-
         @POST("/ws2.aptoide.com/api/6/bulkRequest/api_list/getStore,listApps/")
         Response postApk(@Body Api user) throws Response.TicketException;
     }
@@ -157,9 +153,7 @@ public class FragmentListApps extends Fragment {
 
         @Override
         public long getHeaderId() {
-
             return Math.abs(header.hashCode());
-
         }
 
         @Override
@@ -174,7 +168,6 @@ public class FragmentListApps extends Fragment {
             ImageLoader.getInstance().displayImage(review.getUser().getAvatar(), holder.avatar);
 
             holder.reviewer.setText("Reviewed by - " + review.getUser().getName());
-
 
             final Integer id = review.getId();
 
@@ -757,9 +750,7 @@ public class FragmentListApps extends Fragment {
         touchListener.setOnHeaderClickListener(new StickyRecyclerHeadersTouchListener.OnHeaderClickListener() {
             @Override
             public void onHeaderClick(View viewHeader, int i, long l) {
-
                 if((((RecyclerAdapter) view.getAdapter()).list.get(i)).isMore()) {
-
                     Intent intent;
                     String widgetid = ((Row) ((RecyclerAdapter) view.getAdapter()).list.get(i)).widgetid;
                     if (widgetid.equals("timeline")) {
@@ -783,7 +774,6 @@ public class FragmentListApps extends Fragment {
                         intent.putExtra("widgetname", ((Row) ((RecyclerAdapter) view.getAdapter()).list.get(i)).header);
                         flurryParams.put("WidgetCategory", ((Row) ((RecyclerAdapter) view.getAdapter()).list.get(i)).header);
                         FlurryAgent.logEvent("Home_Page_Clicked_On_More", flurryParams);
-
                     }
 
                     startActivity(intent);
@@ -791,7 +781,6 @@ public class FragmentListApps extends Fragment {
             }
         });
         view.addOnItemTouchListener(touchListener);
-
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -839,9 +828,6 @@ public class FragmentListApps extends Fragment {
                         }
                     });
                 }
-
-
-
             }
 
             @Override
@@ -858,20 +844,14 @@ public class FragmentListApps extends Fragment {
                         fragment.show(getFragmentManager(), "passwordDialog");
                         return;
                     }
-                }catch (Exception e){
-
-                }
+                }catch (Exception e){}
 
                 try {
                     List<Response.GetStore.Widgets.Widget> list = response.responses.getStore.datasets.widgets.data.list;
                     HashMap<String, Response.ListApps.Category> dataset = response.responses.listApps.datasets.getDataset();
 
-
-
                     for (Response.GetStore.Widgets.Widget widget : list) {
-
                         if (widget.type.equals("apps_list")) {
-
                             if ("apps_list:EDITORS_group_hrand".equals(widget.widgetid)) {
 
                                 ArrayList<Response.ListApps.Apk> inElements = new ArrayList<>(dataset.get(widget.data.ref_id).data.list);
@@ -928,7 +908,6 @@ public class FragmentListApps extends Fragment {
                             map.add(row);
                             ((RecyclerAdapter) view.getAdapter()).getPlaceholders().put(widget.type, map.size());
                         }
-
                     }
 
                     if(isAdultEnabled()) {
@@ -951,13 +930,11 @@ public class FragmentListApps extends Fragment {
                     request.setKeyword("__NULL__");
 
                     if (AptoideUtils.isLoggedIn(getActivity())) {
-
                         SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
 
                         if (defaultSharedPreferences.getBoolean(Preferences.TIMELINE_ACEPTED_BOOL, false)) {
 
                             ListApksInstallsRequest listRelatedApkRequest = new ListApksInstallsRequest();
-
                             listRelatedApkRequest.setLimit(String.valueOf(BUCKET_SIZE + 1));
 
                             manager.execute(listRelatedApkRequest, "MoreFriendsInstalls", DurationInMillis.ALWAYS_EXPIRED, new RequestListener<TimelineListAPKsJson>() {
@@ -991,7 +968,6 @@ public class FragmentListApps extends Fragment {
 
                                 }
                             });
-
                         }
 
 
@@ -1045,7 +1021,6 @@ public class FragmentListApps extends Fragment {
                         });
                     }
 
-
                     GetReviews.GetReviewList reviewRequest = new GetReviews.GetReviewList();
 
                     reviewRequest.setOrderBy("rand");
@@ -1061,14 +1036,15 @@ public class FragmentListApps extends Fragment {
 
                         @Override
                         public void onRequestSuccess(ReviewListJson reviewListJson) {
-                            int location = ((RecyclerAdapter) view.getAdapter()).getPlaceholders().get("reviews_list");
+                            if("OK".equals(reviewListJson.getStatus()) && reviewListJson.getReviews().size()>0) {
+                                int location = ((RecyclerAdapter) view.getAdapter()).getPlaceholders().get("reviews_list");
 
-                            ReviewRow reviewRow = new ReviewRow("Reviews", reviewListJson.getReviews().get(0));
-                            reviewRow.widgetid = "reviews_list";
-                            ((RecyclerAdapter) view.getAdapter()).list.add(location, reviewRow);
+                                ReviewRow reviewRow = new ReviewRow("Reviews", reviewListJson.getReviews().get(0));
+                                reviewRow.widgetid = "reviews_list";
+                                ((RecyclerAdapter) view.getAdapter()).list.add(location, reviewRow);
 
-                            (view.getAdapter()).notifyDataSetChanged();
-
+                                (view.getAdapter()).notifyDataSetChanged();
+                            }
                         }
                     });
 
@@ -1170,9 +1146,6 @@ public class FragmentListApps extends Fragment {
                 manager.execute(request, "home" + BUCKET_SIZE, DurationInMillis.ALWAYS_EXPIRED, requestListener);
             }
         });
-
-
-
 
         manager.execute(request, "home" + BUCKET_SIZE, DurationInMillis.ONE_WEEK, requestListener);
 

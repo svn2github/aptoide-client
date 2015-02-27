@@ -1,6 +1,5 @@
 package cm.aptoide.ptdev;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -10,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,14 +21,9 @@ import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-import net.danlew.android.joda.JodaTimeAndroid;
-
-import org.joda.time.MonthDay;
-import org.joda.time.Years;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,15 +43,7 @@ import lecho.lib.hellocharts.view.PieChartView;
  */
 public class ReviewActivity extends ActionBarActivity {
 
-
     SpiceManager manager = new SpiceManager(HttpClientSpiceService.class);
-
-
-    private ImageView speedScreenshot;
-    private ImageView usabilityScreenshot;
-    private ImageView addictiveScreenshot;
-    private ImageView stabilityScreenshot;
-
 
     private PieChartData speedData;
     private PieChartView speedChart;
@@ -71,6 +56,7 @@ public class ReviewActivity extends ActionBarActivity {
 
     private PieChartData stabilityData;
     private PieChartView stabilityChart;
+
     private TextView title;
     private TextView finalVeredict;
     private TextView reviewer;
@@ -81,8 +67,13 @@ public class ReviewActivity extends ActionBarActivity {
     private LinearLayout prosContainer;
     private ImageView bigImage;
 
+    ArrayList<ImageView> screenshots;
 
     DisplayImageOptions options = new DisplayImageOptions.Builder().resetViewBeforeLoading(false).displayer(new FadeInBitmapDisplayer(1000)).build();
+    private TextView speedLabel;
+    private TextView usabilityLabel;
+    private TextView addictiveLabel;
+    private TextView stabilityLabel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,7 +83,7 @@ public class ReviewActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setWindowTitle("Reviews");
+        getSupportActionBar().setWindowTitle(getString(R.string.review_title));
         init();
 
         getWindow().getDecorView().setBackgroundColor(Color.WHITE);
@@ -100,7 +91,6 @@ public class ReviewActivity extends ActionBarActivity {
         GetReviews.GetReview reviewsRequest = new GetReviews.GetReview();
         int id = getIntent().getIntExtra("id", 0);
         reviewsRequest.setId(id);
-
 
         manager.execute(reviewsRequest, "review-id-" + id, DurationInMillis.ONE_DAY,new RequestListener<ReviewJson>() {
             @Override
@@ -112,10 +102,9 @@ public class ReviewActivity extends ActionBarActivity {
             public void onRequestSuccess(final ReviewJson reviewListJson) {
                 Log.d("AptoideReview", reviewListJson.toString()) ;
                 int addiction = reviewListJson.getReview().getAddiction();
-                int performance = reviewListJson.getReview().getPerformance();
+                int speed = reviewListJson.getReview().getPerformance();
                 int stability = reviewListJson.getReview().getStability();
                 int usability = reviewListJson.getReview().getUsability();
-
 
                 TextView vername = (TextView) findViewById(R.id.vername_date);
 
@@ -129,25 +118,20 @@ public class ReviewActivity extends ActionBarActivity {
                     vername.setText(reviewListJson.getReview().getApk().getVername());
                 }
 
-
-
-
                 findViewById(R.id.getapp).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(v.getContext(), Aptoide.getConfiguration().getAppViewActivityClass());
-
                         intent.putExtra("fromApkInstaller", true);
                         intent.putExtra("id", reviewListJson.getReview().getApk().getId().longValue());
                         startActivity(intent);
                     }
                 });
 
-                setValue(speedData, performance);
-                setValue(addictiveData, addiction);
-                setValue(stabilityData, stability);
-                setValue(usabilityData, usability);
-
+                setValue(speedData, speed,speedLabel,speedChart);
+                setValue(addictiveData, addiction,addictiveLabel,addictiveChart);
+                setValue(stabilityData, stability,stabilityLabel,stabilityChart);
+                setValue(usabilityData, usability,usabilityLabel,usabilityChart);
 
                 rating.setText(String.valueOf(reviewListJson.getReview().getRating()));
                 title.setText(reviewListJson.getReview().getApk().getTitle());
@@ -165,7 +149,6 @@ public class ReviewActivity extends ActionBarActivity {
                         ImageLoader.getInstance().displayImage(reviewScreenshots.get(i++).getUrl(), screenshot, options);
                     }
                 }
-
 
                 ImageLoader.getInstance().displayImage(reviewListJson.getReview().getApk().getIcon(), appIcon, options);
                 ImageLoader.getInstance().displayImage(reviewListJson.getReview().getUser().getAvatar(), avatar, options);
@@ -207,49 +190,57 @@ public class ReviewActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void setValue(PieChartData data, int score){
+    private void setValue(PieChartData data, int score, TextView label,PieChartView chartView){
+        int color = getColorBasedOnScore(score);
+        setGraph(chartView, data,color);
+        label.setBackgroundColor(color);
         data.getValues().get(0).setTarget(score);
         data.getValues().get(1).setTarget(10-score);
         data.setCenterText1(score + "/10");
     }
 
-    ArrayList<ImageView> screenshots = new ArrayList<>();
+    private int getColorBasedOnScore(int score){
+        String hexColor;
+        if(score >=9){
+            hexColor = "#00c81b";
+        }else if(score >= 7 ){
+            hexColor= "#d9d31a";
+        }else if(score>=5){
+            hexColor = "#ff6600";
+        }else{
+            hexColor= "#ff3037";
+        }
+        return Color.parseColor(hexColor);
+    }
 
     private void init() {
+        final View speed_chart = findViewById(R.id.speed_chart);
+        final View usability_chart = findViewById(R.id.usability_chart);
+        final View addictive_chart = findViewById(R.id.addictive_chart);
+        final View stability_chart = findViewById(R.id.stability_chart);
 
-        speedChart = (PieChartView) findViewById(R.id.speed_chart).findViewById(R.id.chart);
-        usabilityChart = (PieChartView) findViewById(R.id.usability_chart).findViewById(R.id.chart);
-        addictiveChart = (PieChartView) findViewById(R.id.addictive_chart).findViewById(R.id.chart);
-        stabilityChart = (PieChartView) findViewById(R.id.stability_chart).findViewById(R.id.chart);
+        speedChart = (PieChartView) speed_chart.findViewById(R.id.chart);
+        usabilityChart = (PieChartView) usability_chart.findViewById(R.id.chart);
+        addictiveChart = (PieChartView) addictive_chart.findViewById(R.id.chart);
+        stabilityChart = (PieChartView) stability_chart.findViewById(R.id.chart);
 
-        speedScreenshot = (ImageView) findViewById(R.id.speed_chart).findViewById(R.id.screenshot);
-        usabilityScreenshot = (ImageView) findViewById(R.id.usability_chart).findViewById(R.id.screenshot);
-        addictiveScreenshot = (ImageView) findViewById(R.id.addictive_chart).findViewById(R.id.screenshot);
-        stabilityScreenshot = (ImageView) findViewById(R.id.stability_chart).findViewById(R.id.screenshot);
+        screenshots = new ArrayList<>();
+        screenshots.add((ImageView) speed_chart.findViewById(R.id.screenshot));
+        screenshots.add((ImageView) usability_chart.findViewById(R.id.screenshot));
+        screenshots.add((ImageView) addictive_chart.findViewById(R.id.screenshot));
+        screenshots.add((ImageView) stability_chart.findViewById(R.id.screenshot));
+
         bigImage = (ImageView) findViewById(R.id.bigImage);
 
+        speedLabel = (TextView) speed_chart.findViewById(R.id.designation);
+        usabilityLabel = (TextView) usability_chart.findViewById(R.id.designation);
+        addictiveLabel = (TextView) addictive_chart.findViewById(R.id.designation);
+        stabilityLabel = (TextView) stability_chart.findViewById(R.id.designation);
 
-        TextView speedLabel = (TextView) findViewById(R.id.speed_chart).findViewById(R.id.designation);
-        TextView usabilityLabel = (TextView) findViewById(R.id.usability_chart).findViewById(R.id.designation);
-        TextView addictiveLabel = (TextView) findViewById(R.id.addictive_chart).findViewById(R.id.designation);
-        TextView stabilityLabel = (TextView) findViewById(R.id.stability_chart).findViewById(R.id.designation);
-
-        speedLabel.setText("Speed");
-        usabilityLabel.setText("Usability");
-        addictiveLabel.setText("Addicitive");
-        stabilityLabel.setText("Stability");
-
-        speedLabel.setBackgroundColor(Color.parseColor("#ff3037"));
-        usabilityLabel.setBackgroundColor(Color.parseColor("#d9d31a"));
-        stabilityLabel.setBackgroundColor(Color.parseColor("#00c81b"));
-        addictiveLabel.setBackgroundColor(Color.parseColor("#ff6600"));
-
-
-
-        screenshots.add(speedScreenshot);
-        screenshots.add(usabilityScreenshot);
-        screenshots.add(addictiveScreenshot);
-        screenshots.add(stabilityScreenshot);
+        speedLabel.setText(R.string.review_speed);
+        usabilityLabel.setText(R.string.review_usability);
+        addictiveLabel.setText(R.string.review_addictive);
+        stabilityLabel.setText(R.string.review_stability);
 
         title = (TextView) findViewById(R.id.app_name);
         finalVeredict = (TextView) findViewById(R.id.final_veredict);
@@ -258,7 +249,7 @@ public class ReviewActivity extends ActionBarActivity {
 
         appIcon = (ImageView) findViewById(R.id.app_icon);
         avatar = (ImageView) findViewById(R.id.avatar);
-        
+
         speedData = new PieChartData();
         usabilityData = new PieChartData();
         addictiveData = new PieChartData();
@@ -266,12 +257,6 @@ public class ReviewActivity extends ActionBarActivity {
 
         consContainer = (LinearLayout) findViewById(R.id.cons_container);
         prosContainer = (LinearLayout) findViewById(R.id.pros_container);
-
-        setGraph(speedChart, speedData);
-        setGraph(usabilityChart, usabilityData);
-        setGraph(addictiveChart, addictiveData);
-        setGraph(stabilityChart, stabilityData);
-
     }
 
     @Override
@@ -286,17 +271,15 @@ public class ReviewActivity extends ActionBarActivity {
         manager.shouldStop();
     }
 
-    public void setGraph(PieChartView graph, PieChartData data){
-
+    private void setGraph(PieChartView graph, PieChartData data,int color){
         ArrayList<SliceValue> sliceValues = new ArrayList<>();
         SliceValue sliceValue2 = new SliceValue(1);
         SliceValue sliceValue = new SliceValue(0);
 
-
         sliceValues.add(sliceValue);
         sliceValues.add(sliceValue2);
 
-        sliceValue.setColor(getResources().getColor(R.color.greenapple));
+        sliceValue.setColor(color);
         sliceValue2.setColor(getResources().getColor(R.color.dark_custom_gray));
         data.setHasCenterCircle(true);
         data.setCenterCircleColor(Color.BLACK);
@@ -307,12 +290,6 @@ public class ReviewActivity extends ActionBarActivity {
         graph.setPieChartData(data);
         graph.setChartRotationEnabled(false);
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
 
 }
 

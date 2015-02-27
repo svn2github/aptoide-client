@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -41,8 +42,6 @@ import cm.aptoide.ptdev.widget.RecyclerView;
  * Created by rmateus on 16-02-2015.
  */
 public class ReviewsActivity extends ActionBarActivity {
-
-
     SpiceManager spiceManager = new SpiceManager(HttpClientSpiceService.class);
 
     ArrayList<Review> reviewArrayList = new ArrayList<>();
@@ -53,8 +52,9 @@ public class ReviewsActivity extends ActionBarActivity {
         Aptoide.getThemePicker().setAptoideTheme(this);
 
         super.onCreate(savedInstanceState);
+        final SwipeRefreshLayout swipeLayout = new SwipeRefreshLayout(this);
 
-        RecyclerView recyclerView = new RecyclerView(this);
+        RecyclerView recyclerView = new RecyclerView(swipeLayout.getContext());
 
         addContentView(recyclerView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         LinearLayoutManager linearLayoutManager;
@@ -67,10 +67,7 @@ public class ReviewsActivity extends ActionBarActivity {
 
         recyclerView.setLayoutManager(linearLayoutManager);
 
-
-
         reviewsAdapter = new ReviewsAdapter(reviewArrayList);
-
 
         float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics());
 
@@ -78,14 +75,15 @@ public class ReviewsActivity extends ActionBarActivity {
 
         recyclerView.setAdapter(reviewsAdapter);
 
-        GetReviews.GetReviewList reviews = new GetReviews.GetReviewList();
+        final GetReviews.GetReviewList reviews = new GetReviews.GetReviewList();
 
         boolean editors = getIntent().getBooleanExtra("editors", false);
         int store_id = getIntent().getIntExtra("store_id", 0);
         reviews.setHomePage(editors);
         reviews.setStoreId(store_id);
+        reviews.setLimit(30);
 
-        spiceManager.execute(reviews, new RequestListener<ReviewListJson>() {
+        final RequestListener<ReviewListJson> listener = new RequestListener<ReviewListJson>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
 
@@ -97,17 +95,18 @@ public class ReviewsActivity extends ActionBarActivity {
                 reviewArrayList.addAll(reviewListJson.getReviews());
                 reviewsAdapter.notifyDataSetChanged();
             }
-
+        };
+        spiceManager.execute(reviews, "Reviews", DurationInMillis.ONE_WEEK, listener);
+        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                spiceManager.execute(reviews, "Reviews", DurationInMillis.ALWAYS_EXPIRED, listener);
+            }
         });
-
-
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setWindowTitle("Reviews");
-
-
+        getSupportActionBar().setWindowTitle(getString(R.string.review_title));
     }
 
     @Override
@@ -118,11 +117,9 @@ public class ReviewsActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         if(item.getItemId() == android.R.id.home || item.getItemId() == R.id.home){
             finish();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -133,10 +130,7 @@ public class ReviewsActivity extends ActionBarActivity {
     }
 
     public static class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewViewHolder>{
-
-
         ArrayList<Review> reviewArrayList = new ArrayList<>();
-
 
         public ReviewsAdapter(ArrayList<Review> reviewArrayList) {
             this.reviewArrayList = reviewArrayList;
@@ -144,7 +138,6 @@ public class ReviewsActivity extends ActionBarActivity {
 
         @Override
         public ReviewViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
             Context context = parent.getContext();
 
             View inflate = LayoutInflater.from(context).inflate(R.layout.row_review, parent, false);
@@ -165,7 +158,6 @@ public class ReviewsActivity extends ActionBarActivity {
 
             holder.reviewer.setText(reviewArrayList.get(position).getUser().getName());
 
-
             final Integer id = reviewArrayList.get(position).getId();
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -174,11 +166,9 @@ public class ReviewsActivity extends ActionBarActivity {
                     Context context = v.getContext();
 
                     Intent i = new Intent(context, ReviewActivity.class);
-
                     i.putExtra("id", id);
 
                     context.startActivity(i);
-
                 }
             });
         }
@@ -189,14 +179,12 @@ public class ReviewsActivity extends ActionBarActivity {
         }
 
         public static class ReviewViewHolder extends RecyclerView.ViewHolder{
-
             ImageView appIcon;
             TextView appName;
             TextView description;
             TextView rating;
             TextView reviewer;
             ImageView avatar;
-
 
             public ReviewViewHolder(View itemView) {
                 super(itemView);
@@ -207,12 +195,7 @@ public class ReviewsActivity extends ActionBarActivity {
                 appName = (TextView) itemView.findViewById(R.id.app_name);
                 description = (TextView) itemView.findViewById(R.id.description);
                 rating = (TextView) itemView.findViewById(R.id.rating);
-
-
             }
         }
-
     }
-
-
 }

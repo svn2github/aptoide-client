@@ -753,7 +753,6 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
         @Override
         public void onAdClicked(Ad ad) {
             Log.d("pois","onAdClicked , ad: "+ad.toString());
-            Toast.makeText(getActivity(), "Ad Clicked", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -767,7 +766,6 @@ public class FragmentSocialTimeline extends Fragment implements FragmentSignIn.C
         public void onError(Ad ad, AdError error) {
             Log.d("pois"," onError "+error.getErrorMessage());
             Log.d("pois"," onError code:"+error.getErrorCode());
-            Toast.makeText(getActivity(), "Ad failed to load: " +  error.getErrorMessage(), Toast.LENGTH_SHORT).show();
         }
 
 

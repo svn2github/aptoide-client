@@ -49,7 +49,6 @@
                     android:layout_centerVertical="true"
                     android:text="Get App" android:layout_alignParentRight="true"/>
                 <TextView
-
                     android:id="@+id/app_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -63,15 +62,8 @@
                     android:layout_toLeftOf="@id/getapp"
                     android:textColor="@android:color/white"
                     android:shadowColor="@color/dark_custom_gray"
-                    android:text="Sample text"
                     android:textSize="24sp" />
-
-
-
-
             </RelativeLayout>
-
-
 
             <TextView
                 android:id="@+id/vername_date"
