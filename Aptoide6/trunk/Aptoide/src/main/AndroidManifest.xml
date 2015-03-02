@@ -29,8 +29,8 @@
 
     <permission android:label="Make internal payments" android:name="org.onepf.openiab.permission.BILLING" android:protectionLevel="normal"/>
 
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.SEND_SMS" />
+    <!--<uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />-->
 
     <!-- Define your own permission to protect payment broadcast -->
     <permission android:name="cm.aptoide.ptdev.PAYMENT_BROADCAST_PERMISSION"
@@ -252,11 +252,7 @@
         <activity android:name="com.mopub.common.MoPubBrowser" android:configChanges="keyboardHidden|orientation" android:theme="@style/NoActionBar"/>
         <activity android:name="com.mopub.mobileads.MraidVideoPlayerActivity" android:configChanges="keyboardHidden|orientation" android:theme="@style/NoActionBar"/>
         <activity android:name="com.millennialmedia.android.MMActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar" android:configChanges="keyboardHidden|orientation|keyboard" />
-        <activity android:name="com.inmobi.androidsdk.IMBrowserActivity" android:configChanges="keyboardHidden|orientation|keyboard|smallestScreenSize|screenSize" android:hardwareAccelerated="true" android:theme="@style/NoActionBar" />
-        <activity
-            android:name="org.nexage.sourcekit.mraid.MRAIDBrowser"
-            android:configChanges="orientation|keyboard|keyboardHidden|screenSize"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+
 
         <activity
             android:name="cm.aptoide.ptdev.widget.SearchWidgetActivity"
@@ -404,14 +400,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver
-            android:name="com.inmobi.commons.analytics.androidsdk.IMAdTrackerReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER" />
-            </intent-filter>
-        </receiver>
+
 
         <receiver android:name="cm.aptoide.ptdev.pushnotification.PushNotificationReceiver">
             <intent-filter>
@@ -477,7 +466,7 @@
             android:configChanges="keyboardHidden|orientation" />
         <activity android:name="io.card.payment.DataEntryActivity" />
 
-        <receiver android:name="mp.MpSMSReceiver">
+        <!--<receiver android:name="mp.MpSMSReceiver">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
@@ -494,6 +483,6 @@
                 <action android:name="mp.info.PAYMENT_STATUS_CHANGED" />
             </intent-filter>
         </receiver>
-        <activity android:name="fortumo.FortumoPaymentActivity" />
+        <activity android:name="fortumo.FortumoPaymentActivity" />-->
     </application>
 </manifest>
