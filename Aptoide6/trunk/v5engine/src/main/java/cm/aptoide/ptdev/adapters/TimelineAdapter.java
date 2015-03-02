@@ -480,7 +480,7 @@ public class TimelineAdapter extends ArrayAdapter<TimelineListAPKsJson.UserApk> 
 
         // Or you can replace the above call with the following function to specify the clickable areas.
          nativeAd.registerViewForInteraction(adView, Arrays.asList(nativeAdCallToAction));
-        nativeAdCallToAction.callOnClick();
+
     }
 
     public static class UserAPKAd extends TimelineListAPKsJson.UserApk{

@@ -69,8 +69,8 @@ dependencies {
     }
     compile project(':mopub-sdk')
     compile fileTree(dir: 'lib', include: '*.jar')
-    compile files('lib/FortumoInApp-android-9.3.0.jar')
-    compile files('lib/AudienceNetwork.jar')
+
+
 }
 
 

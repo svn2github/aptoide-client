@@ -12,7 +12,7 @@
 -keepattributes
 -keepparameternames
 -keeppackagenames
--keep class  com.google.android.gms.ads.identifier.AdvertisingIdClient$Info, com.google.android.gms.ads.identifier.AdvertisingIdClient, com.smaato.soma.internal.connector.OrmmaBridge, !com.smaato.**, !com.millennialmedia.**, !com.inmobi.**,  !com.google.android.gms.** , !org.**, !com.rabbitmq.**, !com.facebook.widget.**, !com.millennialmedia.android.**{ * ;}
+-keep class  com.google.android.gms.ads.identifier.AdvertisingIdClient$Info, com.google.android.gms.ads.identifier.AdvertisingIdClient, com.smaato.soma.internal.connector.OrmmaBridge, !com.android.support,!lecho.lib.hellocharts,!com.smaato.**, !com.millennialmedia.**, !com.inmobi.**,  !com.google.android.gms.** , !org.**, !com.rabbitmq.**, !com.facebook.widget.**, !com.millennialmedia.android.**{ * ;}
 -keepclassmembers class   com.millennialmedia.android.*, !com.millennialmedia.**, !com.inmobi.**, !com.google.android.gms.** , !org.**, !com.rabbitmq.** , !com.facebook.widget.**, !com.millennialmedia.android.**{ * ;}
 -keepclasseswithmembers class  !com.millennialmedia.**, !com.inmobi.**,  !com.google.android.gms.** , !org.**, !com.rabbitmq.** , !com.facebook.widget.**, !com.millennialmedia.android.**{ * ;}
 

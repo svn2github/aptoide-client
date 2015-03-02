@@ -11,7 +11,7 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
-import mp.MpUtils;
+
 import openiab.webservices.BasePurchaseStatusRequest;
 import openiab.webservices.IabPurchaseStatusRequest;
 import openiab.webservices.PaidAppPurchaseStatusRequest;
@@ -20,6 +20,8 @@ import openiab.webservices.json.IabPurchaseStatusJson;
 /**
  * Created by asantos on 04-02-2015.
  */
+
+/*
 public abstract class PaymentStatusReceiver extends BroadcastReceiver {
     private static String TAG = "pois";
     //<action android:name="mp.info.PAYMENT_STATUS_CHANGED" />
@@ -38,7 +40,7 @@ public abstract class PaymentStatusReceiver extends BroadcastReceiver {
         Log.d(TAG, "- price_amount:    " + extras.getString("price_amount"));
         Log.d(TAG, "- price_currency:  " + extras.getString("price_currency"));
         Log.d(TAG, "- service_id:      " + extras.getString("service_id"));
-        Log.d(TAG, "- user_id:         " + extras.getString("user_id"));*/
+        Log.d(TAG, "- user_id:         " + extras.getString("user_id"));
         Log.d(TAG, "- product_name:    " + product_name);
 
         Log.d(TAG, "- isconsumable:         " + isconsumable);
@@ -51,4 +53,6 @@ public abstract class PaymentStatusReceiver extends BroadcastReceiver {
 
     protected abstract void onReceiverDone(boolean wasPaid,boolean isconsumable,String payCode,int prodID);
 
-}
+
+
+} */

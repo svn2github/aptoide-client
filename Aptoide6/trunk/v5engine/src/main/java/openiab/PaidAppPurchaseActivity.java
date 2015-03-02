@@ -36,8 +36,7 @@ import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.configuration.AccountGeneral;
 import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
-import fortumo.FortumoPaymentActivity;
-import fortumo.PaymentStatusReceiver;
+
 import openiab.webservices.BasePurchaseStatusRequest;
 import openiab.webservices.IabPurchaseStatusRequest;
 import openiab.webservices.PaidAppPurchaseStatusRequest;

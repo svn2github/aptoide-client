@@ -9,12 +9,10 @@ import android.util.Log;
 
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.preferences.SecurePreferences;
-import mp.MpUtils;
-import mp.PaymentActivity;
-import mp.PaymentRequest;
+
 import openiab.webservices.json.PaymentServices;
 
-public class FortumoPaymentActivity extends PaymentActivity {
+/**public class FortumoPaymentActivity extends PaymentActivity {
     public static final String RESULT_EXTRA_ISCONSUMABLE_BOOL = "IEIC";
     public static final String RESULT_EXTRA_PAYCODE_STRING = "IEPC";
     public static final String RESULT_EXTRA_PRODID_INT = "IEPID";
@@ -107,7 +105,7 @@ public class FortumoPaymentActivity extends PaymentActivity {
 
             final String product_name =  extras.getString("product_name");
             final boolean isconsumable = product_name.endsWith(FortumoPaymentActivity.ISCONSUMABLECHAR);
-/*        Log.d(TAG, "- billing_status:  " + extras.getInt("billing_status"));
+        Log.d(TAG, "- billing_status:  " + extras.getInt("billing_status"));
         Log.d(TAG, "- credit_amount:   " + extras.getString("credit_amount"));
         Log.d(TAG, "- credit_name:     " + extras.getString("credit_name"));
         Log.d(TAG, "- message_id:      " + extras.getString("message_id") );
@@ -115,7 +113,7 @@ public class FortumoPaymentActivity extends PaymentActivity {
         Log.d(TAG, "- price_amount:    " + extras.getString("price_amount"));
         Log.d(TAG, "- price_currency:  " + extras.getString("price_currency"));
         Log.d(TAG, "- service_id:      " + extras.getString("service_id"));
-        Log.d(TAG, "- user_id:         " + extras.getString("user_id"));*/
+        Log.d(TAG, "- user_id:         " + extras.getString("user_id"));
             Log.d(TAG, "- product_name:    " + product_name);
 
             Log.d(TAG, "- isconsumable:         " + isconsumable);
@@ -129,3 +127,4 @@ public class FortumoPaymentActivity extends PaymentActivity {
         }
     }
 }
+*/

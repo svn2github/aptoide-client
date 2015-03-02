@@ -18,6 +18,9 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+
 import cm.aptoide.ptdev.Aptoide;
 import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.database.Database;
@@ -208,7 +211,13 @@ public class AddStoreDialog extends DialogFragment {
                 String password = data.getStringExtra("password");
                 Login login = new Login();
                 login.setUsername(username.trim());
-                login.setPassword(password.trim());
+                try {
+                    login.setPassword(AptoideUtils.Algorithms.computeSHA1sum(password.trim()));
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
                 get(url, login);
                 showDialog();
                 break;
@@ -271,7 +280,7 @@ public class AddStoreDialog extends DialogFragment {
             api.store_name = store_name;
             if(login != null){
                 api.store_user = login.getUsername();
-                api.store_pass_sha1 = AptoideUtils.Algorithms.computeSHA1sum(login.getPassword());
+                api.store_pass_sha1 = login.getPassword();
             }
 
             return getService().checkServer(api);

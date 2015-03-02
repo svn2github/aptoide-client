@@ -43,7 +43,7 @@ import cm.aptoide.ptdev.R;
 import cm.aptoide.ptdev.dialogs.AptoideDialog;
 import cm.aptoide.ptdev.dialogs.ProgressDialogFragment;
 import cm.aptoide.ptdev.services.HttpClientSpiceService;
-import fortumo.FortumoPaymentActivity;
+
 import openiab.webservices.BasePurchaseStatusRequest;
 import openiab.webservices.IabPurchaseStatusRequest;
 import openiab.webservices.PaidAppPurchaseStatusRequest;
@@ -405,7 +405,7 @@ public abstract class BasePurchaseActivity extends ActionBarActivity implements 
                     Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
                 }
                 break;
-            case FORTUMO_CODE:
+            /*case FORTUMO_CODE:
                 Log.d("pois","Request Code FORTUMO_CODE");
                 if (resultCode == RESULT_OK) {
 
@@ -447,11 +447,11 @@ public abstract class BasePurchaseActivity extends ActionBarActivity implements 
                             }
                             finish();
                         }
-                    });
+                    });*/
 
-                }else{
-                    Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
-                }
+                //}else{
+                  //  Toast.makeText(Aptoide.getContext(), R.string.error_occured, Toast.LENGTH_LONG).show();
+                //}
 
         }
     }
@@ -646,18 +646,18 @@ public abstract class BasePurchaseActivity extends ActionBarActivity implements 
                             service.getCurrency(),
                             df.format(service.getPrice())));
     }
-    protected void caseFortumo(final int id,final PaymentServices service,LinearLayout paymentMethodsLayout){
-        telephonyPayment(service,paymentMethodsLayout,R.layout.button_fortumo,new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Intent i = new Intent(getBaseContext(), FortumoPaymentActivity.class);
-                i.putExtra(FortumoPaymentActivity.EXTRA_ID,id);
-                i.putExtra(FortumoPaymentActivity.EXTRA_PAYMENTSERVICE,service);
-                i.putExtra(FortumoPaymentActivity.EXTRA_ISCONSUMABLE,false);
-                Log.d("pois", "clicked on fortumo!");
-                startActivityForResult(i,FORTUMO_CODE);
-            }
-        });
-    }
+//    protected void caseFortumo(final int id,final PaymentServices service,LinearLayout paymentMethodsLayout){
+//        telephonyPayment(service,paymentMethodsLayout,R.layout.button_fortumo,new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                final Intent i = new Intent(getBaseContext(), FortumoPaymentActivity.class);
+//                i.putExtra(FortumoPaymentActivity.EXTRA_ID,id);
+//                i.putExtra(FortumoPaymentActivity.EXTRA_PAYMENTSERVICE,service);
+//                i.putExtra(FortumoPaymentActivity.EXTRA_ISCONSUMABLE,false);
+//                Log.d("pois", "clicked on fortumo!");
+//                startActivityForResult(i,FORTUMO_CODE);
+//            }
+//        });
+//    }
 
 }

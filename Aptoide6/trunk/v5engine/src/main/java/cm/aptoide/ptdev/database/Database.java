@@ -183,7 +183,7 @@ public class Database {
 
         for(servers.moveToFirst(); !servers.isAfterLast();servers.moveToNext()){
             if(servers.getString(servers.getColumnIndex("name")).equals(store.getName())){
-                return 0;
+                return servers.getLong(servers.getColumnIndex("id_repo"));
             }
         }
 

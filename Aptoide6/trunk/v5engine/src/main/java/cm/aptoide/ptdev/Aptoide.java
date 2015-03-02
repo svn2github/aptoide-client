@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.preference.PreferenceManager;
+
 import android.util.Log;
 import android.widget.Toast;
 
@@ -77,6 +78,10 @@ public class Aptoide extends Application {
 
     public static boolean IS_SYSTEM;
 
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+    }
 
     @Override
     public void onCreate() {

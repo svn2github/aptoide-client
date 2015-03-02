@@ -1023,8 +1023,8 @@ public class Start extends ActionBarActivity implements
             createPendingIntent(am, this, Aptoide.getConfiguration().getAction(), PushNotificationReceiver.PUSH_NOTIFICATION_TIME_INTERVAL, 982764);
             createPendingIntent(am, this, "updates_service", AlarmManager.INTERVAL_HALF_DAY / 2, 982765);
 
-            createPendingIntent(am, this, "timelinepostsservice", AlarmManager.INTERVAL_FIFTEEN_MINUTES / 15, 982766);
-            createPendingIntent(am, this, "timelineactivityservice", AlarmManager.INTERVAL_FIFTEEN_MINUTES / 15, 982767);
+            createPendingIntent(am, this, "timelinepostsservice",  AlarmManager.INTERVAL_HALF_DAY , 982766);
+            createPendingIntent(am, this, "timelineactivityservice",  AlarmManager.INTERVAL_HALF_DAY , 982767);
         }
     }
 

@@ -74,6 +74,9 @@ public class ReviewActivity extends ActionBarActivity {
     private TextView usabilityLabel;
     private TextView addictiveLabel;
     private TextView stabilityLabel;
+    private TextView consLabel;
+    private TextView prosLabel;
+    private TextView vername_date;
 
 
     private void showLoading(){
@@ -97,7 +100,22 @@ public class ReviewActivity extends ActionBarActivity {
         getSupportActionBar().setWindowTitle(getString(R.string.review_title));
         init();
 
-        getWindow().getDecorView().setBackgroundColor(Color.WHITE);
+
+        int aptoideTheme = Aptoide.getThemePicker().getAptoideTheme(this);
+
+        if(aptoideTheme == R.style.AptoideThemeDefault){
+            getWindow().getDecorView().setBackgroundColor(Color.WHITE);
+        }else{
+            getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.transparent_black));
+            consLabel.setBackgroundColor(getResources().getColor(R.color.dark_gray));
+            prosLabel.setBackgroundColor(getResources().getColor(R.color.dark_gray));
+            vername_date.setBackgroundColor(getResources().getColor(R.color.dark_gray));
+
+        }
+
+
+
+
 
         GetReviews.GetReview reviewsRequest = new GetReviews.GetReview();
         int id = getIntent().getIntExtra("id", 0);
@@ -263,6 +281,10 @@ public class ReviewActivity extends ActionBarActivity {
         usabilityData = new PieChartData();
         addictiveData = new PieChartData();
         stabilityData = new PieChartData();
+
+        prosLabel = (TextView) findViewById(R.id.pros_label);
+        consLabel = (TextView) findViewById(R.id.cons_label);
+        vername_date = (TextView) findViewById(R.id.vername_date);
 
         consContainer = (LinearLayout) findViewById(R.id.cons_container);
         prosContainer = (LinearLayout) findViewById(R.id.pros_container);

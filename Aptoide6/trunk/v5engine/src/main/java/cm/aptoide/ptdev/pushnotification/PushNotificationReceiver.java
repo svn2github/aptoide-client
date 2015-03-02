@@ -133,8 +133,8 @@ public class PushNotificationReceiver extends BroadcastReceiver {
                 createPendingIntent(am, context, PUSH_NOTIFICATION_Action, PUSH_NOTIFICATION_TIME_INTERVAL, 982764);
                 createPendingIntent(am, context, "updates_service", AlarmManager.INTERVAL_HALF_DAY / 2, 982765);
 
-                createPendingIntent(am, context, "timelinepostsservice", AlarmManager.INTERVAL_FIFTEEN_MINUTES / 15, 982766);
-                createPendingIntent(am, context, "timelineactivityservice", AlarmManager.INTERVAL_FIFTEEN_MINUTES / 15, 982767);
+                createPendingIntent(am, context, "timelinepostsservice",  AlarmManager.INTERVAL_HALF_DAY, 982766);
+                createPendingIntent(am, context, "timelineactivityservice",  AlarmManager.INTERVAL_HALF_DAY, 982767);
 
 
 //                Log.i("PushNotificationReceiver", "Alarm Registed Received");
