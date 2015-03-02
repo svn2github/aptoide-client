@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
+import android.support.v4.content.IntentCompat;
 import android.util.Log;
 
 import java.util.UUID;
@@ -65,7 +66,7 @@ public class ManagerPreferences {
 
         //removeLauncherShortcut(context);
 
-        Intent shortcutIntent = new Intent(context, ReviewActivity.class);
+        Intent shortcutIntent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
         Log.d("Aptoide-Shortcut", "Creating Intent");
         final Intent intent = new Intent();
         intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
