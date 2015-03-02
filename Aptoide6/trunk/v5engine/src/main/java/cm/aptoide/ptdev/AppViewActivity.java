@@ -1200,8 +1200,15 @@ public class AppViewActivity extends ActionBarActivity implements LoaderManager.
 
 
         if(refreshOnResume) {
-            spiceManager.removeDataFromCache(GetApkInfoJson.class, getCacheKey());
-            onRefresh( null );
+            GetApkInfoRequestFromVercode request = new GetApkInfoRequestFromVercode(getApplicationContext());
+
+            request.setRepoName(repoName);
+            request.setPackageName(package_name);
+            request.setVersionName(versionName);
+            request.setVercode(versionCode);
+            if (token != null) request.setToken(token);
+
+            spiceManager.getFromCacheAndLoadFromNetworkIfExpired(request, getCacheKey(), DurationInMillis.ALWAYS_EXPIRED, requestListener);
             refreshOnResume = false;
         }
 
