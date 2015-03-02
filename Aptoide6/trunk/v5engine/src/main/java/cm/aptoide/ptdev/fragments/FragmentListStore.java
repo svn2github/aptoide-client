@@ -923,7 +923,7 @@ public class FragmentListStore extends Fragment {
                     appHolder.appName.setText(Html.fromHtml(appItem.getName()).toString());
 
 
-                    if(sort.equals(StoreActivity.Sort.DOWNLOADS)){
+                    if(sort.equals(StoreActivity.Sort.DOWNLOADS) && !"group_top".equals(appItem.getCategory_ref_id())){
                         appHolder.rating.setVisibility(View.GONE);
                         appHolder.downloads.setVisibility(View.VISIBLE);
                         appHolder.downloads.setText(context.getString(R.string.X_download_number,AptoideUtils.withSuffix(String.valueOf(appItem.getDownloads()))));

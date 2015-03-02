@@ -75,6 +75,17 @@ public class ReviewActivity extends ActionBarActivity {
     private TextView addictiveLabel;
     private TextView stabilityLabel;
 
+
+    private void showLoading(){
+        findViewById(android.R.id.empty).setVisibility(View.VISIBLE);
+        findViewById(R.id.content).setVisibility(View.GONE);
+    }
+
+    private void showContent(){
+        findViewById(android.R.id.empty).setVisibility(View.GONE);
+        findViewById(R.id.content).setVisibility(View.VISIBLE);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Aptoide.getThemePicker().setAptoideTheme(this);
@@ -91,8 +102,8 @@ public class ReviewActivity extends ActionBarActivity {
         GetReviews.GetReview reviewsRequest = new GetReviews.GetReview();
         int id = getIntent().getIntExtra("id", 0);
         reviewsRequest.setId(id);
-
-        manager.execute(reviewsRequest, "review-id-" + id, DurationInMillis.ONE_DAY,new RequestListener<ReviewJson>() {
+        showLoading();
+        manager.execute(reviewsRequest, "review-id-" + id, DurationInMillis.ONE_HOUR,new RequestListener<ReviewJson>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
 
@@ -107,7 +118,7 @@ public class ReviewActivity extends ActionBarActivity {
                 int usability = reviewListJson.getReview().getUsability();
 
                 TextView vername = (TextView) findViewById(R.id.vername_date);
-
+                showContent();
                 Date date = null;
                 try {
                     date = Configs.TIME_STAMP_FORMAT.parse(reviewListJson.getReview().getAddedTimestamp());
@@ -163,11 +174,9 @@ public class ReviewActivity extends ActionBarActivity {
                 }
 
                 for (String con : reviewListJson.getReview().getCons()) {
-
                     TextView conTv = (TextView) layoutInflater.inflate(R.layout.review_con, consContainer, false);
                     conTv.setText(con);
                     consContainer.addView(conTv);
-
                 }
 
                 speedChart.startDataAnimation();

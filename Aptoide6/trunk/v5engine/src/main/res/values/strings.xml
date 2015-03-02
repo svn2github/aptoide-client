@@ -664,5 +664,6 @@
     <string name="review_addictive">Addictive</string>
     <string name="review_stability">Stability</string>
     <string name="review_title">Reviews</string>
+    <string name="no_reviews_found">No reviews found</string>
 
 </resources>

@@ -18,6 +18,7 @@ import android.os.IBinder;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -56,7 +57,7 @@ public class TimelineActivitySyncService {
         public void sync(Context context, String packageName) {
 
             try {
-
+                Log.d("AptoideTimeline", "Starting timelineActivityService");
                 if(PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).contains("timelineTimestamp")) {
 
                     TimelineActivityJson timelineActivityJson = TimelineCheckRequestSync.getRequest("owned_activity, related_activity");

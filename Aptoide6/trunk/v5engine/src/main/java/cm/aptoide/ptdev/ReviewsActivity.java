@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.DurationInMillis;
@@ -47,16 +48,28 @@ public class ReviewsActivity extends ActionBarActivity {
     ArrayList<Review> reviewArrayList = new ArrayList<>();
     private ReviewsAdapter reviewsAdapter;
 
+    private void showLoading(){
+        findViewById(android.R.id.empty).setVisibility(View.VISIBLE);
+        findViewById(R.id.swipeRefreshLayout).setVisibility(View.GONE);
+    }
+
+    private void showContent(){
+        findViewById(android.R.id.empty).setVisibility(View.GONE);
+        findViewById(R.id.swipeRefreshLayout).setVisibility(View.VISIBLE);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Aptoide.getThemePicker().setAptoideTheme(this);
 
         super.onCreate(savedInstanceState);
-        final SwipeRefreshLayout swipeLayout = new SwipeRefreshLayout(this);
 
-        RecyclerView recyclerView = new RecyclerView(swipeLayout.getContext());
+        setContentView(R.layout.app_review_list);
+        final SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
 
-        addContentView(recyclerView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+
         LinearLayoutManager linearLayoutManager;
 
         if(getResources().getBoolean(R.bool.landscape)){
@@ -77,12 +90,13 @@ public class ReviewsActivity extends ActionBarActivity {
 
         final GetReviews.GetReviewList reviews = new GetReviews.GetReviewList();
 
-        boolean editors = getIntent().getBooleanExtra("editors", false);
-        int store_id = getIntent().getIntExtra("store_id", 0);
+        final boolean editors = getIntent().getBooleanExtra("editors", false);
+        final int store_id = getIntent().getIntExtra("store_id", 0);
         reviews.setHomePage(editors);
         reviews.setStoreId(store_id);
-        reviews.setLimit(30);
+        reviews.setLimit(50);
 
+        showLoading();
         final RequestListener<ReviewListJson> listener = new RequestListener<ReviewListJson>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
@@ -91,22 +105,42 @@ public class ReviewsActivity extends ActionBarActivity {
 
             @Override
             public void onRequestSuccess(ReviewListJson reviewListJson) {
-                reviewArrayList.clear();
-                reviewArrayList.addAll(reviewListJson.getReviews());
-                reviewsAdapter.notifyDataSetChanged();
+                try{
+                    reviewArrayList.clear();
+                    reviewArrayList.addAll(reviewListJson.getReviews());
+                    reviewsAdapter.notifyDataSetChanged();
+                    swipeLayout.setRefreshing(false);
+
+                    if(reviewListJson.getReviews().size()>0){
+                        showContent();
+                    } else{
+                        showEmptyList();
+                    }
+                }catch (Exception e){
+                    Crashlytics.logException(e);
+                    showEmptyList();
+                }
+
             }
         };
-        spiceManager.execute(reviews, "Reviews", DurationInMillis.ONE_WEEK, listener);
+        spiceManager.execute(reviews, "review-list" + editors + store_id, DurationInMillis.ONE_HOUR, listener);
+
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                spiceManager.execute(reviews, "Reviews", DurationInMillis.ALWAYS_EXPIRED, listener);
+                spiceManager.execute(reviews, "review-list" + editors + store_id, DurationInMillis.ALWAYS_EXPIRED, listener);
             }
         });
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setWindowTitle(getString(R.string.review_title));
+    }
+
+    private void showEmptyList() {
+        findViewById(R.id.empty_list).setVisibility(View.VISIBLE);
+        findViewById(android.R.id.empty).setVisibility(View.GONE);
     }
 
     @Override

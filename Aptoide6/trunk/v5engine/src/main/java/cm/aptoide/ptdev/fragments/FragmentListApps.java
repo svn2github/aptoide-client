@@ -91,6 +91,7 @@ public class FragmentListApps extends Fragment {
     private RequestListener<Response> requestListener;
     Map<String, String> flurryParams = new HashMap<>();
     private TestRequest request;
+    private boolean refresh;
 
     @Override
     public void onStart() {
@@ -1028,7 +1029,7 @@ public class FragmentListApps extends Fragment {
                     reviewRequest.setHomePage(true);
                     reviewRequest.setLimit(1);
 
-                    manager.execute(reviewRequest,"review-homepage",DurationInMillis.ONE_MINUTE/10, new RequestListener<ReviewListJson>() {
+                    manager.execute(reviewRequest,"review-homepage",refresh?DurationInMillis.ALWAYS_EXPIRED: DurationInMillis.ONE_HOUR, new RequestListener<ReviewListJson>() {
                         @Override
                         public void onRequestFailure(SpiceException spiceException) {
 
@@ -1100,7 +1101,10 @@ public class FragmentListApps extends Fragment {
                     }
 
                 }
+                refresh = false;
             }
+
+
 
         };
 
@@ -1143,6 +1147,7 @@ public class FragmentListApps extends Fragment {
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                refresh = true;
                 manager.execute(request, "home" + BUCKET_SIZE, DurationInMillis.ALWAYS_EXPIRED, requestListener);
             }
         });

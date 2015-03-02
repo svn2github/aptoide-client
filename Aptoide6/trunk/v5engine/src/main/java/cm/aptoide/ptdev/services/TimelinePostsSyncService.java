@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -45,7 +46,7 @@ public class TimelinePostsSyncService   {
 
         public void sync(Context context, String packageName) {
             try {
-
+                Log.d("AptoideTimeline", "Starting timelinePostsService");
                 if(PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext()).contains("timelineTimestamp")) {
 
 

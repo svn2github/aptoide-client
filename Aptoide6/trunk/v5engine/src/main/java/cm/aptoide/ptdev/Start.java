@@ -1020,10 +1020,19 @@ public class Start extends ActionBarActivity implements
         if(!alarmUp){
 
             AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            PendingIntent pi = PendingIntent.getBroadcast(this, 982764, i, PendingIntent.FLAG_UPDATE_CURRENT);
-            am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, PushNotificationReceiver.PUSH_NOTIFICATION_TIME_INTERVAL, pi);
+            createPendingIntent(am, this, Aptoide.getConfiguration().getAction(), PushNotificationReceiver.PUSH_NOTIFICATION_TIME_INTERVAL, 982764);
+            createPendingIntent(am, this, "updates_service", AlarmManager.INTERVAL_HALF_DAY / 2, 982765);
 
+            createPendingIntent(am, this, "timelinepostsservice", AlarmManager.INTERVAL_FIFTEEN_MINUTES / 15, 982766);
+            createPendingIntent(am, this, "timelineactivityservice", AlarmManager.INTERVAL_FIFTEEN_MINUTES / 15, 982767);
         }
+    }
+
+    public void createPendingIntent(AlarmManager am, Context context, String action, long time, int broadcastid){
+        Intent i = new Intent(context, PushNotificationReceiver.class);
+        i.setAction(action);
+        PendingIntent pi = PendingIntent.getBroadcast(context, broadcastid, i, PendingIntent.FLAG_UPDATE_CURRENT);
+        am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 0, time , pi);
     }
 
     private void updateAccount() {
