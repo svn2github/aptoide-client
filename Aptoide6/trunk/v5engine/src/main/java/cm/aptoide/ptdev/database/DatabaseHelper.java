@@ -294,7 +294,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }else if (oldVersion >= 21 && oldVersion < 26 && Aptoide.getConfiguration().isSaveOldRepos()){
+        }else if (oldVersion >= 21 && oldVersion < 28 && Aptoide.getConfiguration().isSaveOldRepos()){
             try {
                 Cursor c = db.query("repo", null, Schema.Repo.COLUMN_IS_USER +"=?", new String[]{"1"}, null, null, null);
 
@@ -340,7 +340,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
-        if (oldVersion >= 13 && oldVersion <= 25 && Aptoide.getConfiguration().isSaveOldRepos()) {
+        if (oldVersion >= 13 && oldVersion < 28 && Aptoide.getConfiguration().isSaveOldRepos()) {
 
             for (Server server : oldServers) {
                 ContentValues values = new ContentValues();
@@ -374,7 +374,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private void removeSharedPreferences() {
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(Aptoide.getContext());
-        preferences.edit().remove("editorschoiceTimestamp").remove("topappsTimestamp").remove("updates").commit();
+        preferences.edit().remove("editorschoiceTimestamp").remove("topappsTimestamp").remove("updates").apply();
 
     }
 

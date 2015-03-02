@@ -159,6 +159,10 @@ public class Database {
         ContentValues values = new ContentValues();
 
         values.put(Schema.Repo.COLUMN_AVATAR, store.getAvatar());
+
+        if(store.getId() > 0) {
+            values.put(Schema.Repo.COLUMN_ID, store.getId());
+        }
         values.put(Schema.Repo.COLUMN_DOWNLOADS, store.getDownloads());
         values.put(Schema.Repo.COLUMN_THEME, store.getTheme());
         values.put(Schema.Repo.COLUMN_DESCRIPTION, store.getDescription());
@@ -185,8 +189,7 @@ public class Database {
 
         ContentValues values = BuildContentValuesFromStore(store);
 
-        if(store.getId()!=0)
-            values.put(Schema.Repo.COLUMN_ID, store.getId());
+
         values.put(Schema.Repo.COLUMN_URL, store.getBaseUrl());
         values.put(Schema.Repo.COLUMN_NAME, store.getName());
 
