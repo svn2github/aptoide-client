@@ -58,8 +58,6 @@ public class MainFail extends Activity implements RequestsTvListener {
         RequestListener<Response> requestListener = new RequestListener<Response>() {
             @Override
             public void onRequestFailure(SpiceException spiceException) {
-                Log.d("pois","spiceException msg:"+spiceException.getMessage());
-                Log.d("pois","spiceException cause:"+spiceException.getCause());
                 onFailure();
             }
 

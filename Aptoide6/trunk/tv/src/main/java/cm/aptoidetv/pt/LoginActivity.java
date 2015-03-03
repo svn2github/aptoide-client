@@ -653,23 +653,11 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
     }
 
     private void finishLogin(Intent intent) {
-
-        Log.d("aptoide", TAG + "> finishLogin");
-        Log.d("pois", "has accountName: "+intent.hasExtra(AccountManager.KEY_ACCOUNT_NAME));
-        Log.d("pois", "has accountPassword: "+intent.hasExtra(PARAM_USER_PASS));
-        Log.d("pois", "has KEY_ACCOUNT_TYPE: "+intent.hasExtra(AccountManager.KEY_ACCOUNT_TYPE));
-        Log.d("pois", "has ARG_IS_ADDING_NEW_ACCOUNT: "+intent.hasExtra(ARG_IS_ADDING_NEW_ACCOUNT));
-
         String accountName = intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-        Log.d("pois", "accountName: "+accountName);
         String accountPassword = intent.getStringExtra(PARAM_USER_PASS);
-        Log.d("pois", "accountPassword: "+accountPassword);
-        Log.d("pois", "KEY_ACCOUNT_TYPE: "+intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE));
         final Account account = new Account(accountName, intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE));
 
-
         if (getIntent().getBooleanExtra(ARG_IS_ADDING_NEW_ACCOUNT, false)) {
-            Log.d("aptoide", TAG + "> finishLogin > addAccountExplicitly");
             String authtoken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
             String authtokenType = mAuthTokenType;
 
@@ -678,7 +666,6 @@ public class LoginActivity extends AccountAuthenticatorActivity implements Googl
             mAccountManager.addAccountExplicitly(account, accountPassword, null);
             mAccountManager.setAuthToken(account, authtokenType, authtoken);
         } else {
-            Log.d("aptoide", TAG + "> finishLogin > setPassword");
             mAccountManager.setPassword(account, accountPassword);
         }
 

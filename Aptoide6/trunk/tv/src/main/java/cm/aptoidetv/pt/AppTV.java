@@ -41,15 +41,6 @@ public class AppTV extends Application {
                 new OkHttpDownloader(
                         getDefaultCacheDir(Defaults.PATH_CACHE_ICONS), 100 * 1024 * 1024));
         picassoInstance = builder.build();
-        /*final OkHttpClient okHttpClient = new OkHttpClient();
-        try {
-            okHttpClient.setCache(new Cache(
-                    new File(Defaults.PATH_CACHE), 100 * 1024 * 1024));
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.d("pois","SetUp Cache Failed!");
-        }
-        Log.d("pois","CahcePath: "+ okHttpClient.getCache().getDirectory().getPath());*/
     }
 
     private static File getDefaultCacheDir(String path) {

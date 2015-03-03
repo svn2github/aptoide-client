@@ -453,13 +453,11 @@ public class DetailsActivity extends ActionBarActivity {
                             break;
                         case DownloadManager.STATUS_SUCCESSFUL:
                             try {
-                                Log.d("pois","deu SUCCESSFUL:");
                                 Intent intent = new Intent(Intent.ACTION_VIEW);
 
                                 String absolutePath = Environment.getExternalStorageDirectory().getAbsolutePath();
                                 File apk = new File(absolutePath + "/apks/" + path[0]);
                                 if(!apk.exists()){
-                                    Log.d("pois","Nao existe!");
                                     loopagain = false;
                                     break;
                                 }
@@ -469,11 +467,9 @@ public class DetailsActivity extends ActionBarActivity {
                                 startActivity(intent);
 
                             } catch (Exception e) {
-                                Log.d("pois","deu exception");
                                 e.printStackTrace();
                             }
                         case DownloadManager.STATUS_FAILED:
-                            Log.d("pois","deu Fail");
                             loopagain = false;
                             break;
                     }

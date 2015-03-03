@@ -49,8 +49,6 @@ public class MainFragment extends BrowseFragment{
     private RequestListener<Response> requestListener = new RequestListener<Response>() {
         @Override
         public void onRequestFailure(SpiceException spiceException) {
-            Log.d("pois","spiceException msg:" + spiceException.getMessage());
-            Log.d("pois","spiceException cause:"+spiceException.getCause());
             ((RequestsTvListener) getActivity()).onFailure();
         }
 
@@ -137,7 +135,6 @@ public class MainFragment extends BrowseFragment{
             } catch (Exception e) {
                 long timepassed = System.currentTimeMillis()-timeof1strequest;
                 if(timepassed>10000){
-                    Log.d("pois","Fail: Time Passed > 10000");
                     ((RequestsTvListener) getActivity()).onFailure();
                 }
 

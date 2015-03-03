@@ -253,7 +253,7 @@ public class SettingsWHeaders extends PreferenceActivity {
                     }
 
                 }catch (Exception e){
-                    Log.e("pois", "GetDirSize : "+ e.toString());
+                    Log.e("Exception", "GetDirSize : "+ e.toString());
                 }
                 return size;
             }
