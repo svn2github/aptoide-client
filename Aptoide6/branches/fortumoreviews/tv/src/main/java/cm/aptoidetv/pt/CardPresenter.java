@@ -22,10 +22,10 @@ import cm.aptoidetv.pt.Model.BindInterface;
  */
 public class CardPresenter extends Presenter {
     private static Context mContext;
-    public static final int card_presenter_width = 705;
-    public static final int card_presenter_height = 345;
-    public static final int ICON_WIDTH = 256;
-    public static final int ICON_HEIGHT = 256;
+    public static final int card_presenter_width = Utils.convertDpToPixel(528,AppTV.getContext());
+    public static final int card_presenter_height = Utils.convertDpToPixel(258,AppTV.getContext());
+    public static final int ICON_WIDTH = Utils.convertDpToPixel(192,AppTV.getContext());
+    public static final int ICON_HEIGHT = Utils.convertDpToPixel(192,AppTV.getContext());
 /*  public static final int card_presenter_width = 320;
     public static final int card_presenter_height = 180;
     private static final int CARD_WIDTH = 313;

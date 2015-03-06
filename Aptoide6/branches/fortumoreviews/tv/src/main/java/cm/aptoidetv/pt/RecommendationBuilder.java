@@ -114,8 +114,7 @@ public class RecommendationBuilder {
 
         Bitmap image = Picasso.with(mContext)
                 .load(mImageUri)
-                .resize(Utils.convertDpToPixel(mContext, CARD_WIDTH),
-                        Utils.convertDpToPixel(mContext, CARD_HEIGHT))
+                .resize(CARD_WIDTH, CARD_HEIGHT)
                 .get();
 
         TypedArray typedArray = mContext.getTheme().obtainStyledAttributes(ThemePicker.getThemePicker(), new int[]{R.attr.brandColor});

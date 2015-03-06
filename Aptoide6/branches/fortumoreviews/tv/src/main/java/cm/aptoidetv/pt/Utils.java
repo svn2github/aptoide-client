@@ -8,6 +8,7 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.WindowManager;
 
 import java.io.File;
@@ -45,12 +46,7 @@ public class Utils {
         return String.format(Locale.ENGLISH, "%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 
-    public static int convertDpToPixel(Context ctx, int dp) {
-        float density = ctx.getResources().getDisplayMetrics().density;
-        return Math.round((float) dp * density);
-    }
-
-    public static int dpToPx(int dp, Context ctx) {
+    public static int convertDpToPixel(int dp,Context ctx) {
         float density = ctx.getResources().getDisplayMetrics().density;
         return Math.round((float) dp * density);
     }
