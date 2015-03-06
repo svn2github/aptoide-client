@@ -1,2 +1,0 @@
-/home/asantos/Aptoide6/Aptoidefortumo/build/intermediates/classes/debug
-/home/asantos/Aptoide6/Aptoidefortumo/build/intermediates/pre-dexed/debug/FortumoInApp-android-9.3.0-9829032fdc79e644d949670c0f42f339d556d7ae.jar
