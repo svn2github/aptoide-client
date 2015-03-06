@@ -1,0 +1,80 @@
+apply plugin: 'com.android.application'
+apply plugin: 'crashlytics'
+//apply from: 'signing.gradle'
+
+repositories{
+
+    maven { url 'http://download.crashlytics.com/maven' }
+
+}
+
+def String packageName = "com.aptoide.partners.".concat(project.STORE_NAME).toLowerCase()
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "20.0.0"
+
+    defaultConfig {
+        applicationId packageName
+        minSdkVersion 9
+        targetSdkVersion 21
+    }
+
+    packagingOptions {
+        pickFirst 'META-INF/services/javax.annotation.processing.Processor'
+        pickFirst 'META-INF/DEPENDENCIES.txt'
+        pickFirst 'META-INF/DEPENDENCIES'
+        pickFirst 'META-INF/LICENSE.txt'
+        pickFirst 'META-INF/LICENSE'
+        pickFirst 'META-INF/NOTICE.txt'
+        pickFirst 'META-INF/NOTICE'
+        pickFirst 'META-INF/MANIFEST.MF'
+        pickFirst 'META-INF/LGPL2.1'
+    }
+
+    buildTypes{
+        debug {
+            minifyEnabled true
+            proguardFile 'proguard-aptoide.txt'
+            zipAlignEnabled true
+        }
+        release {
+            zipAlignEnabled true
+            minifyEnabled true
+            proguardFile 'proguard-aptoide.txt'
+//	        signingConfig signingConfigs.release
+        }
+	    dexOptions{
+                javaMaxHeapSize  "3g"
+        }
+
+
+    }
+
+
+
+
+}
+
+android.applicationVariants.all{ variant ->
+    variant.mergeResources.doLast{
+
+        def String buildNumber = applicationId
+        if (buildNumber != null) {
+            File valuesFile = file("${buildDir}/intermediates/res/${variant.dirName}/values/values.xml")
+            println("Replacing strings number in " + valuesFile)
+            println("PackageName = " + buildNumber)
+            String content = valuesFile.getText('UTF-8')
+            content = content.replace('${applicationId}', buildNumber)
+            valuesFile.write(content, 'UTF-8')
+        }
+    }
+}
+
+
+
+dependencies {
+    compile project(':v5engine')
+    compile fileTree(dir: 'libs', include: '*.jar')
+
+}

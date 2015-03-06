@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="WidgetProvider_timestamp_today">Bugün</string>
+  <string name="WidgetProvider_timestamp_yesterday">Dün</string>
+  <string name="WidgetProvider_timestamp_hour_ago">%s saat önce</string>
+  <string name="WidgetProvider_timestamp_hours_ago">%s saat önce</string>
+  <string name="WidgetProvider_timestamp_minutes_ago">%s dakika önce</string>
+  <string name="WidgetProvider_timestamp_just_now">Şimdi</string>
+  <string name="WidgetProvider_timestamp_weeks_ago">%s hafta önce</string>
+  <string name="WidgetProvider_timestamp_week_ago">%s hafta önce</string>
+  <string name="WidgetProvider_timestamp_this_week">Bu hafta</string>
+
+  <string name="comments">Yorumlar</string>
+
+  <string name="description">Açıklama</string>
+
+  <string name="install">Kur</string>
+
+  <string name="downloads">İndirmeler</string>
+  <string name="size">Boyut</string>
+  <string name="likes">Beğeniler</string>
+  <string name="dont_likes">Beğenmemeler</string>
+
+  <string name="open">Aç</string>
+
+  <string name="update_self_title">Güncelleme mevcut</string>
+  <string name="update_self_msg">%s uygulamasının yeni bir sürümü var\ngüncellemek istiyor musunuz?</string>
+  <string name="retrieving_update">Güncelleştirme alınıyor...</string>
+
+</resources>

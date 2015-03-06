@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+Copyright (c) 2012 tdeus.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the GNU Public License v2.0
+which accompanies this distribution, and is available at
+http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/apkinfoheader"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/homeLabelbackground"
+    android:paddingBottom="3dp">
+
+    <TextView
+        android:id="@+id/message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="@string/row_app_update_not_safe"
+        android:textColor="?android:textColorPrimaryInverse"
+        android:textIsSelectable="false"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/app_icon"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/message"
+        android:layout_margin="5dp" />
+
+    <TextView
+        android:id="@+id/app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/app_icon"
+        android:layout_toRightOf="@+id/app_icon"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:paddingRight="6dp"
+        android:singleLine="true"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+
+    <TextView
+        android:id="@+id/app_version_installed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/app_get_latest"
+        android:layout_below="@+id/app_version"
+        android:layout_toRightOf="@+id/app_icon"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColor="@android:color/darker_gray"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/download_progress"
+        layout="@layout/fragment_app_downloading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/app_version_installed"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_toRightOf="@+id/app_icon"
+        android:visibility="gone" />
+
+
+    <TextView
+        android:id="@+id/app_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/app_name"
+        android:layout_toRightOf="@+id/app_icon"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColor="@android:color/darker_gray" />
+
+    <TextView
+        android:id="@+id/app_get_latest"
+        style="@style/focusableRowBackground"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/app_version"
+        android:layout_alignBottom="@+id/app_version"
+        android:layout_toLeftOf="@+id/btinstall"
+        android:layout_toRightOf="@+id/app_version"
+        android:ellipsize="end"
+        android:focusable="true"
+        android:maxLines="1"
+        android:paddingLeft="3dp"
+        android:singleLine="true"
+        android:textColor="?attr/customColor"
+        android:visibility="gone" />
+
+
+    <Button
+        android:id="@+id/btinstall"
+        style="?attr/customButtonColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/app_name"
+        android:text="@string/install"
+        android:textAppearance="@android:style/TextAppearance.Medium"
+        android:textColor="@android:color/white" />
+
+
+    <RelativeLayout
+        android:id="@+id/extra_info_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btinstall"
+        android:visibility="gone"
+        android:gravity="center"
+        android:padding="2dp">
+
+
+        <LinearLayout
+            android:id="@+id/badge_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground">
+
+            <ImageView
+                android:id="@+id/app_badge"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:id="@+id/app_badge_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:textSize="12sp"  />
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/btinstallshare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/badge_layout"
+            android:layout_toRightOf="@+id/badge_layout"
+            android:checked="true"
+            android:visibility="gone"
+            android:text="@string/share_on_timeline" />
+    </RelativeLayout>
+
+
+</RelativeLayout>
+

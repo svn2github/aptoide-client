@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="WidgetProvider_timestamp_today">اليوم</string>
+    <string name="WidgetProvider_timestamp_yesterday">أمس</string>
+    <string name="WidgetProvider_timestamp_hour_ago">منذ %s ساعة</string>
+    <string name="WidgetProvider_timestamp_hours_ago">%s منذ ساعات</string>
+    <string name="WidgetProvider_timestamp_minutes_ago">منذ %s دقائق</string>
+    <string name="WidgetProvider_timestamp_just_now">الآن</string>
+    <string name="WidgetProvider_timestamp_weeks_ago">منذ %s اسابيع</string>
+    <string name="WidgetProvider_timestamp_week_ago">منذ %s اسبوع</string>
+    <string name="WidgetProvider_timestamp_this_week">هذا الأسبوع</string>
+    <string name="downloads">التنزيلات</string>
+    <string name="size">الحجم</string>
+    <string name="likes">الإعجابات</string>
+    <string name="dont_likes">لا يعجبني</string>
+    <string name="description">الوصف</string>
+    <string name="install">تثبيت</string>
+    <string name="votes">التصويتات</string>
+    <string name="update_self_title">تحديث متوفر</string>
+    <string name="update_self_msg">هناك نسخة جديدة من s٪ متاحة \n هل ترغب في تحديث ؟</string>
+    <string name="retrieving_update">جلب التحديث...</string>
+    <string name="open">فتح</string>
+</resources>

@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="WidgetProvider_timestamp_today">Сегодня</string>
+  <string name="WidgetProvider_timestamp_yesterday">Вчера</string>
+  <string name="WidgetProvider_timestamp_hour_ago">%s час назад</string>
+  <string name="WidgetProvider_timestamp_hours_ago">%s часов назад</string>
+  <string name="WidgetProvider_timestamp_minutes_ago">%s минут назад</string>
+  <string name="WidgetProvider_timestamp_just_now">Только что</string>
+  <string name="WidgetProvider_timestamp_weeks_ago">%s недель назад</string>
+  <string name="WidgetProvider_timestamp_week_ago">%s неделю назад</string>
+  <string name="WidgetProvider_timestamp_this_week">На этой неделе</string>
+
+  <string name="comments">Комментарии</string>
+
+  <string name="description">Описание</string>
+
+  <string name="install">Установить</string>
+
+  <string name="downloads">Загрузки</string>
+  <string name="size">Размер</string>
+  <string name="likes">Нравится</string>
+  <string name="dont_likes">Не нравится</string>
+
+  <string name="update_self_title">Доступно обновление</string>
+  <string name="update_self_msg">Новая версия %s доступна\nЖелаете обновить?</string>
+  <string name="retrieving_update">Получение обновления...</string>
+
+</resources>

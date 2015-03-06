@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="WidgetProvider_timestamp_today">Šiandien</string>
+  <string name="WidgetProvider_timestamp_yesterday">Vakar</string>
+  <string name="WidgetProvider_timestamp_hour_ago">prieš %s valandą</string>
+  <string name="WidgetProvider_timestamp_hours_ago">prieš %s valandas</string>
+  <string name="WidgetProvider_timestamp_minutes_ago">prieš %s minutes</string>
+  <string name="WidgetProvider_timestamp_just_now">Dabar</string>
+  <string name="WidgetProvider_timestamp_weeks_ago">prieš %s savaites</string>
+  <string name="WidgetProvider_timestamp_week_ago">prieš %s savaitę</string>
+  <string name="WidgetProvider_timestamp_this_week">Šią savaitę</string>
+
+  <string name="comments">Komentarai</string>
+
+  <string name="description">Aprašymas</string>
+
+  <string name="install">Įdiegti</string>
+
+  <string name="downloads">Atsisiuntimai</string>
+  <string name="size">Dydis</string>
+  <string name="likes">Mėgsta</string>
+  <string name="dont_likes">Nemėgsta</string>
+
+  <string name="open">Atidaryti</string>
+
+  <string name="update_self_title">Galimas naujinimas</string>
+  <string name="update_self_msg">Galima nauja %s versija,\nar norite atnaujinti?</string>
+  <string name="retrieving_update">Gaunamas naujinimas...</string>
+
+</resources>

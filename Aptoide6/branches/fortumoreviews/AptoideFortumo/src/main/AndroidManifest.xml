@@ -1,0 +1,54 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="cm.aptoide.ptdev">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <permission android:label="Make internal payments" android:name="org.onepf.openiab.permission.BILLING" android:protectionLevel="normal"/>
+
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+
+    <!-- Define your own permission to protect payment broadcast -->
+    <permission android:name="cm.aptoide.ptdev.PAYMENT_BROADCAST_PERMISSION"
+        android:label="Read payment status"
+        android:protectionLevel="signature" />
+    <!-- "signature" permission granted automatically by system, without notifying user. -->
+    <uses-permission android:name="cm.aptoide.ptdev.PAYMENT_BROADCAST_PERMISSION" />
+
+    <uses-feature android:name="android.hardware.telephony" android:required="true" />
+
+
+    <application android:allowBackup="true" android:label="@string/app_name"
+        android:icon="@mipmap/ic_launcher" android:theme="@style/AppTheme">
+
+        <service android:name=".FortumoPaymentService" android:exported="true">
+            <intent-filter>
+                <action android:name="Aptoide.FortumoPaymentService"></action>
+            </intent-filter>
+        </service>
+
+        <receiver android:name="mp.MpSMSReceiver">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+        <service android:name="mp.MpService" />
+        <service android:name="mp.StatusUpdateService" />
+        <activity android:name="mp.MpActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
+
+        <receiver android:name="cm.aptoide.ptdev.FortumoPaymentActivity$MyReceiver"
+            android:permission="cm.aptoide.ptdev.PAYMENT_BROADCAST_PERMISSION">
+            <intent-filter>
+                <action android:name="mp.info.PAYMENT_STATUS_CHANGED" />
+            </intent-filter>
+        </receiver>
+
+        <activity android:name="cm.aptoide.ptdev.FortumoPaymentActivity"/>
+
+    </application>
+
+
+</manifest>

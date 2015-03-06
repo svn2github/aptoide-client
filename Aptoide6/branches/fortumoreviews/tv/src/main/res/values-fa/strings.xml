@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="WidgetProvider_timestamp_today">امروز</string>
+    <string name="WidgetProvider_timestamp_yesterday">دیروز</string>
+    <string name="WidgetProvider_timestamp_hour_ago">%s ساعت پیش</string>
+    <string name="WidgetProvider_timestamp_hours_ago">%s ساعت پیش</string>
+    <string name="WidgetProvider_timestamp_minutes_ago">%s دقیقه پیش</string>
+    <string name="WidgetProvider_timestamp_just_now">همین الان</string>
+    <string name="WidgetProvider_timestamp_weeks_ago">%s هفته ها قبل</string>
+    <string name="WidgetProvider_timestamp_week_ago">%s هفته پیش</string>
+    <string name="WidgetProvider_timestamp_this_week">این هفته</string>
+
+    <string name="like">خوشم آمد</string>
+    <string name="dont_like">خوشم نیامد</string>
+    <string name="comments">نظرات</string>
+    <string name="description">توضیح</string>
+
+    <string name="open">باز کردن</string>
+
+    <string name="update_self_title">روز رسانی موجود است</string>
+    <string name="update_self_msg">یک نسخه از %s در دسترس است،n\\تمایل به به روز رسانی دارید؟</string>
+    <string name="retrieving_update">در حال بازیابی به روزرسانی...</string>
+</resources>

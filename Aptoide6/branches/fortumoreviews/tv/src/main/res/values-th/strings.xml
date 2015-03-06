@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="WidgetProvider_timestamp_today">วันนี้</string>
+  <string name="WidgetProvider_timestamp_yesterday">เมื่อวาน</string>
+  <string name="WidgetProvider_timestamp_hour_ago">%s ชั่วโมงที่ผ่านมา</string>
+  <string name="WidgetProvider_timestamp_hours_ago">%s ชั่วโมงที่ผ่านมา</string>
+  <string name="WidgetProvider_timestamp_minutes_ago">%s นาทีที่ผ่านมา</string>
+  <string name="WidgetProvider_timestamp_just_now">เมื่อสักครู่</string>
+  <string name="WidgetProvider_timestamp_weeks_ago">%s สัปดาห์ที่ผ่านมา</string>
+  <string name="WidgetProvider_timestamp_week_ago">"%s สัปดาห์ที่ผ่านมา "</string>
+  <string name="WidgetProvider_timestamp_this_week">สัปดาห์นี้</string>
+
+  <string name="comments">ความคิดเห็น</string>
+
+  <string name="install">ติดตั้ง</string>
+
+  <string name="downloads">ดาวน์โหลด</string>
+  <string name="size">ขนาด</string>
+  <string name="likes">ชอบ</string>
+  <string name="dont_likes">ไม่ชอบ</string>
+
+  <string name="open">เปิด</string>
+
+  <string name="update_self_title">การอัปเดตที่มีอยู่</string>
+  <string name="update_self_msg">มีเวอร์ชั่นใหม่ของ %s ที่สามารถดาวน์โหลดได้\nคุณต้องการอัปเดตหรือไม่?</string>
+  <string name="retrieving_update">กำลังรับข้อมูล...</string>
+
+</resources>

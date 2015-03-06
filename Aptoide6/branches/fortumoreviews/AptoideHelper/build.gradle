@@ -1,0 +1,54 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.14.0'
+    }
+}
+apply plugin: 'com.android.application'
+apply from: 'signing.gradle'
+
+repositories {
+        mavenCentral()
+}
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.1.1"
+
+    defaultConfig {
+        minSdkVersion 7
+        targetSdkVersion 21
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        debug {
+            minifyEnabled true
+            proguardFile 'proguard-aptoide.txt'
+            zipAlignEnabled true
+            signingConfig signingConfigs.release
+
+        }
+
+        dexOptions {
+            preDexLibraries true
+            incremental true
+            javaMaxHeapSize "2g"
+        }
+
+        release {
+            minifyEnabled true
+            proguardFile 'proguard-aptoide.txt'
+            signingConfig signingConfigs.release
+
+        }
+    }
+}
+
+dependencies {
+    compile 'com.android.support:appcompat-v7:21.+'
+    compile 'commons-io:commons-io:2.+'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="?attr/customRowForegroundHomeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?attr/backgroundCard"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/app_icon"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_gravity="center_vertical"/>
+
+        <TextView
+            android:id="@+id/app_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/app_icon"
+            android:layout_toRightOf="@+id/app_icon"
+            android:ellipsize="end"
+            android:gravity="center|left"
+            android:maxLines="1"
+            android:layout_marginLeft="5dp"
+            android:singleLine="true"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/app_version"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/app_name"
+            android:layout_toEndOf="@+id/app_icon"
+            android:layout_toRightOf="@+id/app_icon"
+            android:layout_alignLeft="@+id/app_name"
+            android:ellipsize="end"
+            android:gravity="center|left"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <RatingBar
+            android:id="@+id/app_rating"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/app_version"
+            android:layout_toEndOf="@+id/app_icon"
+            android:layout_toRightOf="@+id/app_icon"
+            android:layout_alignLeft="@+id/app_name"
+            android:numStars="5" />
+
+    </RelativeLayout>
+
+
+</FrameLayout>

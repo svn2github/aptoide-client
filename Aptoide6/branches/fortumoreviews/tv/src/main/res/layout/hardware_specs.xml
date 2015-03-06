@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:layout_margin="35dp" >
+
+    <TextView
+        android:drawableStart="@android:drawable/ic_menu_info_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/setting_hwspecstitle"
+        android:layout_marginTop="10dp"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    <TextView
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/hwinfo"
+        android:singleLine="false"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:layout_marginTop="15dp"
+        android:text="@string/setting_appfiltertitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/setting_appfiltersum"
+            android:singleLine="true"
+            android:layout_alignBottom="@+id/CheckedTextViewFilterAplications"/>
+       <CheckBox
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:id="@+id/CheckedTextViewFilterAplications"
+           android:focusable="true"
+           android:layout_alignParentEnd="true"
+           android:gravity="end"/>
+    </RelativeLayout>
+
+</LinearLayout>
+

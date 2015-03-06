@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="WidgetProvider_timestamp_today">Ngayong Araw</string>
+  <string name="WidgetProvider_timestamp_yesterday">Kahapon</string>
+  <string name="WidgetProvider_timestamp_hour_ago">%s oras ang nakalipas</string>
+  <string name="WidgetProvider_timestamp_hours_ago">%s oras ang nakalipas</string>
+  <string name="WidgetProvider_timestamp_minutes_ago">%s minuto ang nakalipas</string>
+  <string name="WidgetProvider_timestamp_just_now">Ngayon lang</string>
+  <string name="WidgetProvider_timestamp_weeks_ago">%s linggo ang nakalipas</string>
+  <string name="WidgetProvider_timestamp_week_ago">%s linggo ang nakalipas</string>
+  <string name="WidgetProvider_timestamp_this_week">Ngayong linggo</string>
+
+  <string name="like">Gusto</string>
+  <string name="dont_like">Hindi gusto</string>
+  <string name="comments">Mga komento</string>
+
+  <string name="description">Paglalarawan</string>
+
+  <string name="downloads">Mga Download</string>
+  <string name="size">Laki</string>
+  <string name="likes">Mga gusto</string>
+  <string name="dont_likes">Mga hindi gusto</string>
+
+  <string name="open">Buksan</string>
+
+  <string name="update_self_title">May makukuhang update</string>
+  <string name="update_self_msg">Mayroong makukuhang bagong bersyon ng %s,\ngusto mo bang i-update?</string>
+  <string name="retrieving_update">Kinukuha ang update...</string>
+
+</resources>

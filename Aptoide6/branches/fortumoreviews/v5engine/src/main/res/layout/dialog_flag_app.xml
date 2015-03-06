@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="vertical">
+
+        <RadioGroup
+                android:id="@+id/flag_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+            <RadioButton
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/flag_good"
+                    android:id="@+id/button_good" android:checked="false"/>
+            <RadioButton
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/flag_license"
+                    android:id="@+id/button_license" android:checked="false"/>
+            <RadioButton
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/flag_fake"
+                    android:id="@+id/button_fake" android:checked="false"/>
+            <RadioButton
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/flag_freeze"
+                    android:id="@+id/button_freeze" android:checked="false"/>
+            <RadioButton
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/flag_virus"
+                    android:id="@+id/button_virus" android:layout_gravity="center" android:checked="false"/>
+
+        </RadioGroup>
+
+        <Button android:id="@+id/button_mark_flag"
+                style="?attr/customButtonColor"
+                android:layout_width="fill_parent"
+                android:text="@string/flag_this_app"
+                android:layout_margin="10dp" />
+
+    </LinearLayout>
+
+</ScrollView>

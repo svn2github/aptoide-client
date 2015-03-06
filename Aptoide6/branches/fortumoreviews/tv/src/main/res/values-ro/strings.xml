@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="WidgetProvider_timestamp_today">Azi</string>
+  <string name="WidgetProvider_timestamp_yesterday">Ieri</string>
+  <string name="WidgetProvider_timestamp_hour_ago">%s oră în urmă</string>
+  <string name="WidgetProvider_timestamp_hours_ago">Cu %s ore în urmă</string>
+  <string name="WidgetProvider_timestamp_minutes_ago">Cu %s minute în urmă</string>
+  <string name="WidgetProvider_timestamp_just_now">Chiar acum</string>
+  <string name="WidgetProvider_timestamp_weeks_ago">Cu %s săptămâni în urmă</string>
+  <string name="WidgetProvider_timestamp_week_ago">%s săptămână în urmă</string>
+  <string name="WidgetProvider_timestamp_this_week">Săptămâna aceasta</string>
+
+  <string name="comments">Comentarii</string>
+
+  <string name="install">Instalează</string>
+
+  <string name="downloads">Descărcări</string>
+  <string name="size">Dimensiune</string>
+  <string name="likes">Aprecieri</string>
+  <string name="dont_likes">Ne-aprecieri</string>
+
+  <string name="open">Deschide</string>
+
+  <string name="update_self_title">Actualizare disponibilă</string>
+  <string name="update_self_msg">Este disponibilă o versiune nouă a %s \nDoriți să actualizați?</string>
+  <string name="retrieving_update">Recuperăm actualizarea...</string>
+
+</resources>

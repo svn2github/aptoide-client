@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="WidgetProvider_timestamp_today">Ma</string>
+  <string name="WidgetProvider_timestamp_yesterday">Tegnap</string>
+  <string name="WidgetProvider_timestamp_hour_ago">%s órával ezelőtt</string>
+  <string name="WidgetProvider_timestamp_hours_ago">%s órával ezelőtt</string>
+  <string name="WidgetProvider_timestamp_minutes_ago">%s perccel ezelőtt</string>
+  <string name="WidgetProvider_timestamp_just_now">Épp most</string>
+  <string name="WidgetProvider_timestamp_weeks_ago">%s héttel ezelőtt</string>
+  <string name="WidgetProvider_timestamp_week_ago">%s héttel ezelőtt</string>
+  <string name="WidgetProvider_timestamp_this_week">Ezen a héten</string>
+
+
+  <string name="comments">Hozzászólások</string>
+
+  <string name="description">Leírás</string>
+
+  <string name="install">Telepítés</string>
+
+  <string name="downloads">Letöltések</string>
+  <string name="size">Méret</string>
+  <string name="likes">Kedvelik</string>
+  <string name="dont_likes">Nem kedvelik</string>
+
+  <string name="open">Megnyitás</string>
+
+  <string name="update_self_title">Frissítés elérhető</string>
+  <string name="update_self_msg">A(z) %s új verziója elérhető\nSzeretné frissíteni?</string>
+  <string name="retrieving_update">Frissítés beszerzése</string>
+
+</resources>

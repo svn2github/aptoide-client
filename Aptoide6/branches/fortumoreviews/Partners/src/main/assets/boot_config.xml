@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bootconf>
+    <storeconf>
+        <theme>default</theme>
+        <avatar>http://cdn3.aptoide.com/includes/themes/default/images/repo_default_icon.png</avatar>
+        <description></description>
+        <view>list</view>
+        <items>applications,games,top_apps,latest_apps,latest_comments,latest_likes,favorites,recommended</items>
+    </storeconf>
+    <aptoideconf>
+        <partnertype>premium</partnertype>
+        <partnerid>7cf0092e7898fca9643a86f77cacc8c7</partnerid>
+        <marketname>Lisciani Market</marketname>
+        <defaultstorename>lisciani</defaultstorename>
+        <aptoidetheme>yellow</aptoidetheme>
+        <splashscreen>http://mirror.apk08.aptoide.com/apks/8/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/lisciani/app/splashscreens/splashscreen.png</splashscreen>
+        <splashscreenland>http://mirror.apk08.aptoide.com/apks/8/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/lisciani/app/splashscreens/splashscreen_land.png</splashscreenland>
+        <brand>brand_lisciani</brand>
+        <searchstores>false</searchstores>
+        <maturecontentswitch>false</maturecontentswitch>
+        <multiplestores>false</multiplestores>
+        <customeditorschoice>true</customeditorschoice>
+        <createshortcut>true</createshortcut>
+        <linkedcomments>true</linkedcomments>
+        <adunitid></adunitid>
+        <gms_depends>all</gms_depends>
+        <maturecontentswitchvalue>true</maturecontentswitchvalue>
+    </aptoideconf>
+</bootconf>

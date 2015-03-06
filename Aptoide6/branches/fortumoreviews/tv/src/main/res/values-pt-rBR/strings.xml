@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="WidgetProvider_timestamp_today">Hoje</string>
+  <string name="WidgetProvider_timestamp_yesterday">Ontem</string>
+  <string name="WidgetProvider_timestamp_hour_ago">há %s horas</string>
+  <string name="WidgetProvider_timestamp_hours_ago">há %s horas</string>
+  <string name="WidgetProvider_timestamp_minutes_ago">há %s minutos</string>
+  <string name="WidgetProvider_timestamp_just_now">Agora mesmo</string>
+  <string name="WidgetProvider_timestamp_weeks_ago">há %s semanas</string>
+  <string name="WidgetProvider_timestamp_week_ago">há %s semanas</string>
+  <string name="WidgetProvider_timestamp_this_week">Esta semana</string>
+
+  <string name="description">Descrição</string>
+
+  <string name="install">Instalar</string>
+
+  <string name="downloads">Downloads</string>
+  <string name="size">Tamanho</string>
+  <string name="likes">Curtidas</string>
+  <string name="dont_likes">Curtidas negativas</string>
+
+  <string name="open">Abrir</string>
+
+  <string name="update_self_title">Atualização disponível</string>
+  <string name="update_self_msg">Há uma nova versão do %s disponível\nVocê deseja atualizar?</string>
+  <string name="retrieving_update">Recuperando atualização...</string>
+
+</resources>

@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="WidgetProvider_timestamp_today">היום</string>
+  <string name="WidgetProvider_timestamp_yesterday">אתמול</string>
+  <string name="WidgetProvider_timestamp_hour_ago">%s שעות קודם לכן</string>
+  <string name="WidgetProvider_timestamp_hours_ago">%s שעות קודם לכן</string>
+  <string name="WidgetProvider_timestamp_minutes_ago">%s דקות קודם לכן</string>
+  <string name="WidgetProvider_timestamp_just_now">כרגע</string>
+  <string name="WidgetProvider_timestamp_weeks_ago">%s שבועות קודם לכן</string>
+  <string name="WidgetProvider_timestamp_week_ago">%s שבועות קודם לכן</string>
+  <string name="WidgetProvider_timestamp_this_week">השבוע</string>
+
+  <string name="like">אוהבים</string>
+  <string name="dont_like">לא אוהבים</string>
+  <string name="comments">הערות</string>
+
+  <string name="description">תיאור</string>
+
+  <string name="downloads">הורדות</string>
+  <string name="size">גודל</string>
+  <string name="likes">אוהבים</string>
+  <string name="dont_likes">לא אוהבים</string>
+
+  <string name="open">פתח</string>
+
+  <string name="update_self_title">עדכון זמין</string>
+  <string name="update_self_msg">גרסה חדשה של %s זמינה, האם ברצונך לעדכן?</string>
+  <string name="retrieving_update">משיג עדכון...</string>
+
+</resources>

@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="WidgetProvider_timestamp_today">오늘</string>
+  <string name="WidgetProvider_timestamp_yesterday">어제</string>
+  <string name="WidgetProvider_timestamp_hour_ago">%s 시간 전</string>
+  <string name="WidgetProvider_timestamp_hours_ago">%s 시간 전</string>
+  <string name="WidgetProvider_timestamp_minutes_ago">%s 분 전</string>
+  <string name="WidgetProvider_timestamp_just_now">방금</string>
+  <string name="WidgetProvider_timestamp_weeks_ago">%s 주 전</string>
+  <string name="WidgetProvider_timestamp_week_ago">%s 주 전</string>
+  <string name="WidgetProvider_timestamp_this_week">이번 주</string>
+
+  <string name="like">좋아요</string>
+  <string name="dont_like">싫어요</string>
+  <string name="comments">댓글</string>
+
+  <string name="description">설명</string>
+
+  <string name="downloads">다운로드 목록</string>
+  <string name="size">크기</string>
+  <string name="likes">좋아요</string>
+  <string name="dont_likes">싫어요</string>
+
+  <string name="open">열기</string>
+
+  <string name="update_self_title">업데이트 가능</string>
+  <string name="update_self_msg">신규 버전의 %s 가 다운 가능합니다\n업데이트 할까요?</string>
+  <string name="retrieving_update">업데이트 불러오는중...</string>
+
+</resources>

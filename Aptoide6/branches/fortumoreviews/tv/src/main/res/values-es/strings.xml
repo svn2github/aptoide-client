@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="WidgetProvider_timestamp_today">Hoy</string>
+    <string name="WidgetProvider_timestamp_yesterday">Ayer</string>
+    <string name="WidgetProvider_timestamp_hour_ago">hace %s hora</string>
+    <string name="WidgetProvider_timestamp_hours_ago">hace %s horas</string>
+    <string name="WidgetProvider_timestamp_minutes_ago">hace minutos</string>
+    <string name="WidgetProvider_timestamp_just_now">Justo ahora</string>
+    <string name="WidgetProvider_timestamp_weeks_ago">hace %s semanas</string>
+    <string name="WidgetProvider_timestamp_week_ago">%s semana atras</string>
+    <string name="WidgetProvider_timestamp_this_week">Esta semana</string>
+
+    <string name="like">Me gusta</string>
+    <string name="dont_like">No me gusta</string>
+    <string name="comments">Comentarios</string>
+    <string name="description">Descripción</string>
+
+    <string name="downloads">Descargas</string>
+    <string name="size">Tamaño</string>
+    <string name="likes">Me gusta</string>
+    <string name="dont_likes">No me gusta</string>
+    <string name="open">Abrir</string>
+    <string name="update_self_title">Actualización disponible</string>
+    <string name="update_self_msg">Hay una nueva versión de aptoide disponible,¿Desea actualizarla?</string>
+    <string name="retrieving_update">Recuperando actualización...</string>
+    <string name="vote">%s voto</string>
+    <string name="votes">%s votos</string>
+</resources>

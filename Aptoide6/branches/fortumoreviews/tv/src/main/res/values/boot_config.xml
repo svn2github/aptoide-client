@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+<!--    <string name="partnertype">premium</string>
+    <string name="partnerid">7315ac8862b6cbefc2decd8b02b4ca42</string>
+    <string name="marketname">Mediavision Market</string>
+    <string name="defaultstorename">mediavision</string>
+    <string name="aptoidetheme">gold</string>
+    <string name="splashscreen">http://mirror.apk11.aptoide.com/apks/11/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/mediavision/apptv/icon/splashscreen.png</string>
+    <string name="splashscreenland">http://mirror.apk11.aptoide.com/apks/11/aptoide-f63c6f2461f65f32b6d144d6d2ff982e/mediavision/apptv/splashscreens/splashscreen_land.png</string>
+    <string name="brand">brand_mediavision</string>
+    <string name="adunitid"/>
+    <string name="theme">default</string>
+    <string name="avatar">https://www.aptoide.com/includes/themes/default/images/repo_default_icon.png</string>
+    <string name="view">list</string>
+    <string name="items">applications,games,top_apps,latest_apps,latest_comments,latest_likes,favorites,recommended</string>
+    <string name="search_authority">cm.aptoidetv.pt.geniatechapps.SearchAuthority</string>
+    <bool name="showsplash">true</bool><string name="splashcolor">#FFFFFFFF</string>-->
+
+    <!--Store Config-->
+    <string name="theme">default</string>
+    <string name="avatar">https://www.aptoide.com/includes/themes/default/images/repo_default_icon.png</string>
+    <string name="view">list</string>
+    <string name="items">applications,games,top_apps,latest_apps,latest_comments,latest_likes,favorites,recommended</string>
+
+    <!--Partner Config-->
+    <string name="partnertype">premium</string>
+    <string name="partnerid">f829219cd75e9abfb6201e386d06e838</string>
+    <string name="marketname">Aptoide TV</string>
+    <string name="imgtitle"></string>
+    <string name="defaultstorename">geniatechapps</string>
+    <!--<string name="defaultstorename">mygica</string>-->
+    <!--<string name="defaultstorename">sharp-store</string>-->
+    <!--<string name="defaultstorename">magicbox-store</string>-->
+    <!--<string name="defaultstorename">iwedia-store</string>-->
+
+    <string name="aptoidetheme">default</string>
+    <string name="splashscreen"></string>
+    <string name="splashscreenland"></string>
+    <bool name="searchstores">true</bool>
+    <bool name="maturecontentswitch">false</bool>
+    <bool name="multiplestores">false</bool>
+    <bool name="customeditorschoice">true</bool>
+    <bool name="createshortcut">true</bool>
+    <string name="adunitid"></string>
+    <bool name="showsplash">true</bool>
+    <string name="splashcolor">#FFe98023</string>
+
+    <!--Project Config-->
+    <string name="search_authority">cm.aptoidetv.pt.aptoidetv.SearchAuthority</string>
+
+</resources>

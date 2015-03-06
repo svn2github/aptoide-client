@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="WidgetProvider_timestamp_today">Hari ini</string>
+  <string name="WidgetProvider_timestamp_yesterday">Kemarin</string>
+  <string name="WidgetProvider_timestamp_hour_ago">%s jam yang lalu</string>
+  <string name="WidgetProvider_timestamp_hours_ago">%s jam yang lalu</string>
+  <string name="WidgetProvider_timestamp_minutes_ago">%s menit yang lalu</string>
+  <string name="WidgetProvider_timestamp_just_now">Baru saja</string>
+  <string name="WidgetProvider_timestamp_weeks_ago">%s minggu yang lalu</string>
+  <string name="WidgetProvider_timestamp_week_ago">%s minggu yang lalu</string>
+  <string name="WidgetProvider_timestamp_this_week">Minggu ini</string>
+
+  <string name="like">Suka</string>
+  <string name="dont_like">Tidak suka</string>
+  <string name="comments">Komentar</string>
+
+  <string name="downloads">Mengunduh</string>
+  <string name="size">Ukuran</string>
+  <string name="likes">Suka</string>
+  <string name="dont_likes">Tidak suka</string>
+
+  <string name="open">Buka</string>
+
+  <string name="update_self_title">Pembaruan tersedia</string>
+  <string name="update_self_msg">Versi baru %s tersedia,\nAnda ingin memperbarui?</string>
+  <string name="retrieving_update">Mengambil pembaruan...</string>
+
+  <string name="vote">%s vote</string>
+  <string name="votes">%s suara</string>
+
+</resources>

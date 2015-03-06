@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="WidgetProvider_timestamp_today">დღეს</string>
+  <string name="WidgetProvider_timestamp_yesterday">გუშინ</string>
+  <string name="WidgetProvider_timestamp_hour_ago">%s საათის წინ</string>
+  <string name="WidgetProvider_timestamp_hours_ago">%s საათის წინ</string>
+  <string name="WidgetProvider_timestamp_minutes_ago">%s წუთის წინ</string>
+  <string name="WidgetProvider_timestamp_just_now">ახლახანს</string>
+  <string name="WidgetProvider_timestamp_weeks_ago">%s კვირის წინ</string>
+  <string name="WidgetProvider_timestamp_week_ago">%s კვირის წინ</string>
+  <string name="WidgetProvider_timestamp_this_week">ამ კვირაში</string>
+
+  <string name="like">მომწონს</string>
+  <string name="dont_like">არ მომწონს</string>
+  <string name="comments">კომენტარები</string>
+
+  <string name="description">აღწერა</string>
+  <string name="install">დაყენება</string>
+
+  <string name="downloads">გადმოწერები</string>
+  <string name="size">ზომა</string>
+  <string name="likes">მოწონებები</string>
+  <string name="dont_likes">არ მოწონებები</string>
+
+  <string name="open">გახსნა</string>
+
+  <string name="update_self_title">ახალი ვერსია ხელმისაწვდომია</string>
+  <string name="update_self_msg">%s -ს ახალი ვერსია ხელმისაწვდომია.\nგსურთ მისი დაყენება?</string>
+  <string name="retrieving_update">განახლების მიღება ...</string>
+
+  <string name="vote">%s ხმა</string>
+  <string name="votes">%s ხმა</string>
+
+</resources>

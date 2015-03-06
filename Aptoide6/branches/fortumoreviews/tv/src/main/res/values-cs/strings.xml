@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="WidgetProvider_timestamp_today">Dnes</string>
+    <string name="WidgetProvider_timestamp_yesterday">Včera</string>
+    <string name="WidgetProvider_timestamp_hour_ago">%s hodina zpátky</string>
+    <string name="WidgetProvider_timestamp_hours_ago">%s hodin zpět</string>
+    <string name="WidgetProvider_timestamp_minutes_ago">%s minut zpět</string>
+    <string name="WidgetProvider_timestamp_just_now">Právě teď</string>
+    <string name="WidgetProvider_timestamp_weeks_ago">%s týdnů zpět</string>
+    <string name="WidgetProvider_timestamp_week_ago">%s týden zpět</string>
+    <string name="WidgetProvider_timestamp_this_week">Tento týden</string>
+    <string name="like">Líbí se</string>
+    <string name="dont_like">Nelíbí se</string>
+    <string name="comments">Komentáře</string>
+    <string name="downloads">Staženných</string>
+    <string name="size">Velikost</string>
+    <string name="likes">Lajků</string>
+    <string name="dont_likes">Nelíbí se</string>
+    <string name="open">Otevřít</string>
+    <string name="update_self_title">Dostupná aktualizace</string>
+    <string name="update_self_msg">K dispozici je nová verze %s ,\npřejete si aktualizovat?</string>
+    <string name="retrieving_update">Načítání aktualizace...</string>
+    <string name="vote">%s hlas</string>
+    <string name="votes">%s hlasů</string>
+
+</resources>

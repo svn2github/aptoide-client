@@ -1,0 +1,162 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <include
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout = "@layout/row_app_title_rating_2texts"/>
+
+        <View
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_height="1dp"
+            android:layout_width="fill_parent"
+            android:background="@color/dark_gray"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin">
+            <TextView
+                android:id="@+id/pros_label"
+                android:layout_width="match_parent"
+                android:text="@string/review_good"
+                android:textSize="18dp"
+                android:gravity="center_vertical"
+                android:padding="10dp"
+                android:drawableRight="@drawable/good"
+                android:textColor="#00c81b"
+                android:layout_height="wrap_content"/>
+
+            <EditText
+                android:id="@+id/Pro1"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:background="@drawable/edittext_bg_round_corner"
+                android:paddingLeft="4dp"
+                android:layout_margin="3dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLength="140"/>
+            <EditText
+                android:id="@+id/Pro2"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:background="@drawable/edittext_bg_round_corner"
+                android:paddingLeft="4dp"
+                android:layout_margin="3dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLength="140"/>
+            <EditText
+                android:id="@+id/Pro3"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:background="@drawable/edittext_bg_round_corner"
+                android:paddingLeft="4dp"
+                android:layout_margin="3dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLength="140"/>
+            <TextView
+                android:textColor="#ff3037"
+                android:id="@+id/cons_label"
+                android:layout_width="match_parent"
+                android:text="@string/review_bad"
+                android:padding="10dp"
+                android:gravity="center_vertical"
+                android:textSize="18dp"
+                android:drawableRight="@drawable/bad"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:id="@+id/Con1"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:background="@drawable/edittext_bg_round_corner"
+                android:paddingLeft="4dp"
+                android:layout_margin="3dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLength="140"/>
+            <EditText
+                android:id="@+id/Con2"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:background="@drawable/edittext_bg_round_corner"
+                android:paddingLeft="4dp"
+                android:layout_margin="3dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLength="140"/>
+            <EditText
+                android:id="@+id/Con3"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:background="@drawable/edittext_bg_round_corner"
+                android:paddingLeft="4dp"
+                android:layout_margin="3dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLength="140"
+
+                android:layout_marginBottom="5dp"/>
+
+            <include android:id="@+id/Seek_Bar_Speed" layout = "@layout/row_seekbar_number"/>
+            <include android:id="@+id/Seek_Bar_Usability" layout = "@layout/row_seekbar_number"/>
+            <include android:id="@+id/Seek_Bar_Stability" layout = "@layout/row_seekbar_number"/>
+            <include android:id="@+id/Seek_Bar_Funny" layout = "@layout/row_seekbar_number"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:layout_margin="5dp">
+
+                <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="@string/review_final_verdict"
+                    android:layout_alignParentLeft="true"/>
+
+                <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/finalScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:layout_alignParentRight="true"/>
+            </RelativeLayout>
+
+            <EditText
+                android:id="@+id/make_review_final_verdict"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:background="@drawable/edittext_bg_round_corner"
+                android:paddingLeft="4dp"
+                android:layout_margin="3dp"
+                android:minLines="4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLength="3000"/>
+
+            <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:focusable="true"
+                android:clickable="true"
+                android:onClick="finishButtonClick"
+                android:padding="5dp"
+                android:layout_margin="5dp"
+                android:text="@string/review_finish"
+                android:background="@drawable/aptoide_bg_round_corner"
+                android:textColor="@android:color/white"/>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

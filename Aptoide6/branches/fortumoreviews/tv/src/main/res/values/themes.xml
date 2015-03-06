@@ -1,0 +1,103 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Theme.Example.Leanback" parent="Theme.Leanback">
+        <item name="android:windowEnterTransition" tools:ignore="NewApi">@android:transition/fade
+        </item>
+        <item name="android:windowExitTransition" tools:ignore="NewApi">@android:transition/fade
+        </item>
+        <item name="android:windowSharedElementExitTransition" tools:ignore="NewApi">
+            @android:transition/move
+        </item>
+        <item name="android:windowSharedElementEnterTransition" tools:ignore="NewApi">
+            @android:transition/move
+        </item>
+        <!-- uncomment to override default transition settings:
+         -->
+        <item name="android:windowAllowReturnTransitionOverlap" tools:ignore="NewApi">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap" tools:ignore="NewApi">true</item>
+        <item name="android:windowContentTransitions" tools:ignore="NewApi">true</item>
+        <item name="android:colorPrimary" tools:ignore="NewApi">@color/search_opaque</item>
+
+    </style>
+
+    <style name="AptoideThemeDefault" parent="Theme.Example.Leanback">
+        <item name="brandColor">@color/aptoide</item>
+        <item name="searchColor">#f09b5c</item>
+    </style>
+
+    <style name="AptoideThemeDefaultBlack" parent="Theme.Example.Leanback">
+        <item name="brandColor">@color/black</item>
+    </style>
+
+    <style name="AptoideThemeDefaultMidnight" parent="Theme.Example.Leanback">
+        <item name="brandColor">@color/midnight</item>
+    </style>
+
+    <style name="AptoideThemeDefaultMaroon" parent="Theme.Example.Leanback">
+        <item name="brandColor">@color/maroon</item>
+    </style>
+
+    <style name="AptoideThemeDefaultGold" parent="Theme.Example.Leanback">
+        <item name="brandColor">@color/gold</item>
+    </style>
+
+    <style name="AptoideThemeDefaultOrange" parent="Theme.Example.Leanback">
+        <item name="brandColor">@color/orange</item>
+    </style>
+
+    <style name="AptoideThemeDefaultSpringgreen" parent="Theme.Example.Leanback">
+        <item name="brandColor">@color/springgreen</item>
+    </style>
+
+    <style name="AptoideThemeDefaultLightsky" parent="Theme.Example.Leanback">
+        <item name="brandColor">@color/lightsky</item>
+    </style>
+
+    <style name="AptoideThemeDefaultPink" parent="Theme.Example.Leanback">
+        <item name="brandColor">@color/pink</item>
+    </style>
+
+    <style name="AptoideThemeDefaultBlue" parent="Theme.Example.Leanback">
+        <item name="brandColor">@color/blue</item>
+    </style>
+
+    <style name="AptoideThemeDefaultRed" parent="Theme.Example.Leanback">
+        <item name="brandColor">@color/red</item>
+    </style>
+
+    <style name="AptoideThemeDefaultMagenta" parent="Theme.Example.Leanback">
+        <item name="brandColor">@color/magenta</item>
+    </style>
+
+    <style name="AptoideThemeDefaultSlategray" parent="Theme.Example.Leanback">
+        <item name="brandColor">@color/slategray</item>
+    </style>
+
+    <style name="AptoideThemeDefaultSeagreen" parent="Theme.Example.Leanback">
+        <item name="brandColor">@color/seagreen</item>
+    </style>
+
+    <style name="AptoideThemeDefaultSilver" parent="Theme.Example.Leanback">
+        <item name="brandColor">@color/silver</item>
+    </style>
+
+    <style name="AptoideThemeDefaultDimgray" parent="Theme.Example.Leanback">
+        <item name="brandColor">@color/dimgray</item>
+    </style>
+
+    <style name="AptoideThemeDefaultGreenApple" parent="Theme.Example.Leanback">
+        <item name="brandColor">@color/greenapple</item>
+    </style>
+
+    <style name="AptoideThemeDefaultHappyBlue" parent="Theme.Example.Leanback">
+        <item name="brandColor">@color/happyblue</item>
+    </style>
+
+    <style name="AptoideThemeDefaultGreen" parent="Theme.Example.Leanback">
+        <item name="brandColor">@color/green</item>
+    </style>
+
+    <style name="AptoideThemeDefaultYellow" parent="Theme.Example.Leanback">
+        <item name="brandColor">@color/yellow</item>
+    </style>
+</resources>

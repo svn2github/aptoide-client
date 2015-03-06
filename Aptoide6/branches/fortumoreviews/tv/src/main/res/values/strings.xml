@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_id">477114135645153</string>
+
+    <string name="app_name">@string/marketname</string>
+
+    <string name="WidgetProvider_timestamp_today">Today</string>
+    <string name="WidgetProvider_timestamp_yesterday">Yesterday</string>
+    <string name="WidgetProvider_timestamp_hour_ago">%s hour ago</string>
+    <string name="WidgetProvider_timestamp_hours_ago">%s hours ago</string>
+    <string name="WidgetProvider_timestamp_minutes_ago">%s minutes ago</string>
+    <string name="WidgetProvider_timestamp_just_now">Just now</string>
+    <string name="WidgetProvider_timestamp_weeks_ago">%s weeks ago</string>
+    <string name="WidgetProvider_timestamp_week_ago">%s week ago</string>
+    <string name="WidgetProvider_timestamp_this_week">This week</string>
+
+    <string name="downloads">Downloads</string>
+    <string name="description">Description</string>
+    <string name="like">Like</string>
+    <string name="dont_like">Don\'t like</string>
+    <string name="dont_likes">Don\'t likes</string>
+    <string name="comments">Comments</string>
+    <string name="write_your_comment">Write your comment</string>
+    <string name="send_comment">Send comment</string>
+    <string name="opinion_success">Your request was successfully submitted</string>
+    <string name="comment_submitted">Your comment was successfuly submitted</string>
+    <string name="no_comments">No comments yet. Be the first!</string>
+    <string name="install">Install</string>
+    <string name="version">Ver.</string>
+    <string name="vote">%s vote</string>
+    <string name="votes">%s votes</string>
+    <string name="update_self_title">Update available</string>
+    <string name="update_self_msg">There is a new version of %s available\nDo you wish to update?</string>
+    <string name="retrieving_update">Retrieving update...</string>
+    <string name="likes">Likes</string>
+    <string name="dislikes">Dislikes</string>
+    <string name="open">Open</string>
+    <string name="size">Size</string>
+    <string name="ratings">Ratings</string>
+    <string name="review">Review</string>
+    <string name="create_username">Username</string>
+    <string name="update_username">Update username</string>
+    <string name="username_success">Username updated with success.</string>
+    <string name="please_update_username">Please update your username to insert comment</string>
+
+    <!-- Error messages -->
+    <string name="failed_to_launch_app">Failed to launch application</string>
+    <string name="failed_to_find_app">The application you are trying to launch is not available</string>
+    <string name="failed_app_launch_timeout">The request to launch the application has timed out!</string>
+    <string name="failed_to_play">Failed to start the playback of media</string>
+    <string name="failed_to_pause">Failed to pause the playback of media</string>
+    <string name="failed_to_connect">Could not connect to the device</string>
+    <string name="failed_to_seek">Failed to seek to the specified position on the remote device</string>
+    <string name="video_error_media_load_timeout">Media loading timed out</string>
+    <string name="video_error_server_inaccessible">Media server was not reachable</string>
+    <string name="video_error_unknown_error">Failed to load video</string>
+    <string name="error_fragment_message">An error occurred</string>
+    <string name="dismiss_error">Dismiss</string>
+    <string name="oops">Oops</string>
+    <string name="retry">Retry</string>
+
+
+    <!-- Global Search -->
+    <!-- The action label for global search -->
+    <string name="global_search">GLOBALSEARCH</string>
+
+    <!-- The label for use as a searchable item -->
+    <string name="search_label">Search</string>
+
+    <!-- The hint text that appears in the search box. -->
+    <string name="search_hint">Search for apps</string>
+
+    <!-- The description that will show up in the search settings for this source.  -->
+    <string name="settings_description">TV</string>
+
+    <!-- General instructions in the main activity. -->
+    <string name="search_instructions">Use the search box to search for videos</string>
+
+    <!-- Shown above search results when we receive a search request. -->
+    <plurals name="search_results">
+        <item quantity="one">%1$d result for \"%2$s\": </item>
+        <item quantity="other">%1$d results for \"%2$s\": </item>
+    </plurals>
+
+    <!-- Search failure message. -->
+    <string name="no_results">No results found for \"%s\"</string>
+    <string name="updates">Updates</string>
+    <string name="update">Update</string>
+
+    <string name="settings">Settings</string>
+    <string name="my_account">My Account</string>
+    <string name="login_or_register">Login or register</string>
+    <string name="preferences">Preferences</string>
+    <string name="preferences_text">Manager your preferences</string>
+
+
+    <string name="register">Sign Up</string>
+    <string name="fields_cannot_empty">Please check your email and password.</string>
+    <string name="password_validation_text">Password must be at least 8 characters and should have at least one letter and one number or special characters (!@#$%*)
+    </string>
+    <string name="username_tip">Type your email</string>
+    <string name="password_tip">Choose a password</string>
+    <string name="username">Email</string>
+    <string name="password">Password</string>
+    <string name="accept_terms">By signing up you are agreeing to the Aptoide Terms of Service and Content Policy for Developers</string>
+    <string name="or">Or</string>
+    <string name="link_device_webinstall">Link account with Webinstall</string>
+    <string name="setcredentials">Login</string>
+    <string name="dont_have_an_account">Don\'t have an account? Sign up</string>
+    <string name="forgot_passwd">Forgot password?</string>
+    <string name="logged_as">You are logged as:</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="one_account_allowed">Only one account allowed</string>
+    <string name="signing_in">Signing in&#8230;</string>
+    <string name="new_to_aptoide">New to %s? Create a free account</string>
+    <string name="please_wait">Please wait&#8230;</string>
+
+    <string name="about_site">Website: </string>
+    <string name="about_mail">Contact: </string>
+    <string name="about_us">About us</string>
+
+    <string name="settings_title_bar">Settings</string>
+    <string name="setting_hwspecssum">Hardware Info about your TV</string>
+    <string name="setting_appfiltersum">Don\'t show applications that are not compatible with this device</string>
+    <string name="setting_appfiltertitle">Filter Applications</string>
+    <string name="setting_hwspecstitle">Hardware Specs</string>
+    <string name="setting_sdk_version">SDK Version</string>
+    <string name="setting_screen_size">Screen Size</string>
+    <string name="setting_esgl_version">ESGL Version</string>
+    <string name="screenCode">Screen code</string>
+    <string name="cpuAbi">CPU</string>
+
+    <string name="setting_clear_memorysum">Manage data on the device</string>
+    <string name="setting_clear_memory">Clear Memory</string>
+    <string name="clearcontent_title">Remove data and configurations</string>
+    <string name="clearcache_title">Clear cache</string>
+    <string name="clear_cache_sucess">Content successfully deleted</string>
+    <string name="cache_using_X_mb">Using %s MB</string>
+    <string name="clearcache_sum">Deletes cache (icons, screenshots) from the SD card.</string>
+    <string name="clearcontent_sum">Deletes the data from the SD card.</string>
+    <string name="settings_maxFileCache_sum">Set a maximum size to keep your apk files</string>
+    <string name="settings_maxFileCache_title">Download File Cache (MB)</string>
+
+    <string name="error_occured">An error occurred. Please try again</string>
+
+    <string name="error_MARG_1">Missing store</string>
+    <string name="error_MARG_2">Missing app info</string>
+    <string name="error_MARG_3">Missing app version</string>
+    <string name="error_MARG_4">Missing login</string>
+    <string name="error_MARG_5">Missing app</string>
+    <string name="error_MARG_6">Missing MD5 data</string>
+    <string name="error_MARG_7">Missing package parameter</string>
+    <string name="error_MARG_8">Missing hmac parameter</string>
+    <string name="error_MARG_9">Missing limit parameter</string>
+    <string name="error_MARG_10">Missing offset parameter</string>
+    <string name="error_MARG_11">Missing lang parameter</string>
+    <string name="error_MARG_100">Missing app name</string>
+    <string name="error_MARG_101">Missing description</string>
+    <string name="error_MARG_102">Missing category</string>
+    <string name="error_MARG_103">Missing rating</string>
+    <string name="error_MARG_104">Missing flag</string>
+    <string name="error_MARG_105">Missing comment</string>
+    <string name="error_MARG_106">Missing vote</string>
+    <string name="error_MARG_107">Missing text</string>
+    <string name="error_MARG_108">Missing like parameter</string>
+    <string name="error_MARG_109">Missing email parameter</string>
+    <string name="error_MARG_110">Missing passhash parameter</string>
+    <string name="error_MARG_111">Missing name parameter</string>
+    <string name="error_MARG_112">Missing user-agent parameter</string>
+    <string name="error_MARG_113">Missing hash parameter</string>
+    <string name="error_MARG_200">Authentication error</string>
+    <string name="error_MARG_201">Invalid username/password combination</string>
+    <string name="error_MARG_202">Invalid token or user/pass</string>
+
+    <string name="error_IARG_1">Invalid store</string>
+    <string name="error_IARG_2">Invalid login</string>
+    <string name="error_IARG_3">Invalid identifier</string>
+    <string name="error_IARG_4">Invalid MD5 data</string>
+    <string name="error_IARG_5">Invalid hmac format</string>
+    <string name="error_IARG_6">Invalid lang</string>
+    <string name="error_IARG_100">The minimum number of characters allowed in a comment is 10</string>
+    <string name="error_IARG_101">The minimum number of characters allowed in a reply comment is 10</string>
+    <string name="error_IARG_102">Invalid argument</string>
+    <string name="error_IARG_103">Invalid category</string>
+    <string name="error_IARG_104">Invalid rating</string>
+    <string name="error_IARG_105">The website is not a valid URL</string>
+    <string name="error_IARG_106">The e-mail address is not valid</string>
+    <string name="error_IARG_107">Invalid flag</string>
+    <string name="error_IARG_108">Invalid comment</string>
+    <string name="error_IARG_109">Invalid vote</string>
+    <string name="error_IARG_110">Invalid reply comment</string>
+    <string name="error_IARG_200">Invalid login token</string>
+    <string name="error_IARG_201">Invalid login mode</string>
+    <string name="error_IARG_300">Invalid custom category</string>
+    <string name="error_IARG_301">Invalid category</string>
+    <string name="error_IARG_302">The application provided already exists in this category</string>
+
+    <string name="error_AUTH_1">Invalid login credentials!</string>
+    <string name="error_AUTH_2">Invalid credentials!</string>
+    <string name="error_AUTH_3">Your account was cancelled. For any questions, contact Aptoide Support team.</string>
+    <string name="error_AUTH_4">HMAC Authentication failure</string>
+    <string name="error_AUTH_100">Could not login with Google. Please check your Google account (you may need to validate your email address).</string>
+    <string name="error_AUTH_101">Could not login with Google. Please try again.</string>
+    <string name="error_AUTH_102">Could not login with Facebook. Please check your Facebook account (you may need to validate your email address).</string>
+    <string name="error_AUTH_103">Could not login with Facebook. Please try again.</string>
+
+    <string name="error_WOP_6">To add a comment you need to insert your name (it will be visible)</string>
+    <string name="error_WOP_7">Comment error</string>
+    <string name="error_WOP_8">Comment vote error</string>
+    <string name="error_WOP_9">The email provided already exists in the system</string>
+    <string name="error_WOP_10">The email provided does not exist in the system yet</string>
+    <string name="error_WOP_11">The store could not be created. Please try again.</string>
+
+
+    <string name="error_REPO_1">The store does not exist.</string>
+    <string name="error_REPO_2">The store was cancelled.</string>
+    <string name="error_REPO_3">The store does not belong to this user.</string>
+
+    <string name="error_APK_1">Can\'t open this app with the given info and version</string>
+    <string name="error_APK_4">Can\'t open this app</string>
+
+    <string name="error_SYS_1">An unknown error occurred, please try again</string>
+    <string name="error_SYS_2">No data found, please try again later</string>
+    <string name="error_SYS_3">System is now in maintenance, please try again later</string>
+    <string name="error_SYS_4">This call is not supported by the current API version</string>
+    <string name="cancel">Cancel</string>
+</resources>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="?attr/customRowForegroundHomeLayout"
+    android:layout_width="match_parent"
+    android:layout_weight="1"
+    android:layout_height="180dp">
+
+    <RelativeLayout
+        style="?attr/backgroundCard"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:padding="5dp">
+
+
+        <ImageView
+            android:id="@+id/app_icon"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_centerHorizontal="true"
+            android:contentDescription="@null" />
+
+
+        <TextView
+            android:id="@+id/app_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/app_icon"
+            android:layout_centerHorizontal="true"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="2"
+            android:maxWidth="100dp"
+            android:text="Observador"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <!--<TextView-->
+        <!--android:id="@+id/app_category17"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignWithParentIfMissing="false"-->
+        <!--android:layout_below="@+id/app_name17"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:ellipsize="end"-->
+        <!--android:gravity="center"-->
+        <!--android:text="1 M down."-->
+        <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
+        <!--android:textColor="@android:color/darker_gray" />-->
+
+
+        <TextView
+            android:id="@+id/app_friend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignWithParentIfMissing="false"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxWidth="120dp"
+            android:paddingLeft="2dp"
+            android:layout_below="@+id/app_name"
+            android:text="Paulo Trezentos installed this"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="10sp"
+            android:layout_alignRight="@+id/app_icon"
+            android:layout_alignEnd="@+id/app_icon"
+            android:layout_toRightOf="@+id/user_avatar"
+            android:layout_toEndOf="@+id/user_avatar" />
+
+        <cm.aptoide.ptdev.views.RoundedImageView
+            android:id="@+id/user_avatar"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center"
+            android:scaleType="centerInside"
+            android:layout_below="@+id/app_name"
+            android:layout_alignLeft="@+id/app_icon"
+            android:layout_alignStart="@+id/app_icon" />
+
+
+    </RelativeLayout>
+
+</FrameLayout>

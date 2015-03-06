@@ -1,0 +1,15 @@
+include 'v5engine',
+        'Aptoide',
+        'hanselandgretel',
+        'Partners',
+        //'AptoideHelper',
+        'AptoideDev',
+        'android-websockets',
+        'facebook',
+        'google-play-services',
+        'mopub-sdk',
+        'AptoideFortumo'
+        // 'tv'
+
+/*
+include  'tv','facebook'*/
